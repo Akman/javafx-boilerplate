@@ -468,14 +468,18 @@ jlink {
     // https://github.com/beryx/badass-jlink-plugin/issues/14#issuecomment-447351574
     forceMerge('log4j-api')
 
+
+    // Set the environment variable BADASS_JLINK_JPACKAGE_HOME
+    // BADASS_JLINK_JPACKAGE_HOME=D:/Programs/Java/jdk-13
     jpackage {
+
         // https://jdk.java.net/jpackage/
         // https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_windows-x64_bin.zip
         // Known issues:
         // JDK-8215447: Investigate if current implementation of --license-file is correct for RPM packages
         // JDK-8220806: invalid --app-version causes failure in windows exe installer
         // JDK-8204991: Cannot start application (WinLauncher) if path contains non-ascii character
-        jpackageHome = 'D:/Programs/Java/jdk-13'
+
         switch (platform) {
             case 'mac':
                 installerOptions = [
