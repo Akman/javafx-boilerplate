@@ -1,8 +1,8 @@
 # Java application boilerplate project
 
-[![Build Status](https://travis-ci.org/Akman/python-boilerplate.svg?branch=master)](https://travis-ci.org/Akman/python-boilerplate)
-[![codecov](https://codecov.io/gh/Akman/python-boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/Akman/python-boilerplate)
-[![Latest Release](https://img.shields.io/github/release/VocabHunter/VocabHunter.svg)](https://github.com/VocabHunter/VocabHunter/releases/latest)
+[![Build Status](https://travis-ci.org/Akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/Akman/java-boilerplate-gradle)
+[![codecov](https://codecov.io/gh/Akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/Akman/java-boilerplate-gradle)
+[![Latest Release](https://img.shields.io/github/release/java-boilerplate-gradle/java-boilerplate-gradle.svg)](https://github.com/Akman/java-boilerplate-gradle/releases/latest)
 
 This project aims to cover best practices for Java application development
 as a whole. It provides tool recommendations for linting, testing and packaging.
@@ -15,8 +15,9 @@ to your needs.
 
 This is the README file for the project.
 
-The file should use UTF-8 encoding and can be written using [md] with
-the appropriate key set. It will be displayed as the project
+The file should use UTF-8 encoding and can be written using
+[GitHub Flavored Markdown][md] with the appropriate key set.
+It will be displayed as the project
 homepage on common code-hosting services, and should be written for that
 purpose.
 
@@ -236,5 +237,5 @@ Display the properties of the project.
 $ ./gradlew properties
 ```
 
-[src]: https://github.com/Akman/python-boilerplate
-[md]: https://help.github.com/articles/basic-writing-and-formatting-syntax/ "GitHub Flavored Markdown"
+[src]: https://github.com/Akman/java-boilerplate-gradle
+[md]: https://help.github.com/articles/basic-writing-and-formatting-syntax "GitHub Flavored Markdown"
