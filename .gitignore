@@ -1,0 +1,20 @@
+# ignore idea settings
+.idea
+*.iml
+
+# ignore vscode settings
+.vscode
+
+# ignore eclipse settings
+.settings
+.project
+.classpath
+
+# general things to ignore
+.gradle
+bin
+build
+
+# ignore logs
+log
+*.log

@@ -1,0 +1,58 @@
+/*
+ * Java Boilerplate Project
+ *
+ * Process Filtered Resources
+ *
+ * Copyright (C) 2019 A.Kapitman
+ * All right reserved
+ */
+
+class PropertiesFile {
+    private File file
+    private String encoding
+    private Map propertiesMap = [:]
+    PropertiesFile(File file, String encoding = 'UTF-8') {
+        this.file = file
+        this.encoding = encoding
+    }
+    PropertiesFile(String fileName, String encoding = 'UTF-8') {
+        this(new File(fileName), encoding)
+    }
+    Map getProperties() {
+        if (!propertiesMap) {
+            Properties properties = new Properties()
+            properties.load(new InputStreamReader(
+                new FileInputStream(this.file), this.encoding))
+            properties.each { name, value -> propertiesMap.put(name, value) }
+        }
+        return propertiesMap
+   }
+}
+
+task processResourcesFiltered(type: Copy) {
+    sourceSets.main.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new PropertiesFile(filterFile)
+        from filteredDir
+        into sourceSets.main.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
+}
+
+processResources.dependsOn processResourcesFiltered
+
+task processTestResourcesFiltered(type: Copy) {
+    sourceSets.test.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new PropertiesFile(filterFile)
+        from filteredDir
+        into sourceSets.test.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
+}
+
+processTestResources.dependsOn processTestResourcesFiltered
