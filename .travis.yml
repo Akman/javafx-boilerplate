@@ -43,7 +43,12 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - ./gradlew --info --stacktrace build jlinkZip jpackage
+  - ./gradlew --info --stacktrace check
+  - ./gradlew jacocoTestReport
+#  - ./gradlew --info --stacktrace jlinkZip jpackage
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 # deploy:
 #   provider: pages
