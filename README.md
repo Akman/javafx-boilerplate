@@ -162,6 +162,12 @@ Verify code coverage metrics based on specified rules for the test task.
 $ ./gradlew jacocoTestCoverageVerification
 ```
 
+## Reports
+
+Plugins used to check the project generate reports also, but JaCoCo do not.
+
+### JaCoCo
+
 Generate code coverage report for the test task.
 
 ```bash
