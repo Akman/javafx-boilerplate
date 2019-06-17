@@ -773,8 +773,13 @@ jlink {
                     // "Program Files" or "AppData" on Windows.
                     // '--install-dir <file path>',
 
-                    // Name for Linux bundle, defaults to the application name
-                    '--linux-bundle-name', 'Launcher',
+                    // Name for Linux bundle, defaults to the application name.
+                    // Valid Debian package name must consist only of
+                    // LOWER CASE LETTERS (a-z), digits (0-9), plus (+) and
+                    // minus (-) signs, and periods (.). They must be at least
+                    // two characters long and must start with an alphanumeric
+                    // character.
+                    '--linux-bundle-name', 'ru.akman.launcher',
 
                     // Maintainer for .deb bundle
                     '--linux-deb-maintainer', 'Alexander Kapitman <akman.ru@gmail.com>',
@@ -792,7 +797,7 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                installerType = 'deb'
+                // installerType = 'deb'
                 break
         }
     }
