@@ -1,8 +1,5 @@
 # if: tag IS blank
 
-#
-# https://jdk.java.net/jpackage
-#
 matrix:
 #  fast_finish: true
   include:
@@ -12,12 +9,12 @@ matrix:
         - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_linux-x64_bin.tar.gz
         - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
         - BADASS_JLINK_JPACKAGE_HOME=/home/travis/build/Akman/java-boilerplate-gradle/jdk-13
-#    - os: osx
-#      osx_image: xcode10.1
-#      env:
-#        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
-#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-#        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
+    - os: osx
+      osx_image: xcode10.1
+      env:
+        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
+        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
+        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
 
 sudo: false
 
@@ -39,8 +36,6 @@ before_install:
 install:
   - chmod a+x ./gradlew
   - tar xzfp $JPACKAGE_ARCHIVE_NAME
-  - ls -al
-#  - gunzip -c $JPACKAGE_ARCHIVE_NAME | tar xopf -
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

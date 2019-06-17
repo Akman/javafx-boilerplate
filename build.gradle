@@ -696,7 +696,7 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                installerType = 'pkg'
+                // installerType = 'pkg'
                 break
             case 'win':
                 imageOptions += [
@@ -751,7 +751,7 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                installerType = 'exe'
+                // installerType = 'exe'
                 break
             case 'linux':
                 imageOptions += [
