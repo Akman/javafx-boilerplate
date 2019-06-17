@@ -53,6 +53,7 @@ repositories {
 }
 
 ext {
+    applicationVersion = version.replaceAll('-SNAPSHOT', '')
     javaVersion = JavaVersion.current()
     javaFXVersion = '11.0.2'
     os = org.gradle.internal.os.OperatingSystem.current()
@@ -610,13 +611,11 @@ jlink {
         // in the create-installer mode.
         installerName = 'Launcher'
 
-        def installerVersion = version.replaceAll('-SNAPSHOT', '')
-
         // Options for creating the application installer
         installerOptions = [
 
             // Version of the application
-            '--app-version', "${installerVersion}",
+            '--app-version', "${applicationVersion}",
 
             // Description of the application
             '--description', 'Launcher Installer',
@@ -730,8 +729,9 @@ jlink {
                     // Adds the application to the system menu
                     '--win-menu',
 
-                    // Start Menu group this application is placed in
-                    '--win-menu-group', 'Akman/Launcher',
+                    // Start Menu group this application is placed in.
+                    // Wix fails when it uses Parent/Child menu group.
+                    '--win-menu-group', 'Launcher',
 
                     // Request to perform an install on a per-user basis
                     '--win-per-user-install',

@@ -3,18 +3,23 @@
 matrix:
 #  fast_finish: true
   include:
-    - os: linux
-      dist: xenial
+#    - os: linux
+#      dist: xenial
+#      env:
+#        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_linux-x64_bin.tar.gz
+#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
+#        - BADASS_JLINK_JPACKAGE_HOME=/home/travis/build/Akman/java-boilerplate-gradle/jdk-13
+#    - os: osx
+#      osx_image: xcode10.1
+#      env:
+#        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
+#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
+#        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
+    - os: windows
       env:
-        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_linux-x64_bin.tar.gz
+        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_windows-x64_bin.zip
         - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-        - BADASS_JLINK_JPACKAGE_HOME=/home/travis/build/Akman/java-boilerplate-gradle/jdk-13
-    - os: osx
-      osx_image: xcode10.1
-      env:
-        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
-        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
+        - BADASS_JLINK_JPACKAGE_HOME=C:/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13
 
 sudo: false
 
@@ -35,7 +40,11 @@ before_install:
 
 install:
   - chmod a+x ./gradlew
-  - tar xzfp $JPACKAGE_ARCHIVE_NAME
+  - if [ "${TRAVIS_OS_NAME}" = "windows" ]; then
+      pkunzip -d $JPACKAGE_ARCHIVE_NAME
+    else
+      tar xzfp $JPACKAGE_ARCHIVE_NAME
+    fi
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
