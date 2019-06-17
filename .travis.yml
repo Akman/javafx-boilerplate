@@ -4,33 +4,43 @@
 # https://jdk.java.net/jpackage
 #
 matrix:
+#  fast_finish: true
   include:
     - os: linux
+      dist: xenial
       env:
-        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_linux-x64_bin.tar.gz
         - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_linux-x64_bin.tar.gz
+        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
         - BADASS_JLINK_JPACKAGE_HOME=/home/travis/build/Akman/java-boilerplate-gradle/jdk-13
 #    - os: osx
+#      osx_image: xcode10.1
 #      env:
-#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_osx-x64_bin.tar.gz
 #        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
+#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
 #        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
+
+sudo: false
 
 language: java
 
-sudo: false
+#install: true
 
 jdk:
   - openjdk11
 
+git:
+    depth: false
+
 before_install:
+  - chmod +x .ci/build.sh
+  - sh .ci/build.sh
   - wget $JPACKAGE_DOWNLOAD_URL
 
 install:
   - chmod a+x ./gradlew
-  - pwd
-  - gunzip -c $JPACKAGE_ARCHIVE_NAME | tar xopf -
+  - tar xzfp $JPACKAGE_ARCHIVE_NAME
   - ls -al
+#  - gunzip -c $JPACKAGE_ARCHIVE_NAME | tar xopf -
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -38,17 +48,26 @@ before_cache:
 
 cache:
   directories:
-#    - $HOME/.gradle
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+# before_script:
+#   - if [ -n "${TRAVIS_TAG}" -a "${TRAVIS_OS_NAME}" = "osx" ]; then
+#     openssl aes-256-cbc -k "$ENC_SECRET" -in app/assets/osx/codesign.cer.enc -out app/assets/osx/codesign.cer -d;
+#     openssl aes-256-cbc -k "$ENC_SECRET" -in app/assets/osx/codesign.p12.enc -out app/assets/osx/codesign.p12 -d;
+#     fi
+
 script:
-  - ./gradlew --info --stacktrace check jacocoTestReport
-  - ./gradlew --info --stacktrace jlinkZip
-#  - ./gradlew --info --stacktrace jpackage
+  - ./gradlew clean check jacocoTestReport
+  - ./gradlew --info --stacktrace jpackage
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+# env:
+#   global:
+#     - secure: "MZhh ... NtQ="
+#     - secure: "d2jv ... VGQ="
 
 # deploy:
 #   provider: pages
@@ -59,3 +78,20 @@ after_success:
 #   local-dir: build/image-zip
 #   on:
 #     branch: master
+
+#   provider: s3
+#   access_key_id: $AWS_ACCESS_KEY_ID
+#   secret_access_key: $AWS_SECRET_ACCESS_KEY
+#   bucket: "download.gluonhq.com"
+#   acl: public_read
+#   upload-dir: scenebuilder
+#   local-dir: deployment
+#   skip_cleanup: true
+#   on:
+#     tags: true
+#     repo: gluonhq/scenebuilder
+
+# after_deploy:
+#   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+#     aws s3 cp --content-type "application/x-rpm" --acl public-read --metadata-directive REPLACE s3://download.gluonhq.com/scenebuilder/$TRAVIS_TAG/install/linux/SceneBuilder-$TRAVIS_TAG.rpm s3://download.gluonhq.com/scenebuilder/$TRAVIS_TAG/install/linux/SceneBuilder-$TRAVIS_TAG.rpm;
+#     fi

@@ -8,8 +8,6 @@
 plugins {
 
     id 'application'
-    // id 'idea'
-    // id 'eclipse'
 
     // https://docs.gradle.com/build-scan-plugin
     id 'com.gradle.build-scan' version '2.3'
@@ -31,6 +29,9 @@ plugins {
 
     // https://spotbugs.github.io
     id 'com.github.spotbugs' version '2.0.0'
+
+    // https://github.com/researchgate/gradle-release
+    id 'net.researchgate.release' version '2.6.0'
     
     // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
     id 'checkstyle'
@@ -41,15 +42,15 @@ plugins {
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 
+    // id 'idea'
+    // id 'eclipse'
+
 }
 
 repositories {
     mavenCentral()
     jcenter()
 }
-
-version = '1.0.1' +
-    (Boolean.valueOf(System.getProperty('snapshot')) ? '-SNAPSHOT' : '')
 
 ext {
     javaVersion = JavaVersion.current()
@@ -61,55 +62,8 @@ ext {
     mainClass = 'ru.akman.launcher.Launcher'
 }
 
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-}
-
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
-
-// [compileJava, compileTestJava]*.options*.encoding = defaultEncoding
-[compileJava, compileTestJava].each {
-    it.options.encoding = defaultEncoding
-    it.options.compilerArgs += [
-        // Give more detail for unchecked conversion warnings that are mandated
-        // by the Java Language Specification.
-        '-Xlint:unchecked',
-        // Show a description of each use or override of a deprecated member
-        // or class. Without this, javac shows a summary of the source files
-        // that use or override deprecated members or classes.
-        '-Xlint:deprecation',
-        // Terminate compilation if warnings occur.
-        '-Werror',
-    ]
-}
-
-application {
-    applicationName = "launcher"
-    mainClassName = "${moduleName}/${mainClass}"
-    applicationDefaultJvmArgs = [
-        "-Dfile.encoding=${defaultEncoding}".toString(),
-    ]
-}
-
-license {
-    header file('LICENSE')
-    skipExistingHeaders true
-    ignoreFailures true
-    strictCheck false
-    mapping([
-        'fxml': 'XML_STYLE',
-    ])
-    excludes([
-        '**/*.properties',
-    ])
-    ext {
-        year = Calendar.getInstance().get(Calendar.YEAR)
-        name = 'Alexander Kapitman'
-        email = 'akman.ru@gmail.com'
-    }
-}
 
 // https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
 dependencies {
@@ -127,6 +81,32 @@ dependencies {
     )
 }
 
+// [compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+[compileJava, compileTestJava].each {
+    it.options.encoding = defaultEncoding
+    it.options.compilerArgs += [
+        // Give more detail for unchecked conversion warnings that are mandated
+        // by the Java Language Specification.
+        '-Xlint:unchecked',
+
+        // Show a description of each use or override of a deprecated member
+        // or class. Without this, javac shows a summary of the source files
+        // that use or override deprecated members or classes.
+        '-Xlint:deprecation',
+
+        // Terminate compilation if warnings occur.
+        '-Werror',
+    ]
+}
+
+application {
+    applicationName = "launcher"
+    mainClassName = "${moduleName}/${mainClass}"
+    applicationDefaultJvmArgs = [
+        "-Dfile.encoding=${defaultEncoding}".toString(),
+    ]
+}
+
 javafx {
     version = "${javaFXVersion}"
     modules = [
@@ -135,8 +115,31 @@ javafx {
     ]
 }
 
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
+
 clean {
     delete "${logDir}"
+}
+
+license {
+    header file("${projectDir}/config/license/LICENSE")
+    skipExistingHeaders true
+    ignoreFailures true
+    strictCheck false
+    mapping([
+        'fxml': 'XML_STYLE',
+    ])
+    excludes([
+        '**/*.properties',
+    ])
+    ext {
+        year = Calendar.getInstance().get(Calendar.YEAR)
+        name = 'Alexander Kapitman'
+        email = 'akman.ru@gmail.com'
+    }
 }
 
 apply from: 'gradle/filteredResources.gradle'
@@ -296,13 +299,9 @@ spotbugs {
 
 tasks.withType(com.github.spotbugs.SpotBugsTask) {
    reports {
-       xml {
-           enabled true
-           withMessages true
-       }
-       html {
-           enabled false
-       }
+       xml.enabled true
+       xml.withMessages true
+       html.enabled false
    }
 }
 
@@ -390,7 +389,9 @@ jar {
 }
 
 //
-// TODO: Illegal option order in command line
+// TODO: Task :run FAILED
+//
+// Illegal option order in command line
 //
 // java [-options] -jar jarfile [args...]
 //
@@ -444,34 +445,137 @@ run {
     ]
 }
 
+release {
+//     failOnCommitNeeded = true
+//     failOnPublishNeeded = true
+//     failOnSnapshotDependencies = true
+//     failOnUnversionedFiles = true
+//     failOnUpdateNeeded = true
+//     revertOnFail = true
+//     preCommitText = ''
+//     preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+//     tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+//     newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+//     tagTemplate = '${version}'
+//     versionPropertyFile = 'gradle.properties'
+//     versionProperties = []
+//     snapshotSuffix = '-SNAPSHOT'
+//     buildTasks = [
+//         'build',
+//     ]
+//     ignoredSnapshotDependencies = []
+//     versionPatterns = [
+//         /(\d+)([^\d]*$)/: { Matcher m, Project p ->
+//             m.replaceAll("${(m[0][1] as int) + 1}${m[0][2]}")
+//         }
+//     ]
+//     pushReleaseVersionBranch = false
+//     scmAdapters = [
+//         net.researchgate.release.GitAdapter,
+//         net.researchgate.release.SvnAdapter,
+//         net.researchgate.release.HgAdapter,
+//         net.researchgate.release.BzrAdapter,
+//     ]
+//     git {
+//         requireBranch = 'master'
+//         pushToRemote = 'origin'
+//         pushToBranchPrefix = ''
+//         commitVersionFileOnly = false
+//         signTag = false
+//     }
+//     svn {
+//         username = null
+//         password = null
+//
+//         // allows to pin the externals when tagging,
+//         // requires subversion client >= 1.9.0
+//         pinExternals = false
+//     }
+}
+
 jlink {
 
-    // mergedModule {
-    // }
-
-    options = [
-        '--strip-debug',
-        '--compress', '2',
-        '--no-header-files',
-        '--no-man-pages',
-    ]
-
-    launcher {
-        name = "${applicationName}"
-        jvmArgs = [
-            "-Dfile.encoding=${defaultEncoding}".toString(),
-        ]
-        // unixScriptTemplate = file("${projectDir}/scripts/unixScriptTemplate")
-        // windowsScriptTemplate = file("${projectDir}/scripts/windowsScriptTemplate")
-    }
-
+    // Include all dependencies matching the given prefixes into
+    // the merged module. This method is useful when it should handle one or
+    // more modular jars as non-modular. You can call this method multiple times.
     // https://github.com/beryx/badass-jlink-plugin/issues/14#issuecomment-447351574
     forceMerge('log4j-api')
 
+    launcher {
+        name = "${applicationName}"
+        args [
+        ]
+        jvmArgs = [
+            "-Dfile.encoding=${defaultEncoding}".toString(),
+        ]
+        unixScriptTemplate = file("${projectDir}/assets/nix-script.template")
+        windowsScriptTemplate = file("${projectDir}/assets/win-script.template")
+    }
 
-    // Set the environment variable BADASS_JLINK_JPACKAGE_HOME
-    // BADASS_JLINK_JPACKAGE_HOME=D:/Programs/Java/jdk-13
+    // Options for creating the runtime image
+    options = [
+        // Specifies the byte order of the generated image: "little" or "big".
+        // The default value is the format of your system's architecture.
+        // '--endian', 'little',
+
+        // Suppresses a fatal error when signed modular JARs are linked in
+        // the runtime image. The signature-related files of the signed modular
+        // JARs aren’t copied to the runtime image.
+        // '--ignore-signing-information',
+
+        // Excludes native commands from the image
+        // '--strip-native-commands',
+
+        // Strips debug information from the output image
+        '--strip-debug',
+
+        // Excludes header files
+        '--no-header-files',
+
+        // Excludes man pages
+        '--no-man-pages',
+
+        // Enable compression of resources: "0" - no compression,
+        // "1" - constant string sharing, "2" - zip
+        '--compress', '2',
+    ]
+
+    // Configure the module descriptor of the merged module.
+    // It provides a DSL that matches the syntax of the directives in
+    // a module declaration file (module-info.java), but it requires quotes
+    // around the names of modules, services, and service implementation classes.
+    // DSL does not support exports directives because automatically exports
+    // all packages found in the merged module.
+    // mergedModule {
+    //
+    //     additive = true
+    //
+    //     requires 'java.desktop'
+    //     requires transitive 'java.sql'
+    //     uses 'java.sql.Driver'
+    //     provides 'java.sql.Driver' with 'org.hsqldb.jdbc.JDBCDriver'
+    // }
+
+    // targetPlatform('linux-s390x') {
+    //     jdkHome = '/usr/lib/jvm/linux-s390x/jdk-11.0.2+9'
+    //     addOptions('--endian', 'big')
+    //     addExtraModulePath('/usr/lib/openjfx/linux-s390x/jmods')
+    // }
+    // targetPlatform('mac') {
+    //     jdkHome = '/usr/lib/jvm/mac/jdk-11.0.2+9'
+    //     addExtraModulePath('/usr/lib/openjfx/mac/jmods')
+    // }
+    // targetPlatform('win') {
+    //     jdkHome = '/usr/lib/jvm/win/jdk-11.0.2+9'
+    //     addExtraModulePath('/usr/lib/openjfx/win/jmods')
+    // }
+
+    // Create a platform-specific application image and installer
+    // Set the environment variable BADASS_JLINK_JPACKAGE_HOME to JDK home
+    // directory with jpackage tool.
     jpackage {
+
+        skipInstaller = false
 
         // https://jdk.java.net/jpackage/
         // https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_windows-x64_bin.zip
@@ -480,169 +584,217 @@ jlink {
         // JDK-8220806: invalid --app-version causes failure in windows exe installer
         // JDK-8204991: Cannot start application (WinLauncher) if path contains non-ascii character
 
+        // https://openjdk.java.net/jeps/343
+
+        // The argument passed to the --name option when running jpackage
+        // in the create-app-image mode.
+        imageName = 'Launcher'
+
+        // List of additional options to be passed to the jpackage executable
+        // in the create-app-image mode.
+        imageOptions = [
+            // Version of the application
+            '--app-version', "${version}",
+
+            // Description of the application
+            '--description', 'Launcher Application',
+
+            // Vendor of the application
+            '--vendor', 'Akman',
+
+            // Copyright for the application
+            '--copyright', 'Copyright (C) 2019 A.Kapitman',
+        ]
+
+        // The argument passed to the --name option when running jpackage
+        // in the create-installer mode.
+        installerName = 'Launcher'
+
+        def installerVersion = version.replaceAll('-SNAPSHOT', '')
+
+        // Options for creating the application installer
+        installerOptions = [
+
+            // Version of the application
+            '--app-version', "${installerVersion}",
+
+            // Description of the application
+            '--description', 'Launcher Installer',
+
+            // Vendor of the application
+            '--vendor', 'Akman',
+
+            // Copyright for the application
+            '--copyright', 'Copyright (C) 2019 A.Kapitman',
+
+            // An identifier that uniquely identifies the application.
+            // Defaults to the main class name.
+            // The value should be a valid DNS name.
+            '--identifier', 'ru.akman.launcher',
+
+            // Path to the license file (absolute path or relative to the
+            // current directory)
+            '--license-file', 'LICENSE',
+
+            // Path to override jpackage resources. Icons, template files,
+            // and other resources of jpackage can be over-ridden by adding
+            // replacement resources to this directory. (absolute path or
+            // relative to the current directory)
+            // '--resource-dir <path>',
+        ]
         switch (platform) {
             case 'mac':
-                installerOptions = [
-                    '--mac-sign',
-                    //'--mac-signing-key-user-name', System.getenv('SIGNING_KEY_USER_NAME'),
-                    //'--mac-signing-keychain', System.getenv('SIGNING_KEYCHAIN_PATH')
+                imageOptions += [
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
+                    '--icon', "${projectDir}/assets/mac/launcher.icns",
+
+                    // Name of the application as it appears in the Menu Bar.
+                    // This can be different from the application name.
+                    // This name must be less than 16 characters long and
+                    // be suitable for displaying in the menu bar and the
+                    // application Info window. Defaults to the application name.
+                    '--mac-bundle-name', 'Launcher',
+
+                    // An identifier that uniquely identifies the application
+                    // for MacOSX. Defaults to the value of --identifier option.
+                    // May only use alphanumeric (A-Z,a-z,0-9), hyphen (-), and
+                    // period (.) characters.
+                    '--mac-bundle-identifier', 'ru.akman.launcher',
+
+                    // Request that the bundle be signed
+                    // '--mac-sign',
+
+                    // Path of the keychain to use (absolute path or relative
+                    // to the current directory). If not specified, the standard
+                    // keychains are used.
+                    // '--mac-signing-keychain <file path>',
+
+                    // User name portion of the typical signing key
+                    // '--mac-signing-key-user-name <user name>',
+
+                    // When signing the application bundle, this value is
+                    // prefixed to all components that need to be signed that
+                    // don't have an existing bundle identifier.
+                    // '--mac-bundle-signing-prefix <prefix string>',
                 ]
+                installerOptions += [
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
+                    '--file-associations', "${projectDir}/assets/mac/associations.properties",
+
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    // '--install-dir <file path>',
+                ]
+                // The type of the installer to create. Valid values are: "exe",
+                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+                // specified (in create-installer mode) all supported types of
+                // installable packages for the current platform will be created.
+                installerType = 'pkg'
                 break
             case 'win':
-                imageOptions = [
-                    // '--win-console'
-                ]
-                installerOptions = [
-                    '--win-per-user-install',
-                    '--win-dir-chooser',
+                imageOptions += [
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
+                    '--icon', "${projectDir}/assets/windows/launcher.ico",
+
+                    // Creates a console launcher for the application, should be
+                    // specified for application which requires to show console
+                    // at start.
                     // '--win-console',
-                    // '--win-menu',
-                    // '--win-shortcut'
                 ]
-                //installerType = 'exe'
+                installerOptions += [
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
+                    '--file-associations', "${projectDir}/assets/windows/associations.properties",
+
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    '--install-dir', 'Launcher',
+
+                    // Adds a dialog to enable the user to choose a directory
+                    // in which the product is installed
+                    '--win-dir-chooser',
+
+                    // Adds the application to the system menu
+                    '--win-menu',
+
+                    // Start Menu group this application is placed in
+                    '--win-menu-group', 'Akman/Launcher',
+
+                    // Request to perform an install on a per-user basis
+                    '--win-per-user-install',
+
+                    // Name of the application for registry references.
+                    // The default is the Application Name with only
+                    // alphanumerics, dots, and dashes (no whitespace)
+                    '--win-registry-name', 'Launcher',
+
+                    // Creates a desktop shortcut for the application
+                    '--win-shortcut',
+
+                    // UUID associated with upgrades for this package
+                    '--win-upgrade-uuid', '8C5094E6-C97E-47D8-8465-1DF16124700F',
+                ]
+                // The type of the installer to create. Valid values are: "exe",
+                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+                // specified (in create-installer mode) all supported types of
+                // installable packages for the current platform will be created.
+                installerType = 'exe'
                 break
             case 'linux':
+                imageOptions += [
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
+                    '--icon', "${projectDir}/assets/linux/launcher.png",
+                ]
+                installerOptions += [
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
+                    '--file-associations', "${projectDir}/assets/linux/associations.properties",
+
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    // '--install-dir <file path>',
+
+                    // Name for Linux bundle, defaults to the application name
+                    '--linux-bundle-name', 'Launcher',
+
+                    // Maintainer for .deb bundle
+                    '--linux-deb-maintainer', 'Alexander Kapitman <akman.ru@gmail.com>',
+
+                    // Menu group this application is placed in
+                    '--linux-menu-group', 'Akman',
+
+                    // Required packages or capabilities for the application
+                    // '--linux-package-deps',
+
+                    // Type of the license ("License: " of the RPM .spec)
+                    '--linux-rpm-license-type', 'MIT',
+                ]
+                // The type of the installer to create. Valid values are: "exe",
+                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+                // specified (in create-installer mode) all supported types of
+                // installable packages for the current platform will be created.
+                installerType = 'deb'
                 break
         }
     }
 
 }
-
-// Platform dependent option for creating the application launcher
-/*
---win-console
-
-Creates a console launcher for the application, should be specified for
-application which requires console interactions
-
---mac-bundle-identifier <ID string>
-
-An identifier that uniquely identifies the application for MacOSX.
-Defaults to the value of --identifier option.
-May only use alphanumeric (A-Z,a-z,0-9), hyphen (-), and period (.) characters.
-
---mac-bundle-name <name string>
-
-Name of the application as it appears in the Menu Bar. This can be different
-from the application name. This name must be less than 16 characters long and
-be suitable for displaying in the menu bar and the application Info window.
-Defaults to the application name.
-
---mac-bundle-signing-prefix <prefix string>
-
-When signing the application bundle, this value is prefixed to all components
-that need to be signed that don't have an existing bundle identifier.
-
---mac-sign — Request that the bundle be signed
-
---mac-signing-keychain <file path>
-
-Path of the keychain to use (absolute path or relative to the current directory).
-If not specified, the standard keychains are used.
-
---mac-signing-key-user-name <user name>
-
-User name portion of the typical "Mac Developer ID Application: " signing key
-*/
-
-// Options for creating the application installer(s)
-
-/*
---app-image <file path>
-
-Location of the predefined application image that is used to build
-an installable package (absolute path or relative to the current directory).
-See create-app-image mode options to create the application image.
-
---file-associations <file path>
-
-Path to a Properties file that contains list of key, value pairs (absolute path
-or relative to the current directory). The keys "extension", "mime-type",
-"icon", and "description" can be used to describe the association.
-This option can be used multiple times.
-
---identifier <id string>
-
-An identifier that uniquely identifies the application. Defaults to the main
-class name. The value should be a valid DNS name.
-
---install-dir <file path>
-
-Absolute path of the installation directory of the application on OS X or Linux.
-Relative sub-path of the installation location of the application such as
-"Program Files" or "AppData" on Windows.
-
---installer-type <type>
-
-The type of the installer to create.
-Valid values are: {"exe", "msi", "rpm", "deb", "pkg", "dmg"}
-If this option is not specified (in create-installer mode) all supported types
-of installable packages for the current platform will be created.
-
---license-file <file path>
-
-Path to the license file (absolute path or relative to the current directory)
-
---resource-dir <path>
-
-Path to override jpackage resources. Icons, template files, and other resources
-of jpackage can be over-ridden by adding replacement resources to this directory.
-(absolute path or relative to the current directory)
-
---runtime-image <file-path>
-
-Path of the predefined runtime image to install (absolute path or relative to
-the current directory). Option is required when creating a runtime installer.
-*/
-
-// Platform dependent options for creating the application installer(s)
-
-/*
---win-dir-chooser
-
-Adds a dialog to enable the user to choose a directory in which the product
-is installed
-
---win-menu — Adds the application to the system menu
-
---win-menu-group <menu group name>
-
-Start Menu group this application is placed in
-
---win-per-user-install
-
-Request to perform an install on a per-user basis
-
---win-registry-name <registry name>
-
-Name of the application for registry references. The default is
-the Application Name with only alphanumerics, dots, and dashes (no whitespace)
-
---win-shortcut
-
-Creates a desktop shortcut for the application
-
---win-upgrade-uuid <id string>
-
-UUID associated with upgrades for this package
-
---linux-bundle-name <bundle name>
-
-Name for Linux bundle, defaults to the application name
-
---linux-deb-maintainer <email address>
-
-Maintainer for .deb bundle
-
---linux-menu-group <menu-group-name>
-
-Menu group this application is placed in
-
---linux-package-deps
-
-Required packages or capabilities for the application
-
---linux-rpm-license-type <type string>
-
-Type of the license ("License: " of the RPM .spec)
-*/
