@@ -65,7 +65,8 @@ before_script:
   - source .travis.env
 
 script:
-  - ./gradlew check jacocoTestReport
+  - java --version
+  - ./gradlew --debug clean check jacocoTestReport jpackage
 
 # When using caches, it may be useful to run a command just before uploading
 # the new cache archive. For example, the dependency management utility may
