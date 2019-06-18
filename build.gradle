@@ -577,7 +577,7 @@ jlink {
     // directory with jpackage tool.
     jpackage {
 
-        skipInstaller = false
+        skipInstaller = true
 
         // https://jdk.java.net/jpackage/
         // https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_windows-x64_bin.zip
@@ -752,7 +752,7 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                installerType = 'msi'
+                // installerType = 'exe'
                 break
             case 'linux':
                 imageOptions += [

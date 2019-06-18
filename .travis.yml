@@ -1,96 +1,101 @@
+#
+# https://docs.travis-ci.com/user/tutorial/
+#
+
 # if: tag IS blank
 
-matrix:
-#  fast_finish: true
-  include:
-#    - os: linux
-#      dist: xenial
-#      language: java
-#      env:
-#        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_linux-x64_bin.tar.gz
-#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-#        - BADASS_JLINK_JPACKAGE_HOME=/home/travis/build/Akman/java-boilerplate-gradle/jdk-13
-#      jdk:
-#        - openjdk11
-#    - os: osx
-#      osx_image: xcode10.1
-#      language: java
-#      env:
-#        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_osx-x64_bin.tar.gz
-#        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-#        - BADASS_JLINK_JPACKAGE_HOME=/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13.jdk/Contents/Home
-#      jdk:
-#        - openjdk11
-    - os: windows
-      language: bash
-      env:
-        - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_windows-x64_bin.zip
-        - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-        - BADASS_JLINK_JPACKAGE_HOME=/c/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13
-
-sudo: false
-
-#install: true
+# env:
+#   global:
+#     - secure: "MZhh ... NtQ="
 
 git:
+
+  # Travis CI can clone repositories to a maximum depth of 50 commits,
+  # which is only really useful if you are performing git operations.
+  # Please note that if you use a depth of 1 and have a queue of jobs,
+  # Travis CI won’t build commits that are in the queue when
+  # you push a new commit.
+  # You can also remove the --depth flag entirely, add depth: false
+  
   depth: false
 
-before_install:
-  - chmod a+x .ci/build.sh
-  - chmod a+x ./gradlew
+  # Travis CI clones repositories without the quiet flag (-q) by default.
+  # Enabling the quiet flag can be useful if you’re trying to avoid
+  # log file size limits or even if you just don’t need to include it.
+  
+  quiet: true
 
-install:
-  - sh .ci/build.sh
+matrix:
 
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  # If some rows in the build matrix are allowed to fail, the build won’t be
+  # marked as finished until they have completed. To mark the build as finished
+  # as soon as possible, add fast_finish: true
+
+  fast_finish: true
+
+  include:
+
+    -  os: linux
+       dist: xenial
+       language: java
+       jdk:
+         - openjdk11
+
+    -  os: osx
+       osx_image: xcode10.1
+       language: java
+       jdk:
+         - openjdk11
+
+    - os: windows
+      language: bash
+
+# Travis CI uploads the cache after the script phase of the build,
+# but before either after_success or after_failure.
+# You can cache arbitrary directories, such as Gradle, Maven, Composer and
+# npm cache directories, between builds.
 
 cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+before_install:
+  - chmod a+x ./gradlew
+  - find .ci -type f -name *.sh -exec chmod a+x {} ';'
+
+install:
+  - .ci/install.sh
+
 before_script:
-  - if [ -f ~/.profile ]; then
-      . ~/.profile;
-    fi
+  - source .travis.env
 
 script:
+  - env
   - ./gradlew clean check jacocoTestReport
-  - ./gradlew --info --stacktrace jpackage
+
+# When using caches, it may be useful to run a command just before uploading
+# the new cache archive. For example, the dependency management utility may
+# write lock files into the directory you are caching and you do not want them
+# to affect the cache.
+# Failure to upload the cache does not mark the job as failed.
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-# env:
-#   global:
-#     - secure: "MZhh ... NtQ="
-#     - secure: "d2jv ... VGQ="
+# after_failure:
+
+before_deploy:
+  - ls -al
+  - env
+  - ./gradlew --info --stacktrace jpackage
 
 # deploy:
-#   provider: pages
-#   skip-cleanup: true
-#   github-token: $GITHUB_TOKEN
-#   keep-history: false
-#   target-branch: images
-#   local-dir: build/image-zip
-#   on:
-#     branch: master
-
-#   provider: s3
-#   access_key_id: $AWS_ACCESS_KEY_ID
-#   secret_access_key: $AWS_SECRET_ACCESS_KEY
-#   bucket: "download.gluonhq.com"
-#   acl: public_read
-#   upload-dir: scenebuilder
-#   local-dir: deployment
-#   skip_cleanup: true
-#   on:
-#     tags: true
-#     repo: gluonhq/scenebuilder
 
 # after_deploy:
-#   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-#     aws s3 cp --content-type "application/x-rpm" --acl public-read --metadata-directive REPLACE s3://download.gluonhq.com/scenebuilder/$TRAVIS_TAG/install/linux/SceneBuilder-$TRAVIS_TAG.rpm s3://download.gluonhq.com/scenebuilder/$TRAVIS_TAG/install/linux/SceneBuilder-$TRAVIS_TAG.rpm;
-#     fi
+
+# after_script:
