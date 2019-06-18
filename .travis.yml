@@ -2,12 +2,6 @@
 # https://docs.travis-ci.com/user/tutorial/
 #
 
-# if: tag IS blank
-
-# env:
-#   global:
-#     - secure: "MZhh ... NtQ="
-
 git:
 
   # Travis CI can clone repositories to a maximum depth of 50 commits,
@@ -31,7 +25,7 @@ matrix:
   # marked as finished until they have completed. To mark the build as finished
   # as soon as possible, add fast_finish: true
 
-  fast_finish: true
+#  fast_finish: true
 
   include:
 
@@ -71,7 +65,8 @@ before_script:
   - source .travis.env
 
 script:
-  - ./gradlew clean check jacocoTestReport jpackage
+  - "/c/Program Files (x86)/Inno Setup 5/iscc.exe"
+#  - ./gradlew check jacocoTestReport
 
 # When using caches, it may be useful to run a command just before uploading
 # the new cache archive. For example, the dependency management utility may
@@ -83,8 +78,8 @@ before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+# after_success:
+#   - bash <(curl -s https://codecov.io/bash)
 
 # after_failure:
 
@@ -94,4 +89,5 @@ after_success:
 
 # after_deploy:
 
-# after_script:
+after_script:
+  - echo '=== ALL DONE ==='
