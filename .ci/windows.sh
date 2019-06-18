@@ -1,8 +1,8 @@
 #!/bin/bash
 
-choco install chocolatey-core.extension
-choco install dotnet3.5
-choco install wixtoolset
+choco install nuget.commandline
+nuget install WiX.Toolset
+
 choco install innosetup
 
 7z x -bd $JPACKAGE_ARCHIVE_NAME

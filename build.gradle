@@ -135,6 +135,7 @@ license {
     ])
     excludes([
         '**/*.properties',
+        '**/*.png',
     ])
     ext {
         year = Calendar.getInstance().get(Calendar.YEAR)
