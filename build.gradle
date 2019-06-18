@@ -753,6 +753,7 @@ jlink {
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
                 installerType = 'exe'
+                // skipInstaller = true
                 break
             case 'linux':
                 imageOptions += [
