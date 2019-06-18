@@ -36,11 +36,11 @@ git:
     depth: false
 
 before_install:
-  - chmod +x .ci/build.sh
-  - sh .ci/build.sh
+  - chmod a+x .ci/build.sh
+  - chmod a+x ./gradlew
 
 install:
-  - chmod a+x ./gradlew
+  - sh .ci/build.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -58,6 +58,9 @@ cache:
 #     fi
 
 script:
+  - if [ -f ~/.profile ]; then
+    . ~/.profile
+    fi
   - echo $JAVA_HOME
   - echo $PATH
   - ./gradlew clean check jacocoTestReport
