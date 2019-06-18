@@ -26,7 +26,7 @@ matrix:
       env:
         - JPACKAGE_ARCHIVE_NAME=openjdk-13-jpackage+49_windows-x64_bin.zip
         - JPACKAGE_DOWNLOAD_URL=https://download.java.net/java/early_access/jpackage/49/$JPACKAGE_ARCHIVE_NAME
-        - BADASS_JLINK_JPACKAGE_HOME=C:/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13
+        - BADASS_JLINK_JPACKAGE_HOME=/c/Users/travis/build/Akman/java-boilerplate-gradle/jdk-13
 
 sudo: false
 
@@ -58,10 +58,6 @@ cache:
 #     fi
 
 script:
-  - if [ "${TRAVIS_OS_NAME}" = "windows" ]; then
-      export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-11.0.2+9"
-      export PATH="/c/Program Files/AdoptOpenJDK/jdk-11.0.2+9/bin":$PATH
-    fi
   - echo $JAVA_HOME
   - echo $PATH
   - ./gradlew clean check jacocoTestReport
