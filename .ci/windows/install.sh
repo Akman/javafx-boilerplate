@@ -16,5 +16,4 @@ choco install adoptopenjdk --version 11.0.2.9
 echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-11.0.2+9"' >> .travis.env
 echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-11.0.2+9/bin":$PATH' >> .travis.env
 
-choco install innosetup
-choco install wixtoolset
+choco install innosetup --version 5.6.1

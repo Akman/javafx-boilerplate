@@ -69,12 +69,10 @@ install:
 
 before_script:
   - source .travis.env
-  - ls -al "/c/Program Files (x86)/Inno Setup 5"
-  - env
-  - ls -al "/c/Program Files (x86)/WiX Toolset v3.11/bin"
 
 script:
   - ./gradlew clean check jacocoTestReport
+  - ls -al "/c/Program Files (x86)/Inno Setup 5"
   - ./gradlew --debug jpackage
 
 # When using caches, it may be useful to run a command just before uploading
