@@ -1,7 +1,12 @@
 #!/bin/bash
 
-#choco install wixtoolset
-choco install innosetup
+choco install nuget.commandline
+nuget install WiX.Toolset
+# choco install wixtoolset
+
+# Bundler EXE Installer skipped because of a configuration problem:
+# java.lang.RuntimeException: Error: Failed to compare version null with 5.0..
+# choco install innosetup
 
 7z x -bd $JPACKAGE_ARCHIVE_NAME
 
