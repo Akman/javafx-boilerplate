@@ -65,7 +65,7 @@ before_script:
   - source .travis.env
 
 script:
-  - "/c/Program Files (x86)/Inno Setup 5/iscc.exe"
+  - echo "=== SCRIPT ==="
 #  - ./gradlew check jacocoTestReport
 
 # When using caches, it may be useful to run a command just before uploading
