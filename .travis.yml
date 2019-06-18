@@ -49,10 +49,10 @@ matrix:
 # You can cache arbitrary directories, such as Gradle, Maven, Composer and
 # npm cache directories, between builds.
 
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+#cache:
+#  directories:
+#    - $HOME/.gradle/caches/
+#    - $HOME/.gradle/wrapper/
 
 before_install:
   - chmod a+x ./gradlew
@@ -66,6 +66,7 @@ before_script:
 
 script:
   - java --version
+  - rm -fr $HOME/.gradle
   - ./gradlew clean check jacocoTestReport jpackage --info --stacktrace
 
 # When using caches, it may be useful to run a command just before uploading
@@ -74,9 +75,9 @@ script:
 # to affect the cache.
 # Failure to upload the cache does not mark the job as failed.
 
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+#before_cache:
+#  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+#  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
