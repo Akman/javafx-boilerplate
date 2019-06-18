@@ -33,7 +33,7 @@ sudo: false
 #install: true
 
 git:
-    depth: false
+  depth: false
 
 before_install:
   - chmod a+x .ci/build.sh
@@ -51,18 +51,12 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-# before_script:
-#   - if [ -n "${TRAVIS_TAG}" -a "${TRAVIS_OS_NAME}" = "osx" ]; then
-#     openssl aes-256-cbc -k "$ENC_SECRET" -in app/assets/osx/codesign.cer.enc -out app/assets/osx/codesign.cer -d;
-#     openssl aes-256-cbc -k "$ENC_SECRET" -in app/assets/osx/codesign.p12.enc -out app/assets/osx/codesign.p12 -d;
-#     fi
-
-script:
+before_script:
   - if [ -f ~/.profile ]; then
       . ~/.profile;
     fi
-  - echo $JAVA_HOME
-  - echo $PATH
+
+script:
   - ./gradlew clean check jacocoTestReport
   - ./gradlew --info --stacktrace jpackage
 

@@ -224,7 +224,7 @@ pmd {
     toolVersion = '6.15.0'
 
     // Whether or not to write PMD results to System.out.
-    consoleOutput = true
+    consoleOutput = false
 
     // Whether to allow the build to continue if there are warnings.
     ignoreFailures = true
