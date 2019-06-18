@@ -59,7 +59,7 @@ cache:
 
 script:
   - if [ -f ~/.profile ]; then
-    . ~/.profile
+      . ~/.profile;
     fi
   - echo $JAVA_HOME
   - echo $PATH
