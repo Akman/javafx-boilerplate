@@ -1,6 +1,6 @@
 #!/bin/bash
 
-choco install wixtoolset
+choco install wix35
 choco install innosetup
 
 7z x -bd $JPACKAGE_ARCHIVE_NAME
