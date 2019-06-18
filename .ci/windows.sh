@@ -1,8 +1,6 @@
 #!/bin/bash
 
-choco install nuget.commandline
-nuget install WiX.Toolset
-
+#choco install wixtoolset
 choco install innosetup
 
 7z x -bd $JPACKAGE_ARCHIVE_NAME
