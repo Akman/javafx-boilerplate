@@ -58,6 +58,8 @@ cache:
 #     fi
 
 script:
+  - echo $JAVA_HOME
+  - echo $PATH
   - ./gradlew clean check jacocoTestReport
   - ./gradlew --info --stacktrace jpackage
 
