@@ -35,17 +35,17 @@ matrix:
 
   include:
 
-    -  os: linux
-       dist: xenial
-       language: java
-       jdk:
-         - openjdk11
-
-    -  os: osx
-       osx_image: xcode10.1
-       language: java
-       jdk:
-         - openjdk11
+#    - os: linux
+#      dist: xenial
+#      language: java
+#      jdk:
+#        - openjdk11
+#
+#    - os: osx
+#      osx_image: xcode10.1
+#      language: java
+#      jdk:
+#        - openjdk11
 
     - os: windows
       language: bash
@@ -69,10 +69,13 @@ install:
 
 before_script:
   - source .travis.env
+  - ls -al "/c/Program Files (x86)/Inno Setup 5"
+  - env
+  - ls -al "/c/Program Files (x86)/WiX Toolset v3.11/bin"
 
 script:
-  - env
   - ./gradlew clean check jacocoTestReport
+  - ./gradlew --debug jpackage
 
 # When using caches, it may be useful to run a command just before uploading
 # the new cache archive. For example, the dependency management utility may
@@ -89,10 +92,7 @@ after_success:
 
 # after_failure:
 
-before_deploy:
-  - ls -al
-  - env
-  - ./gradlew --info --stacktrace jpackage
+# before_deploy:
 
 # deploy:
 
