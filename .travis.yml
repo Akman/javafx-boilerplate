@@ -25,7 +25,7 @@ matrix:
   # marked as finished until they have completed. To mark the build as finished
   # as soon as possible, add fast_finish: true
 
-#  fast_finish: true
+  fast_finish: true
 
   include:
 
@@ -49,10 +49,10 @@ matrix:
 # You can cache arbitrary directories, such as Gradle, Maven, Composer and
 # npm cache directories, between builds.
 
-#cache:
-#  directories:
-#    - $HOME/.gradle/caches/
-#    - $HOME/.gradle/wrapper/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 before_install:
   - chmod a+x ./gradlew
@@ -65,9 +65,9 @@ before_script:
   - source .travis.env
 
 script:
-  - java --version
-  - rm -fr $HOME/.gradle
+#  - rm -fr $HOME/.gradle
   - ./gradlew clean check jacocoTestReport jpackage --info --stacktrace
+  - ls -al build/jpackage
 
 # When using caches, it may be useful to run a command just before uploading
 # the new cache archive. For example, the dependency management utility may
@@ -75,12 +75,12 @@ script:
 # to affect the cache.
 # Failure to upload the cache does not mark the job as failed.
 
-#before_cache:
-#  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-#  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+# after_success:
+#   - bash <(curl -s https://codecov.io/bash)
 
 # after_failure:
 
@@ -90,5 +90,4 @@ after_success:
 
 # after_deploy:
 
-after_script:
-  - echo '=== ALL DONE ==='
+# after_script:
