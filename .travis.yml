@@ -51,8 +51,8 @@ matrix:
 
 cache:
   directories:
-    - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/caches/
 
 before_install:
   - chmod a+x ./gradlew
@@ -65,7 +65,6 @@ before_script:
   - source .travis.env
 
 script:
-#  - rm -fr $HOME/.gradle
   - ./gradlew clean check jacocoTestReport jpackage --info --stacktrace
   - ls -al build/jpackage
 
@@ -79,8 +78,8 @@ before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
-# after_success:
-#   - bash <(curl -s https://codecov.io/bash)
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 # after_failure:
 
