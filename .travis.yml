@@ -34,25 +34,30 @@ matrix:
       language: java
       jdk:
         - openjdk11
+      cache:
+        directories:
+          - $HOME/.gradle/wrapper/
+          - $HOME/.gradle/caches/
+      before_cache:
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
     - os: osx
       osx_image: xcode10.1
       language: java
       jdk:
         - openjdk11
+      cache:
+        directories:
+          - $HOME/.gradle/wrapper/
+          - $HOME/.gradle/caches/
+      before_cache:
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
     - os: windows
       language: bash
-
-# Travis CI uploads the cache after the script phase of the build,
-# but before either after_success or after_failure.
-# You can cache arbitrary directories, such as Gradle, Maven, Composer and
-# npm cache directories, between builds.
-
-cache:
-  directories:
-    - $HOME/.gradle/wrapper/
-#    - $HOME/.gradle/caches/
+      cache: false
 
 before_install:
   - chmod a+x ./gradlew
@@ -66,16 +71,6 @@ before_script:
 
 script:
   - ./gradlew clean check jacocoTestReport jpackage
-
-# When using caches, it may be useful to run a command just before uploading
-# the new cache archive. For example, the dependency management utility may
-# write lock files into the directory you are caching and you do not want them
-# to affect the cache.
-# Failure to upload the cache does not mark the job as failed.
-
-# before_cache:
-#   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-#   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
