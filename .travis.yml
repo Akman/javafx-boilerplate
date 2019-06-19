@@ -34,30 +34,20 @@ matrix:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle/wrapper/
-          - $HOME/.gradle/caches/
-      before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
     - os: osx
       osx_image: xcode10.1
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle/wrapper/
-          - $HOME/.gradle/caches/
-      before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
-    - os: windows
-      language: bash
-      cache: false
+#    - os: windows
+#      language: bash
+
+cache:
+  directories:
+    - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/caches/
 
 before_install:
   - chmod a+x ./gradlew
@@ -71,6 +61,10 @@ before_script:
 
 script:
   - ./gradlew clean check jacocoTestReport jpackage
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
