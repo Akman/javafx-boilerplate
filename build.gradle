@@ -1,8 +1,24 @@
-/*
- * Java Application Boilerplate Project
+/**
+ * The MIT License (MIT)
  *
- * Copyright (C) 2019 A.Kapitman
- * All right reserved
+ * Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 plugins {
@@ -61,6 +77,11 @@ ext {
     defaultEncoding = 'UTF-8'
     logDir = file("${projectDir}/log")
     mainClass = 'ru.akman.launcher.Launcher'
+    jpackageOutputDir = 'jpackage'
+    jpackageImageOutputDir = file("${buildDir}/${jpackageOutputDir}")
+    jpackageImageName = 'Launcher'
+    jpackageInstallerOutputDir = file("${buildDir}/${jpackageOutputDir}")
+    jpackageInstallerName = 'Launcher'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -497,6 +518,16 @@ release {
 
 jlink {
 
+    // The directory into which the custom runtime image should be generated.
+    // If you use the targetPlatform method to generate images for
+    // other platforms, the corresponding images will be created in
+    // subdirectories of imageDir.
+    imageDir = file("${buildDir}/jlinkimage")
+    
+    // The file into which a zip archive of the custom runtime image
+    // should be created.
+    imageZip = file("${buildDir}/${applicationName}-jlinkimage-${applicationVersion}.zip")
+
     // Include all dependencies matching the given prefixes into
     // the merged module. This method is useful when it should handle one or
     // more modular jars as non-modular. You can call this method multiple times.
@@ -577,7 +608,19 @@ jlink {
     // directory with jpackage tool.
     jpackage {
 
-        skipInstaller = false
+        skipInstaller = true
+
+        // Convenience property for setting both imageOutputDir and
+        // installerOutputDir with the value "${buildDir}/${outputDir}".
+        outputDir = jpackageOutputDir
+        
+        // The directory passed as argument to the --output option when running
+        // jpackage in the create-app-image mode.
+        imageOutputDir = jpackageImageOutputDir
+        
+        // The directory passed as argument to the --output option when running
+        // jpackage in the create-installer-image mode.
+        installerOutputDir = jpackageInstallerOutputDir
 
         // https://jdk.java.net/jpackage/
         // https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_windows-x64_bin.zip
@@ -590,7 +633,7 @@ jlink {
 
         // The argument passed to the --name option when running jpackage
         // in the create-app-image mode.
-        imageName = 'Launcher'
+        imageName = jpackageImageName
 
         // List of additional options to be passed to the jpackage executable
         // in the create-app-image mode.
@@ -610,7 +653,7 @@ jlink {
 
         // The argument passed to the --name option when running jpackage
         // in the create-installer mode.
-        installerName = 'Launcher'
+        installerName = jpackageInstallerName
 
         // Options for creating the application installer
         installerOptions = [
@@ -697,6 +740,7 @@ jlink {
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
                 // installerType = 'pkg'
+                // installerType = 'dmg'
                 break
             case 'win':
                 imageOptions += [
@@ -753,6 +797,7 @@ jlink {
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
                 // installerType = 'exe' // Inno Setup 5.6.1
+                // installerType = 'msi' // WiX Toolset 3.11
                 break
             case 'linux':
                 imageOptions += [
@@ -798,9 +843,19 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                // installerType = 'deb'
+                // installerType = 'deb' // fakeroot
+                // installerType = 'rpm' // rpm
                 break
         }
     }
 
+}
+
+task jpackageZip(type: Zip, dependsOn: jpackage) {
+    description = 'Creates a zip of the platform-specific application runtime image'
+    metadataCharset = 'UTF-8'
+    destinationDirectory = jpackageInstallerOutputDir
+    archiveFileName = "${jpackageInstallerName}-${applicationVersion}.zip"
+    from "${jpackageImageOutputDir}/${jpackageImageName}"
+    into "${jpackageInstallerName}-${applicationVersion}"
 }
