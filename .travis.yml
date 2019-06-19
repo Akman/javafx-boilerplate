@@ -29,17 +29,17 @@ matrix:
 
   include:
 
-#    - os: linux
-#      dist: xenial
-#      language: java
-#      jdk:
-#        - openjdk11
-#
-#    - os: osx
-#      osx_image: xcode10.1
-#      language: java
-#      jdk:
-#        - openjdk11
+    - os: linux
+      dist: xenial
+      language: java
+      jdk:
+        - openjdk11
+
+    - os: osx
+      osx_image: xcode10.1
+      language: java
+      jdk:
+        - openjdk11
 
     - os: windows
       language: bash
@@ -52,7 +52,7 @@ matrix:
 cache:
   directories:
     - $HOME/.gradle/wrapper/
-    - $HOME/.gradle/caches/
+#    - $HOME/.gradle/caches/
 
 before_install:
   - chmod a+x ./gradlew
@@ -65,8 +65,7 @@ before_script:
   - source .travis.env
 
 script:
-  - ./gradlew clean check jacocoTestReport jpackage --info --stacktrace
-  - ls -al build/jpackage
+  - ./gradlew clean check jacocoTestReport jpackage
 
 # When using caches, it may be useful to run a command just before uploading
 # the new cache archive. For example, the dependency management utility may
@@ -74,9 +73,9 @@ script:
 # to affect the cache.
 # Failure to upload the cache does not mark the job as failed.
 
-before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+# before_cache:
+#   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+#   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
