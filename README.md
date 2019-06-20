@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/Akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/Akman/java-boilerplate-gradle)
 [![Code Coverage](https://codecov.io/gh/Akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/Akman/java-boilerplate-gradle)
 [![Latest Release](https://img.shields.io/github/downloads/Akman/java-boilerplate-gradle/latest/total.svg)](https://github.com/Akman/java-boilerplate-gradle/releases/latest)
-[![License](https://img.shields.io/github/license/Akman/java-boilerplate-gradle.svg)](https://github.com/Akman/java-boilerplate-gradle/LICENSE)
+[![License](https://img.shields.io/github/license/Akman/java-boilerplate-gradle.svg)](https://github.com/Akman/java-boilerplate-gradle/blob/master/LICENSE)
 
 This project aims to cover best practices for Java application development
 as a whole. It provides tool recommendations for linting, testing and packaging.
