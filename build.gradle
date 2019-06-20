@@ -808,7 +808,7 @@ jlink {
 
 task jpackageZip(type: Zip, dependsOn: jpackage) {
     description = 'Creates a zip of the platform-specific runtime image'
-    jpackageInstallerOutputDir.eachDir() {
+    jpackageInstallerOutputDir.eachDir {
       metadataCharset = defaultEncoding
       destinationDirectory = jpackageInstallerOutputDir
       archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
@@ -923,7 +923,7 @@ task releaseUploadAssets {
     mustRunAfter commitNewVersion
     doLast {
         println "Uploads assets for release: $version"
-        jpackageInstallerOutputDir.eachFile() {
+        jpackageInstallerOutputDir.eachFile {
             println it
         }
     }
