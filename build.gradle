@@ -920,7 +920,7 @@ release {
 
 task releaseUploadAssets {
     description = 'Uploads release assets'
-    dependsOn 'release'
+    mustRunAfter commitNewVersion
     doLast {
         println "Uploads assets for release: $version"
         jpackageInstallerOutputDir.eachFile() {
