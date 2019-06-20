@@ -96,7 +96,7 @@ after_success:
 # after_failure:
 
 before_deploy:
-  - echo $VERSION
+  - ls -al build/jpackage
 
 deploy:
   provider: releases
