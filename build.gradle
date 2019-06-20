@@ -924,10 +924,12 @@ release {
 
 createReleaseTag {
     doLast {
-        println "Uploads assets for release: $version"
-        jpackageInstallerOutputDir.eachFile {
-            if (it.isFile()) {
-                println it
+        if (os.isWindows()) {
+            println "Uploads assets for release: $version"
+            jpackageInstallerOutputDir.eachFile {
+                if (it.isFile()) {
+                    println it
+                }
             }
         }
     }
