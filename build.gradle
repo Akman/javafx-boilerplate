@@ -808,12 +808,15 @@ jlink {
 
 task jpackageZip(type: Zip, dependsOn: jpackage) {
     description = 'Creates a zip of the platform-specific runtime image'
-    jpackageInstallerOutputDir.eachDir {
-      metadataCharset = defaultEncoding
-      destinationDirectory = jpackageInstallerOutputDir
-      archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
-      from it
-      into "${jpackageInstallerName}-${applicationVersion}"
+    def fromDir = jpackageInstallerOutputDir.listFiles().find {
+        it.isDirectory()
+    }
+    if (fromDir) {
+        metadataCharset = defaultEncoding
+        destinationDirectory = jpackageInstallerOutputDir
+        archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
+        from fromDir
+        into "${jpackageInstallerName}-${applicationVersion}"
     }
 }
 
@@ -918,13 +921,14 @@ release {
     }
 }
 
-task releaseUploadAssets {
+task releaseUploadAssets(dependsOn: jpackageZip, mustRunAfter: commitNewVersion) {
     description = 'Uploads release assets'
-    mustRunAfter commitNewVersion
     doLast {
         println "Uploads assets for release: $version"
         jpackageInstallerOutputDir.eachFile {
-            println it
+            if (it.isFile()) {
+                println it
+            }
         }
     }
 }
