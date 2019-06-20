@@ -103,7 +103,7 @@ deploy:
   api_key:
     secure: "aMcP2fctVVLdUReCrbsOnhRc/apQg7P85X7AXhNI+GKWB+ODcVQNL76gjJzSVrLelKn8iB9+4IS2zqrwKeNwd+336XuzmDNUGtFbzZp2dMDHQ4V/VV2WjXpqXemEUMblGIrRrEiBNB0GTww9fQ/mt7OqGDWAJDD6oGjnBAkzKfYhdNxiYDdQbDjulzTcI+nzhqwG/eVQkXD04ov/gE/C8VINOzI7DbmpLGzU+m5xV9KTWbGSFBarNfovC+Rl+lTEZ1+/VUyooM1idbSiHLppcjuAVwdeFaKD8AO9nl5cWpdWQxVkqQc6zZEB5Q9Upu+UtPoQAjL7MFl2SwL0pW0p01KicfeTewURX4iGdv3yyEPEsTpBM1Gytw3jCOLfP6QkhUszKAGUXvtqSxttI5eZBzq92S7CxpTiWTMDnzhDv5li3V1WiyF9cZFhauY5X5fdjUJfwbYBBcU4xXB6GsvYszNBuhb+E3UOo3TeQ0ZHCbnRPnHvIlc0VkcUsFKJmJmmamuzbTYAUyQi62d6vZImdY8q+z0omNSwYBUkQz1VOMXWDZBR81X4QzmMNsFiMvbSmuK4VQO/fRW00nkvUt5tfLkGfnts2MxrSX/38038YCGHg+/8HrrhK813RcIqB6hj9g8GMj94t+02ZwtkmFWeEbBnTPx/QiextT4kWj1Kb28="
   file_glob: true
-  file: build/jpackage/*.zip
+  file: build/jpackage/*
   skip_cleanup: true
   on:
     tags: true

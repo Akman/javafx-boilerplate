@@ -74,6 +74,7 @@ ext {
     javaFXVersion = '11.0.2'
     os = org.gradle.internal.os.OperatingSystem.current()
     platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
+    platformNativePrefix = os.getNativePrefix()
     defaultEncoding = 'UTF-8'
     logDir = file("${projectDir}/log")
     mainClass = 'ru.akman.launcher.Launcher'
@@ -853,9 +854,9 @@ jlink {
 
 task jpackageZip(type: Zip, dependsOn: jpackage) {
     description = 'Creates a zip of the platform-specific application runtime image'
-    metadataCharset = 'UTF-8'
+    metadataCharset = defaultEncoding
     destinationDirectory = jpackageInstallerOutputDir
-    archiveFileName = "${jpackageInstallerName}-${applicationVersion}.zip"
+    archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
     from "${jpackageImageOutputDir}/${jpackageImageName}"
     into "${jpackageInstallerName}-${applicationVersion}"
 }
