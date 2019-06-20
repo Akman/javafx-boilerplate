@@ -808,6 +808,7 @@ jlink {
 
 task jpackageZip(type: Zip, dependsOn: jpackage) {
     description = 'Creates a zip of the platform-specific runtime image'
+    mustRunAfter jpackage
     def fromDir = jpackageInstallerOutputDir.listFiles().find {
         it.isDirectory()
     }
