@@ -919,10 +919,10 @@ release {
         // ]
 
     }
+
 }
 
-task releaseUploadAssets(dependsOn: jpackageZip, mustRunAfter: commitNewVersion) {
-    description = 'Uploads release assets'
+createReleaseTag {
     doLast {
         println "Uploads assets for release: $version"
         jpackageInstallerOutputDir.eachFile {
