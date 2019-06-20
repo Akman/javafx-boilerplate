@@ -96,7 +96,7 @@ after_success:
 # after_failure:
 
 before_deploy:
-  - echo "Deploying version: $VERSION"
+  - echo $VERSION
 
 deploy:
   provider: releases
@@ -108,7 +108,6 @@ deploy:
   on:
     tags: true
 
-after_deploy:
-  - echo "Deployed version: $VERSION"
+# after_deploy:
 
 # after_script:
