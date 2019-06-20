@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.util.regex.Matcher;
+
 plugins {
 
     id 'application'
@@ -469,112 +471,6 @@ run {
     ]
 }
 
-release {
-
-    // Fail when there un-committed changes.
-    failOnCommitNeeded = true
-
-    // Fail when there are local commits that haven't been published upstream.
-    failOnPublishNeeded = true
-
-    // Fail when the project has dependencies on SNAPSHOT versions unless
-    // those SNAPSHOT dependencies have been defined
-    // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
-    failOnSnapshotDependencies = true
-
-    // Fail when files are found that are not under version control.
-    failOnUnversionedFiles = true
-
-    // Fail when the source needs to be updated, or there are changes
-    // available upstream that haven't been pulled.
-    failOnUpdateNeeded = true
-
-    // Should the plugin revert it's changes to gradle.properties
-    // when a failure occurs.
-    revertOnFail = true
-
-    // The string template which is used to generate the tag name.
-    // Possible variables are $version and $name.
-    // Always ensure to use single-quotes, otherwise "$" is interpreted
-    // already in your build script.
-    tagTemplate = 'v${version}'
-
-    // This will be prepended to all commits done by the plugin.
-    // A good place for code review, or ticket numbers.
-    preCommitText = ''
-
-    // The commit message used to commit the non-SNAPSHOT version
-    // if SNAPSHOT was used.
-    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
-
-    // The commit message used when creating the tag.
-    // Not used with BZR projects.
-    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
-
-    // The commit message used when committing the next version.
-    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
-
-    // The version suffix used by the project's version (if used).
-    snapshotSuffix = '-SNAPSHOT'
-
-    versionPropertyFile = 'gradle.properties'
-
-    versionProperties = []
-
-    buildTasks = [
-        'build',
-        'jpackage',
-        'jpackageZip'
-    ]
-
-    ignoredSnapshotDependencies = []
-
-    versionPatterns = [
-        /(\d+)\.(\d+)\.(\d+)(.*$)/: { Matcher m, Project p ->
-            m.each { println it }
-            m.replaceAll("${m[0][1]}${(m[0][2] as int) + 1}${m[0][3]}${m[0][4]}")
-        }
-    ]
-
-    // (GIT only) If set to the name of a branch, the "release" task will
-    // commit the release on this branch, and the next version
-    // on the working branch.
-    pushReleaseVersionBranch = false
-
-    git {
-
-        // Defines the branch which releases must be done off of.
-        // Eg. set to "release" to require releases are done on
-        // the "release" branch (or use a regular expression to allow releases
-        // from multiple branches, e.g. "/release|master/").
-        // Set to '' to ignore.
-        requireBranch = 'master'
-
-        pushToBranchPrefix = ''
-
-        pushToRemote = 'origin'
-
-        commitVersionFileOnly = false
-
-        // Adds `-s` parameter to the tag command
-        signTag = false
-
-        // Defines an array of options to add to the git adapter during a push.
-        // This could be useful to have the vc hooks skipped during a release.
-        // pushOptions = [
-        //     '--no-verify',
-        // ]
-
-    }
-}
-
-task releaseUploadAssets(dependsOn: release) {
-    description = "Uploads assets for release: $version"
-    jpackageInstallerOutputDir.eachFile() {
-        println it
-    }
-}
-
 jlink {
 
     // The directory into which the custom runtime image should be generated.
@@ -918,5 +814,116 @@ task jpackageZip(type: Zip, dependsOn: jpackage) {
       archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
       from it
       into "${jpackageInstallerName}-${applicationVersion}"
+    }
+}
+
+release {
+
+    // Fail when there un-committed changes.
+    failOnCommitNeeded = true
+
+    // Fail when there are local commits that haven't been published upstream.
+    failOnPublishNeeded = true
+
+    // Fail when the project has dependencies on SNAPSHOT versions unless
+    // those SNAPSHOT dependencies have been defined
+    // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
+    failOnSnapshotDependencies = true
+
+    // Fail when files are found that are not under version control.
+    failOnUnversionedFiles = true
+
+    // Fail when the source needs to be updated, or there are changes
+    // available upstream that haven't been pulled.
+    failOnUpdateNeeded = true
+
+    // Should the plugin revert it's changes to gradle.properties
+    // when a failure occurs.
+    revertOnFail = true
+
+    // The string template which is used to generate the tag name.
+    // Possible variables are $version and $name.
+    // Always ensure to use single-quotes, otherwise "$" is interpreted
+    // already in your build script.
+    tagTemplate = 'v${version}'
+
+    // This will be prepended to all commits done by the plugin.
+    // A good place for code review, or ticket numbers.
+    preCommitText = ''
+
+    // The commit message used to commit the non-SNAPSHOT version
+    // if SNAPSHOT was used.
+    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+
+    // The commit message used when creating the tag.
+    // Not used with BZR projects.
+    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+
+    // The commit message used when committing the next version.
+    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+
+    // TODO: unknown property 'snapshotSuffix'
+    // The version suffix used by the project's version (if used).
+    // snapshotSuffix = '-SNAPSHOT'
+
+    versionPropertyFile = 'gradle.properties'
+
+    versionProperties = []
+
+    versionPatterns = [
+        /(\d+)\.(\d+)\.(\d+)(.*$)/: { Matcher m, Project p ->
+            m.replaceAll("${m[0][1]}${(m[0][2] as int) + 1}${m[0][3]}${m[0][4]}")
+        },
+    ]
+
+    buildTasks = [
+        'build',
+        'jpackage',
+        'jpackageZip',
+    ]
+
+    // TODO: unknown property 'ignoredSnapshotDependencies'
+    // ignoredSnapshotDependencies = []
+
+    // TODO: unknown property 'pushReleaseVersionBranch'
+    // (GIT only) If set to the name of a branch, the "release" task will
+    // commit the release on this branch, and the next version
+    // on the working branch.
+    // pushReleaseVersionBranch = false
+
+    git {
+
+        // Defines the branch which releases must be done off of.
+        // Eg. set to "release" to require releases are done on
+        // the "release" branch (or use a regular expression to allow releases
+        // from multiple branches, e.g. "/release|master/").
+        // Set to '' to ignore.
+        requireBranch = 'master'
+
+        pushToBranchPrefix = ''
+
+        pushToRemote = 'origin'
+
+        commitVersionFileOnly = false
+
+        // Adds `-s` parameter to the tag command
+        signTag = false
+
+        // Defines an array of options to add to the git adapter during a push.
+        // This could be useful to have the vc hooks skipped during a release.
+        // pushOptions = [
+        //     '--no-verify',
+        // ]
+
+    }
+}
+
+task releaseUploadAssets(dependsOn: release) {
+    description = 'Uploads release assets'
+    doLast {
+        println "Uploads assets for release: $version"
+        jpackageInstallerOutputDir.eachFile() {
+            println it
+        }
     }
 }
