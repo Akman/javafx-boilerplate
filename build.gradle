@@ -872,7 +872,7 @@ release {
 
     versionPatterns = [
         /(\d+)\.(\d+)\.(\d+)(.*$)/: { Matcher m, Project p ->
-            m.replaceAll("${m[0][1]}${(m[0][2] as int) + 1}${m[0][3]}${m[0][4]}")
+            m.replaceAll("${m[0][1]}.${(m[0][2] as int) + 1}.0${m[0][4]}")
         },
     ]
 
@@ -918,8 +918,9 @@ release {
     }
 }
 
-task releaseUploadAssets(dependsOn: release) {
+task releaseUploadAssets {
     description = 'Uploads release assets'
+    dependsOn 'release'
     doLast {
         println "Uploads assets for release: $version"
         jpackageInstallerOutputDir.eachFile() {
