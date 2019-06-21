@@ -880,7 +880,7 @@ release {
 
     buildTasks = [
         'build',
-        'jpackage',
+        'jpackageZip',
     ]
 
     // TODO: unknown property 'ignoredSnapshotDependencies'
