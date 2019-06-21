@@ -808,16 +808,14 @@ jlink {
 
 task jpackageZip(type: Zip, dependsOn: jpackage) {
     description = 'Creates a zip of the platform-specific runtime image'
-    mustRunAfter jpackage
-    def fromDir = jpackageInstallerOutputDir.listFiles().find {
-        it.isDirectory()
-    }
-    if (fromDir) {
-        metadataCharset = defaultEncoding
-        destinationDirectory = jpackageInstallerOutputDir
-        archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
-        from fromDir
-        into "${jpackageInstallerName}-${applicationVersion}"
+    metadataCharset = defaultEncoding
+    destinationDirectory = jpackageInstallerOutputDir
+    archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
+    into "${jpackageInstallerName}-${applicationVersion}"
+    from {
+        jpackageInstallerOutputDir.listFiles().find {
+            it.isDirectory()
+        }
     }
 }
 
@@ -883,7 +881,6 @@ release {
     buildTasks = [
         'build',
         'jpackage',
-        'jpackageZip',
     ]
 
     // TODO: unknown property 'ignoredSnapshotDependencies'
