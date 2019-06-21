@@ -95,8 +95,7 @@ after_success:
 
 # after_failure:
 
-before_deploy:
-  - ls -al build/jpackage
+# before_deploy:
 
 deploy:
   provider: releases
