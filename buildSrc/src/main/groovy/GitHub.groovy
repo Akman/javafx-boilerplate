@@ -139,6 +139,7 @@ class GitHub {
     public void upload(File file) {
         print 'Uploading file: ' + file.getName() + ' ... '
         String response = curl([
+            '-s',
             '-H', '"Content-Type: application/octet-stream"',
             '--data-binary', '@' + file.toString(),
             getAssetUrl(file.getName())
