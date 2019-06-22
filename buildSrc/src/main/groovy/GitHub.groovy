@@ -21,6 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import org.gradle.api.tasks.StopExecutionException
 import groovy.json.JsonSlurper
 
 class GitHub {
