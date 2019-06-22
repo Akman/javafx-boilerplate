@@ -23,100 +23,168 @@
 
 import groovy.json.JsonSlurper
 
+class GitHub {
+
+    private static final String API_URL = 'https://api.github.com/repos'
+    private static final String UPLOADS_URL = 'https://uploads.github.com/repos'
+
+    private static final JsonSlurper jsonSlurper = new JsonSlurper()
+
+    private String owner
+    private String token
+    private String repo
+    private String branch
+    private String tag
+
+    private String releaseId
+
+    private static String execute(List<String> command) {
+        return execute(command.join(' '))
+    }
+
+    private static String execute(String command) {
+        StringBuffer outputStream = new StringBuffer()
+        Process process = command.execute()
+        process.waitForProcessOutput(outputStream, System.err)
+        return outputStream.toString().trim()
+    }
+
+    private String getAuthToken() {
+        return '-H "Authorization: token ' + token + '"'
+    }
+
+    private String getAuthUrl() {
+        return [ API_URL, owner, repo ].join('/')
+    }
+
+    private String getTagUrl() {
+        List<String> result = [ API_URL, owner, repo, 'releases' ]
+        result += tag == 'latest' ? [ 'latest' ] : [ 'tags', tag ]
+        return result.join('/')
+    }
+
+    private String getAssetUrl(String fileName) {
+        return [
+            UPLOADS_URL, owner, repo, 'releases',
+            releaseId, 'assets?name=', fileName
+        ].join('/')
+    }
+
+    private String git(List<String> command) {
+        return git(command.join(' '))
+    }
+
+    private String git(String command) {
+        return execute('git ' + command)
+    }
+
+    private String curl(List<String> command) {
+        return curl(command.join(' '))
+    }
+
+    private String curl(String command) {
+        return execute('curl ' + getAuthToken() + ' ' + command)
+    }
+
+    private void auth() {
+        print 'Authorization begin ... '
+        String response = curl([ '-s', getAuthUrl() ])
+        def json = jsonSlurper.parseText(response)
+        if (json.name != repo) {
+            println ''
+            println 'Error: Authorization failed!'
+            println response
+            throw new StopExecutionException('Error: Authorization failed!')
+        } else {
+            println 'OK'
+        }
+    }
+
+    private void release() {
+        print 'Get release ... '
+        String response = curl([ '-s', getTagUrl() ])
+        def json = jsonSlurper.parseText(response)
+        if (!json.id) {
+            println ''
+            println 'Error: Failed to get release!'
+            println response
+            throw new StopExecutionException('Error: Failed to get release!')
+        } else {
+            releaseId = json.id
+            println 'OK'
+        }
+    }
+
+    public GitHub() {
+        this('latest')
+    }
+
+    public GitHub(String releaseTag) {
+        tag = releaseTag
+        branch = git([ 'rev-parse', '--abbrev-ref', 'HEAD' ])
+        token = git([ 'config', '--global', 'github.token' ])
+        (owner, repo) = git([ 'config', '--get', 'remote.origin.url' ])
+            .replaceAll(/^.+\:/, '')
+            .replaceAll(/\.git$/, '')
+            .tokenize('/')
+        auth()
+        release()
+        println 'Tag: ' + tag + ' [' + releaseId + ']'
+        println 'Owner: ' + owner
+        println 'Repo: ' + repo
+        println 'Branch: ' + branch
+    }
+
+    public void upload(File file) {
+        print 'Uploading file: ' + file.getName() + ' ... '
+        // String response = curl([
+        //     '-H', '"Content-Type: application/octet-stream"',
+        //     '--data-binary', '@' + file.toString(),
+        //     getAssetUrl(file.getName())
+        // ])
+        // def json = jsonSlurper.parseText(response)
+        // if (json.state != 'uploaded') {
+        //     println ''
+        //     println 'Error: Failed to upload file!'
+        //     println response
+        //     throw new StopExecutionException('Error: Failed to upload file!')
+        // } else {
+        //     println 'OK'
+        // }
+    }
+
+}
+
 task uploadReleaseAssets {
+    description = 'Upload GitHub releases assets (Windows only)'
     doLast {
-        def os = org.gradle.internal.os.OperatingSystem.current()
         if (os.isWindows()) {
-
-            def json = new JsonSlurper()
-
-            def TAG = 'latest'
-
-            def tokenCmd = ['git', 'config', '--global', 'github.token']
-            def tokenOutputStream = new StringBuffer()
-            def tokenProcess = tokenCmd.execute()
-            tokenProcess.waitForProcessOutput(tokenOutputStream, System.err)
-            def TOKEN = tokenOutputStream.toString().trim()
-
-            def repoCmd = ['git', 'config', '--get', 'remote.origin.url']
-            def repoOutputStream = new StringBuffer()
-            def repoProcess = repoCmd.execute()
-            repoProcess.waitForProcessOutput(repoOutputStream, System.err)
-            def (OWNER, REPO) = repoOutputStream.toString().trim()
-                .replaceAll(/^.+\:/, '')
-                .replaceAll(/\.git$/, '')
-                .tokenize('/')
-
-            def branchCmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD']
-            def branchOutputStream = new StringBuffer()
-            def branchProcess = branchCmd.execute()
-            branchProcess.waitForProcessOutput(branchOutputStream, System.err)
-            def BRANCH = branchOutputStream.toString().trim()
-
-            def API_URL = 'https://api.github.com/repos'
-            def UPLOADS_URL = 'https://uploads.github.com/repos'
-            def TAG_URL = "$API_URL/$OWNER/$REPO/releases/tags/$TAG"
-            if (TAG == 'latest') {
-                TAG_URL = "$API_URL/$OWNER/$REPO/releases/latest"
-            }
-
-            println "Upload assets for release: $TAG"
-            println "Owner: $OWNER"
-            println "Repo: $REPO"
-            println "Branch: $BRANCH"
- 
-            println 'Authorization begin ...'
-            def authCmd = ['curl', '-s', '-H', "\"Authorization: token $TOKEN\"", "$API_URL/$OWNER/$REPO"]
-            def authOutputStream = new StringBuffer()
-            def authProcess = authCmd.execute()
-            authProcess.waitForProcessOutput(authOutputStream, System.err)
-            def authJson = json.parseText(authOutputStream.toString())
-            if (authJson.name != REPO) {
-                println 'Error: Authorization failed!'
-                println authOutputStream.toString()
-                throw new StopExecutionException('Error: Authorization failed!')
-            } else {
-                println 'OK'
-            }
-
-            println 'Get release ...'
-            def releaseCmd = ['curl', '-s', '-H', "\"Authorization: token $TOKEN\"", TAG_URL]
-            def releaseOutputStream = new StringBuffer()
-            def releaseProcess = releaseCmd.execute()
-            releaseProcess.waitForProcessOutput(releaseOutputStream, System.err)
-            def releaseJson = json.parseText(releaseOutputStream.toString())
-            def RELEASE_ID = releaseJson.id
-            if (!RELEASE_ID) {
-                println 'Error: Failed to get release!'
-                println releaseOutputStream.toString()
-                throw new StopExecutionException('Error: Failed to get release!')
-            } else {
-                println "Release ID: $RELEASE_ID"
-            }
-
-            def ASSET_URL_PREFIX = "$UPLOADS_URL/$OWNER/$REPO/releases/$RELEASE_ID/assets?name="
+            def gitHub = new GitHub( /* latest */ )
             jpackageInstallerOutputDir.eachFile {
                 if (it.isFile()) {
-                    println 'Uploading file: ' + it.getName()
-                    def uploadCmd = ['curl', '-s',
-                        '-H', "\"Authorization: token $TOKEN\"",
-                        '-H', '"Content-Type: application/octet-stream"',
-                        '--data-binary', "@$it", ASSET_URL_PREFIX + it.getName()
-                    ]
-                    def uploadOutputStream = new StringBuffer()
-                    def uploadProcess = uploadCmd.execute()
-                    uploadProcess.waitForProcessOutput(uploadOutputStream, System.err)
-                    def uploadJson = json.parseText(uploadOutputStream.toString())
-                    if (uploadJson.state != 'uploaded') {
-                        println 'Error: Failed to upload file!'
-                        println uploadOutputStream.toString()
-                        throw new StopExecutionException('Error: Failed to upload file!')
-                    } else {
-                        println 'OK'
-                    }
+                    gitHub.upload(it)
                 }
             }
+        }
+    }
+}
 
+// Task from net.researchgate.release plugin
+createReleaseTag {
+    doLast {
+        if (os.isWindows()) {
+            println 'Upload GitHub releases assets (Windows only)'
+            def engine = new groovy.text.SimpleTemplateEngine()
+            def tag = engine.createTemplate(release.tagTemplate).make([
+                name: name,
+                version: version
+            ]).toString()
+            def gitHub = new GitHub(tag)
+            jpackageInstallerOutputDir.eachFile {
+                if (it.isFile()) {
+                    gitHub.upload(it)
+                }
+            }
         }
     }
 }

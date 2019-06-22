@@ -63,6 +63,9 @@ plugins {
 
 }
 
+apply from: 'gradle/filteredResources.gradle'
+apply from: 'gradle/uploadReleaseAssets.gradle'
+
 repositories {
     mavenCentral()
     jcenter()
@@ -165,8 +168,6 @@ license {
         email = 'akman.ru@gmail.com'
     }
 }
-
-apply from: 'gradle/filteredResources.gradle'
 
 // processResourcesFiltered {
 //     include 'filtered/'
@@ -917,108 +918,3 @@ release {
     }
 
 }
-
-createReleaseTag {
-    doLast {
-        if (os.isWindows()) {
-            def engine = new groovy.text.SimpleTemplateEngine()
-            def json = new groovy.json.JsonSlurper()
-
-            def TAG = engine.createTemplate(release.tagTemplate).make([
-                name: name,
-                version: version
-            ]).toString()
-
-            // def TAG = 'latest'
-
-            def BRANCH = release.git.requireBranch
-
-            // def branchCmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD']
-            // def branchOutputStream = new StringBuffer()
-            // def branchProcess = branchCmd.execute()
-            // branchProcess.waitForProcessOutput(branchOutputStream, System.err)
-            // def BRANCH = branchOutputStream.toString().trim()
-
-            def repoCmd = ['git', 'config', '--get', 'remote.origin.url']
-            def repoOutputStream = new StringBuffer()
-            def repoProcess = repoCmd.execute()
-            repoProcess.waitForProcessOutput(repoOutputStream, System.err)
-            def (OWNER, REPO) = repoOutputStream.toString().trim()
-                .replaceAll(/^.+\:/, '')
-                .replaceAll(/\.git$/, '')
-                .tokenize('/')
-
-            def tokenCmd = ['git', 'config', '--global', 'github.token']
-            def tokenOutputStream = new StringBuffer()
-            def tokenProcess = tokenCmd.execute()
-            tokenProcess.waitForProcessOutput(tokenOutputStream, System.err)
-            def TOKEN = tokenOutputStream.toString().trim()
-
-            def API_URL = 'https://api.github.com/repos'
-            def UPLOADS_URL = 'https://uploads.github.com/repos'
-            def TAG_URL = "$API_URL/$OWNER/$REPO/releases/tags/$TAG"
-            if (TAG == 'latest') {
-                TAG_URL = "$API_URL/$OWNER/$REPO/releases/latest"
-            }
-
-            println "Upload assets for release: $TAG"
-            println "Owner: $OWNER"
-            println "Repo: $REPO"
-            println "Branch: $BRANCH"
- 
-            println 'Authorization begin ...'
-            def authCmd = ['curl', '-s', '-H', "\"Authorization: token $TOKEN\"", "$API_URL/$OWNER/$REPO"]
-            def authOutputStream = new StringBuffer()
-            def authProcess = authCmd.execute()
-            authProcess.waitForProcessOutput(authOutputStream, System.err)
-            def authJson = json.parseText(authOutputStream.toString())
-            if (authJson.name != REPO) {
-                println 'Error: Authorization failed!'
-                println authOutputStream.toString()
-                throw new StopExecutionException('Error: Authorization failed!')
-            } else {
-                println 'OK'
-            }
-
-            println 'Get release ...'
-            def releaseCmd = ['curl', '-s', '-H', "\"Authorization: token $TOKEN\"", TAG_URL]
-            def releaseOutputStream = new StringBuffer()
-            def releaseProcess = releaseCmd.execute()
-            releaseProcess.waitForProcessOutput(releaseOutputStream, System.err)
-            def releaseJson = json.parseText(releaseOutputStream.toString())
-            def RELEASE_ID = releaseJson.id
-            if (!RELEASE_ID) {
-                println 'Error: Failed to get release!'
-                println releaseOutputStream.toString()
-                throw new StopExecutionException('Error: Failed to get release!')
-            } else {
-                println "Release ID: $RELEASE_ID"
-            }
-
-            def ASSET_URL_PREFIX = "$UPLOADS_URL/$OWNER/$REPO/releases/$RELEASE_ID/assets?name="
-            jpackageInstallerOutputDir.eachFile {
-                if (it.isFile()) {
-                    println 'Uploading file: ' + it.getName()
-                    // def uploadCmd = ['curl', '-s',
-                    //     '-H', "\"Authorization: token $TOKEN\"",
-                    //     '-H', '"Content-Type: application/octet-stream"',
-                    //     '--data-binary', "@$it", ASSET_URL_PREFIX + it.getName()
-                    // ]
-                    // def uploadOutputStream = new StringBuffer()
-                    // def uploadProcess = uploadCmd.execute()
-                    // uploadProcess.waitForProcessOutput(uploadOutputStream, System.err)
-                    // def uploadJson = json.parseText(uploadOutputStream.toString())
-                    // if (uploadJson.state != 'uploaded') {
-                    //     println 'Error: Failed to upload file!'
-                    //     println uploadOutputStream.toString()
-                    //     throw new StopExecutionException('Error: Failed to upload file!')
-                    // } else {
-                    //     println 'OK'
-                    // }
-                }
-            }
-        }
-    }
-}
-
-apply from: 'gradle/uploadReleaseAssets.gradle'
