@@ -66,9 +66,8 @@ class GitHub {
 
     private String getAssetUrl(String fileName) {
         return [
-            UPLOADS_URL, owner, repo, 'releases',
-            releaseId, 'assets?name=', fileName
-        ].join('/')
+            UPLOADS_URL, owner, repo, 'releases', releaseId, 'assets?name='
+        ].join('/') + fileName
     }
 
     private String git(List<String> command) {
