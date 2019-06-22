@@ -155,3 +155,19 @@ class GitHub {
     }
 
 }
+
+// import java.io.*
+// import groovyx.net.http.HTTPBuilder
+// import groovyx.net.http.EncoderRegistry
+// import static groovyx.net.http.Method.*
+// import static groovyx.net.http.ContentType.*
+// def http = new groovyx.net.http.HTTPBuilder("http://local.com:8983/solr/update/json")
+// http.request(POST, JSON ) { req ->
+//     req.body{
+// 
+//     }
+//     response.success = { resp, reader ->
+//         println "$resp.statusLine   Respond rec"
+// 
+//     }
+// }
