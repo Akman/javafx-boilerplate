@@ -122,36 +122,36 @@ class GitHub {
 
     public GitHub(String releaseTag) {
         tag = releaseTag
+        println 'Tag: ' + tag
         branch = git([ 'rev-parse', '--abbrev-ref', 'HEAD' ])
-        token = git([ 'config', '--global', 'github.token' ])
+        println 'Branch: ' + branch
         (owner, repo) = git([ 'config', '--get', 'remote.origin.url' ])
             .replaceAll(/^.+\:/, '')
             .replaceAll(/\.git$/, '')
             .tokenize('/')
-        auth()
-        release()
-        println 'Tag: ' + tag + ' [' + releaseId + ']'
         println 'Owner: ' + owner
         println 'Repo: ' + repo
-        println 'Branch: ' + branch
+        token = git([ 'config', '--global', 'github.token' ])
+        auth()
+        release()
     }
 
     public void upload(File file) {
         print 'Uploading file: ' + file.getName() + ' ... '
-        // String response = curl([
-        //     '-H', '"Content-Type: application/octet-stream"',
-        //     '--data-binary', '@' + file.toString(),
-        //     getAssetUrl(file.getName())
-        // ])
-        // def json = jsonSlurper.parseText(response)
-        // if (json.state != 'uploaded') {
-        //     println ''
-        //     println 'Error: Failed to upload file!'
-        //     println response
-        //     throw new StopExecutionException('Error: Failed to upload file!')
-        // } else {
-        //     println 'OK'
-        // }
+        String response = curl([
+            '-H', '"Content-Type: application/octet-stream"',
+            '--data-binary', '@' + file.toString(),
+            getAssetUrl(file.getName())
+        ])
+        def json = jsonSlurper.parseText(response)
+        if (json.state != 'uploaded') {
+            println ''
+            println 'Error: Failed to upload file!'
+            println response
+            throw new StopExecutionException('Error: Failed to upload file!')
+        } else {
+            println 'OK'
+        }
     }
 
 }
