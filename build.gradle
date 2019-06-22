@@ -63,9 +63,6 @@ plugins {
 
 }
 
-apply from: 'gradle/filteredResources.gradle'
-apply from: 'gradle/uploadReleaseAssets.gradle'
-
 repositories {
     mavenCentral()
     jcenter()
@@ -168,6 +165,8 @@ license {
         email = 'akman.ru@gmail.com'
     }
 }
+
+apply from: 'gradle/filteredResources.gradle'
 
 // processResourcesFiltered {
 //     include 'filtered/'
@@ -918,3 +917,5 @@ release {
     }
 
 }
+
+apply from: 'gradle/uploadReleaseAssets.gradle'
