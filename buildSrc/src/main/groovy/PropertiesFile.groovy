@@ -42,33 +42,3 @@ class PropertiesFile {
         return propertiesMap
    }
 }
-
-task processResourcesFiltered(type: Copy) {
-    description = 'Processes filtered resources'
-    sourceSets.main.resources.srcDirs.each {
-        def filteredDir = new File(it, 'filtered')
-        def filtersDir = new File(it, 'filters')
-        def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new PropertiesFile(filterFile)
-        from filteredDir
-        into sourceSets.main.output.resourcesDir
-        expand filter.properties + project.properties + System.properties
-    }
-}
-
-processResources.dependsOn processResourcesFiltered
-
-task processTestResourcesFiltered(type: Copy) {
-    description = 'Processes filtered test resources'
-    sourceSets.test.resources.srcDirs.each {
-        def filteredDir = new File(it, 'filtered')
-        def filtersDir = new File(it, 'filters')
-        def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new PropertiesFile(filterFile)
-        from filteredDir
-        into sourceSets.test.output.resourcesDir
-        expand filter.properties + project.properties + System.properties
-    }
-}
-
-processTestResources.dependsOn processTestResourcesFiltered

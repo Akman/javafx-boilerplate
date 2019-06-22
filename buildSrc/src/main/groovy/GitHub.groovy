@@ -154,37 +154,3 @@ class GitHub {
     }
 
 }
-
-task uploadReleaseAssets {
-    description = 'Upload GitHub releases assets (Windows only)'
-    doLast {
-        if (os.isWindows()) {
-            def gitHub = new GitHub( /* latest */ )
-            jpackageInstallerOutputDir.eachFile {
-                if (it.isFile()) {
-                    gitHub.upload(it)
-                }
-            }
-        }
-    }
-}
-
-// Task from net.researchgate.release plugin
-createReleaseTag {
-    doLast {
-        if (os.isWindows()) {
-            println 'Upload GitHub releases assets (Windows only)'
-            def engine = new groovy.text.SimpleTemplateEngine()
-            def tag = engine.createTemplate(release.tagTemplate).make([
-                name: name,
-                version: version
-            ]).toString()
-            def gitHub = new GitHub(tag)
-            jpackageInstallerOutputDir.eachFile {
-                if (it.isFile()) {
-                    gitHub.upload(it)
-                }
-            }
-        }
-    }
-}

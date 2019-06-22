@@ -22,7 +22,6 @@
  */
 
 plugins {
-
     id 'application'
 
     // https://docs.gradle.com/build-scan-plugin
@@ -60,7 +59,6 @@ plugins {
 
     // id 'idea'
     // id 'eclipse'
-
 }
 
 repositories {
@@ -82,7 +80,7 @@ ext {
     jpackageImageOutputDir = file("${buildDir}/${jpackageOutputDir}")
     jpackageImageName = 'Launcher'
     jpackageInstallerOutputDir = file("${buildDir}/${jpackageOutputDir}")
-    jpackageInstallerName = 'Launcher'
+    jpackageInstallerName = 'Launcher' // "-${platformNativePrefix}"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -166,7 +164,18 @@ license {
     }
 }
 
-apply from: 'gradle/filteredResources.gradle'
+task processResourcesFiltered(type: Copy) {
+    description = 'Processes filtered resources'
+    sourceSets.main.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new PropertiesFile(filterFile)
+        from filteredDir
+        into sourceSets.main.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
+}
 
 // processResourcesFiltered {
 //     include 'filtered/'
@@ -176,7 +185,21 @@ apply from: 'gradle/filteredResources.gradle'
 // }
 
 processResources {
+    dependsOn processResourcesFiltered
     exclude 'filtered/', 'filters/'
+}
+
+task processTestResourcesFiltered(type: Copy) {
+    description = 'Processes filtered test resources'
+    sourceSets.test.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new PropertiesFile(filterFile)
+        from filteredDir
+        into sourceSets.test.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
 }
 
 // processTestResourcesFiltered {
@@ -187,6 +210,7 @@ processResources {
 // }
 
 processTestResources {
+    dependsOn processTestResourcesFiltered
     exclude 'filtered/', 'filters/'
 }
 
@@ -561,7 +585,7 @@ jlink {
     // directory with jpackage tool.
     jpackage {
 
-        skipInstaller = true
+        skipInstaller = false
 
         // Convenience property for setting both imageOutputDir and
         // installerOutputDir with the value "${buildDir}/${outputDir}".
@@ -918,4 +942,35 @@ release {
 
 }
 
-apply from: 'gradle/uploadReleaseAssets.gradle'
+createReleaseTag {
+    doLast {
+        if (os.isWindows()) {
+            println 'Upload GitHub releases assets (Windows only)'
+            def engine = new groovy.text.SimpleTemplateEngine()
+            def tag = engine.createTemplate(release.tagTemplate).make([
+                name: name,
+                version: version
+            ]).toString()
+            def gitHub = new GitHub(tag)
+            jpackageInstallerOutputDir.eachFile {
+                if (it.isFile()) {
+                    gitHub.upload(it)
+                }
+            }
+        }
+    }
+}
+
+task uploadReleaseAssets {
+    description = 'Upload GitHub releases assets (Windows only)'
+    doLast {
+        if (os.isWindows()) {
+            def gitHub = new GitHub( /* latest */ )
+            jpackageInstallerOutputDir.eachFile {
+                if (it.isFile()) {
+                    gitHub.upload(it)
+                }
+            }
+        }
+    }
+}
