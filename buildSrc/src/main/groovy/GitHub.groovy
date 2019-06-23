@@ -87,31 +87,29 @@ class GitHub {
     }
 
     private void auth() {
-        print 'Authorization begin ... '
+        logger.lifecycle('Authorization begin ...')
         String response = curl([ '-s', getAuthUrl() ])
         def json = jsonSlurper.parseText(response)
         if (json.name != repo) {
-            println ''
-            println 'Error: Authorization failed!'
-            println response
+            logger.error('Error: Authorization failed!')
+            logger.error(response)
             throw new StopExecutionException('Error: Authorization failed!')
         } else {
-            println 'OK'
+            logger.lifecycle('OK')
         }
     }
 
     private void release() {
-        print 'Get release ... '
+        logger.lifecycle('Get release ...')
         String response = curl([ '-s', getTagUrl() ])
         def json = jsonSlurper.parseText(response)
         if (!json.id) {
-            println ''
-            println 'Error: Failed to get release!'
-            println response
+            logger.error('Error: Failed to get release!')
+            logger.error(response)
             throw new StopExecutionException('Error: Failed to get release!')
         } else {
             releaseId = json.id
-            println 'OK'
+            logger.lifecycle('OK')
         }
     }
 
@@ -121,22 +119,22 @@ class GitHub {
 
     public GitHub(String releaseTag) {
         tag = releaseTag
-        println 'Tag: ' + tag
+        logger.lifecycle('Tag: ' + tag)
         branch = git([ 'rev-parse', '--abbrev-ref', 'HEAD' ])
-        println 'Branch: ' + branch
+        logger.lifecycle(Branch: ' + branch)
         (owner, repo) = git([ 'config', '--get', 'remote.origin.url' ])
             .replaceAll(/^.+\:/, '')
             .replaceAll(/\.git$/, '')
             .tokenize('/')
-        println 'Owner: ' + owner
-        println 'Repo: ' + repo
+        logger.lifecycle('Owner: ' + owner)
+        logger.lifecycle('Repo: ' + repo)
         token = git([ 'config', '--global', 'github.token' ])
         auth()
         release()
     }
 
     public void upload(File file) {
-        print 'Uploading file: ' + file.getName() + ' ... '
+        logger.lifecycle('Uploading file: ' + file.getName() + ' ...')
         String response = curl([
             '-s',
             '-H', '"Content-Type: application/octet-stream"',
@@ -145,12 +143,11 @@ class GitHub {
         ])
         def json = jsonSlurper.parseText(response)
         if (json.state != 'uploaded') {
-            println ''
-            println 'Error: Failed to upload file!'
-            println response
+            logger.error('Error: Failed to upload file!')
+            logger.error(response)
             throw new StopExecutionException('Error: Failed to upload file!')
         } else {
-            println 'OK'
+            logger.lifecycle('OK')
         }
     }
 

@@ -46,7 +46,7 @@ plugins {
     id 'com.github.spotbugs' version '2.0.0'
 
     // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '2.6.0'
+    id 'net.researchgate.release' version '2.8.0'
     
     // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
     id 'checkstyle'
@@ -886,9 +886,8 @@ release {
     // The commit message used when committing the next version.
     newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
 
-    // TODO: unknown property 'snapshotSuffix'
     // The version suffix used by the project's version (if used).
-    // snapshotSuffix = '-SNAPSHOT'
+    snapshotSuffix = '-SNAPSHOT'
 
     versionPropertyFile = 'gradle.properties'
 
@@ -905,14 +904,12 @@ release {
         'jpackageZip',
     ]
 
-    // TODO: unknown property 'ignoredSnapshotDependencies'
-    // ignoredSnapshotDependencies = []
+    ignoredSnapshotDependencies = []
 
-    // TODO: unknown property 'pushReleaseVersionBranch'
     // (GIT only) If set to the name of a branch, the "release" task will
     // commit the release on this branch, and the next version
     // on the working branch.
-    // pushReleaseVersionBranch = false
+    pushReleaseVersionBranch = false
 
     git {
 
@@ -949,7 +946,7 @@ createReleaseTag {
             def engine = new groovy.text.SimpleTemplateEngine()
             def tag = engine.createTemplate(release.tagTemplate).make([
                 name: name,
-                version: version
+                version: applicationVersion
             ]).toString()
             def gitHub = new GitHub(tag)
             jpackageInstallerOutputDir.eachFile {
