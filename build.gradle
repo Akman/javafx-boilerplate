@@ -886,9 +886,6 @@ release {
     // The commit message used when committing the next version.
     newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
 
-    // The version suffix used by the project's version (if used).
-    snapshotSuffix = '-SNAPSHOT'
-
     versionPropertyFile = 'gradle.properties'
 
     versionProperties = []
