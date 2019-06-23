@@ -49,8 +49,14 @@ class GitHub {
 
     private static String execute(String command) {
         StringBuffer outputStream = new StringBuffer()
-        Process process = command.execute()
-        process.waitForProcessOutput(outputStream, System.err)
+        try {
+            Process process = command.execute()
+            process.waitForProcessOutput(outputStream, System.err)
+        } catch(Exception ex) {
+            logger.error('Error: Execution failed!')
+            logger.error(ex)
+            throw new StopExecutionException('Error: Execution failed!')
+        }
         return outputStream.toString().trim()
     }
 
