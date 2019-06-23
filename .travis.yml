@@ -83,8 +83,8 @@ before_script:
 script:
   - ./gradlew clean check jacocoTestReport
   - if [ -n "${TRAVIS_TAG}" ]; then
-      # ./gradlew jpackageZip;
       ./gradlew jpackage;
+      # ./gradlew jpackageZip;
     fi
 
 before_cache:

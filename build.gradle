@@ -897,7 +897,9 @@ release {
     ]
 
     buildTasks = [
-        'build',
+        'clean',
+        'check',
+        'jacocoTestReport',
         'jpackage',
         // 'jpackageZip',
     ]
