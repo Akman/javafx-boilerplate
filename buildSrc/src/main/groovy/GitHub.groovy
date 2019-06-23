@@ -121,7 +121,7 @@ class GitHub {
         tag = releaseTag
         logger.lifecycle('Tag: ' + tag)
         branch = git([ 'rev-parse', '--abbrev-ref', 'HEAD' ])
-        logger.lifecycle(Branch: ' + branch)
+        logger.lifecycle('Branch: ' + branch)
         (owner, repo) = git([ 'config', '--get', 'remote.origin.url' ])
             .replaceAll(/^.+\:/, '')
             .replaceAll(/\.git$/, '')
