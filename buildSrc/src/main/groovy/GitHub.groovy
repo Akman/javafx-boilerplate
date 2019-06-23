@@ -23,8 +23,12 @@
 
 import org.gradle.api.tasks.StopExecutionException
 import groovy.json.JsonSlurper
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
 
 class GitHub {
+
+    private final static Logger logger = Logging.getLogger(GitHub)
 
     private static final String API_URL = 'https://api.github.com/repos'
     private static final String UPLOADS_URL = 'https://uploads.github.com/repos'
