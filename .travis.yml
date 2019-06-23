@@ -62,9 +62,6 @@ matrix:
       jdk:
         - openjdk11
 
-#    - os: windows
-#      language: bash
-
 cache:
   directories:
     - $HOME/.gradle/wrapper/

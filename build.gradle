@@ -773,8 +773,8 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                // installerType = 'exe' // Inno Setup 5.6.1
-                installerType = 'msi' // WiX Toolset 3.11
+                installerType = 'exe' // Inno Setup 5.6.1
+                // installerType = 'msi' // WiX Toolset 3.11
                 break
             case 'linux':
                 imageOptions += [
