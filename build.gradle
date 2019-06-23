@@ -936,21 +936,13 @@ release {
 
 }
 
-task uploadReleaseAssets {
-    description = 'Upload GitHub releases assets (Windows only)'
-    dependsOn release
+task upload {
+    description = 'Upload GitHub releases assets'
     doLast {
-        if (os.isWindows()) {
-            def engine = new groovy.text.SimpleTemplateEngine()
-            def tag = engine.createTemplate(release.tagTemplate).make([
-                name: name,
-                version: applicationVersion
-            ]).toString()
-            def gitHub = new GitHub(tag)
-            jpackageInstallerOutputDir.eachFile {
-                if (it.isFile()) {
-                    gitHub.upload(it)
-                }
+        def gitHub = new GitHub()
+        jpackageInstallerOutputDir.eachFile {
+            if (it.isFile()) {
+                gitHub.upload(it)
             }
         }
     }
