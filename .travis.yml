@@ -137,4 +137,5 @@ deploy:
 
 # after_deploy:
 
-# after_script:
+after_script:
+  - ps -ef
