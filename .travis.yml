@@ -55,52 +55,20 @@ matrix:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle/wrapper/
-          - $HOME/.gradle/caches/
-      before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
     - os: osx
       osx_image: xcode10.1
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle/wrapper/
-          - $HOME/.gradle/caches/
-      before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
     - os: windows
       language: bash
-      # Failure to upload the cache does not mark the job as failed.
-      # store build cache
-      # 16.55s changes detected, packing new archive
-      # rm: cannot remove '/c/Users/travis/.gradle/caches/modules-2/modules-2.lock': Device or resource busy
-      # gzip: warning: GZIP environment variable is deprecated; use an alias or script
-      # tar: C\:/Users/travis/.gradle/caches/5.4.1/executionHistory/executionHistory.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/5.4.1/fileContent/fileContent.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/5.4.1/fileHashes/fileHashes.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/5.4.1/generated-gradle-jars/generated-gradle-jars.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/5.4.1/javaCompile/javaCompile.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/jars-3/jars-3.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: C\:/Users/travis/.gradle/caches/journal-1/journal-1.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # uploading master/cache-windows-1803-containers-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.tgz
-      # tar: C\:/Users/travis/.gradle/caches/modules-2/modules-2.lock: Read error at byte 0, while reading 38 bytes: Device or resource busy
-      # tar: Exiting with failure status due to previous errors
-      # cache uploaded
-      cache:
-        directories:
-          - $HOME/.gradle/wrapper/
-          # - $HOME/.gradle/caches/
-      before_cache:
-        # - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        # - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/caches/
 
 before_install:
   - chmod a+x ./gradlew
@@ -114,6 +82,10 @@ before_script:
 
 script:
   - ./gradlew check jacocoTestReport
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -137,5 +109,4 @@ deploy:
 
 # after_deploy:
 
-after_script:
-  - ps -ef
+# after_script:

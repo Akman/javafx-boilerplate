@@ -4,7 +4,7 @@
 
 set -ev
 
-echo 'export GRADLE_OPTS=-Dfile.encoding=utf-8' > .travis.env
+echo '' > .travis.env
 
 if [ -n "${TRAVIS_TAG}" ]; then
   echo "export VERSION=${TRAVIS_TAG}" >> .travis.env
