@@ -717,7 +717,7 @@ jlink {
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
                 // installerType = 'pkg'
-                installerType = 'dmg'
+                // installerType = 'dmg'
                 break
             case 'win':
                 imageOptions += [
@@ -901,7 +901,6 @@ release {
         'check',
         'jacocoTestReport',
         'jpackage',
-        // 'jpackageZip',
     ]
 
     ignoredSnapshotDependencies = []
