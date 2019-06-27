@@ -4,7 +4,10 @@
 
 set -ev
 
-echo '' > .travis.env
+if [ -f .travis.env ]; then
+  rm -rf .travis.env
+fi
+touch .travis.env
 
 if [ -n "${TRAVIS_TAG}" ]; then
   echo "export VERSION=${TRAVIS_TAG}" >> .travis.env
