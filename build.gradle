@@ -34,7 +34,7 @@ plugins {
     // id 'org.javamodularity.moduleplugin' version '1.5.0'
 
     // https://badass-jlink-plugin.beryx.org
-    id 'org.beryx.jlink' version '2.10.4'
+    id 'org.beryx.jlink' version '2.11.1'
 
     // https://github.com/hierynomus/license-gradle-plugin
     id 'com.github.hierynomus.license' version '0.15.0'
@@ -46,7 +46,7 @@ plugins {
     id 'com.github.spotbugs' version '2.0.0'
 
     // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '2.8.0'
+    id 'net.researchgate.release' version '2.8.1'
     
     // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
     id 'checkstyle'
@@ -82,6 +82,8 @@ ext {
     jpackageInstallerOutputDir = file("${buildDir}/${jpackageOutputDir}")
     jpackageInstallerName = 'Launcher' // "-${platformNativePrefix}"
 }
+
+defaultTasks 'clean', 'check', 'jacocoTestReport'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -170,19 +172,12 @@ task processResourcesFiltered(type: Copy) {
         def filteredDir = new File(it, 'filtered')
         def filtersDir = new File(it, 'filters')
         def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new PropertiesFile(filterFile)
+        def filter = new ru.akman.utils.PropertiesMap(filterFile)
         from filteredDir
         into sourceSets.main.output.resourcesDir
         expand filter.properties + project.properties + System.properties
     }
 }
-
-// processResourcesFiltered {
-//     include 'filtered/'
-//     filters = [
-//       'filters/filter.properties'
-//     ]
-// }
 
 processResources {
     dependsOn processResourcesFiltered
@@ -195,19 +190,12 @@ task processTestResourcesFiltered(type: Copy) {
         def filteredDir = new File(it, 'filtered')
         def filtersDir = new File(it, 'filters')
         def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new PropertiesFile(filterFile)
+        def filter = new ru.akman.utils.PropertiesMap(filterFile)
         from filteredDir
         into sourceSets.test.output.resourcesDir
         expand filter.properties + project.properties + System.properties
     }
 }
-
-// processTestResourcesFiltered {
-//     include 'filtered/'
-//     filters = [
-//       'filters/filter.properties'
-//     ]
-// }
 
 processTestResources {
     dependsOn processTestResourcesFiltered
@@ -518,8 +506,8 @@ jlink {
         jvmArgs = [
             "-Dfile.encoding=${defaultEncoding}".toString(),
         ]
-        unixScriptTemplate = file("${projectDir}/assets/nix-script.template")
-        windowsScriptTemplate = file("${projectDir}/assets/win-script.template")
+        unixScriptTemplate = file("${projectDir}/package/nix-script.template")
+        windowsScriptTemplate = file("${projectDir}/package/win-script.template")
     }
 
     // Options for creating the runtime image
@@ -667,7 +655,7 @@ jlink {
                 imageOptions += [
                     // Path of the icon of the application bundle (absolute path
                     // or relative to the current directory)
-                    '--icon', "${projectDir}/assets/mac/launcher.icns",
+                    '--icon', "${projectDir}/package/mac/launcher.icns",
 
                     // Name of the application as it appears in the Menu Bar.
                     // This can be different from the application name.
@@ -704,7 +692,7 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/assets/mac/associations.properties",
+                    '--file-associations', "${projectDir}/package/mac/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the
@@ -723,7 +711,7 @@ jlink {
                 imageOptions += [
                     // Path of the icon of the application bundle (absolute path
                     // or relative to the current directory)
-                    '--icon', "${projectDir}/assets/windows/launcher.ico",
+                    '--icon', "${projectDir}/package/windows/launcher.ico",
 
                     // Creates a console launcher for the application, should be
                     // specified for application which requires to show console
@@ -736,7 +724,7 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/assets/windows/associations.properties",
+                    '--file-associations', "${projectDir}/package/windows/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the
@@ -780,7 +768,7 @@ jlink {
                 imageOptions += [
                     // Path of the icon of the application bundle (absolute path
                     // or relative to the current directory)
-                    '--icon', "${projectDir}/assets/linux/launcher.png",
+                    '--icon', "${projectDir}/package/linux/launcher.png",
                 ]
                 installerOptions += [
                     // Path to a Properties file that contains list of
@@ -788,7 +776,7 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/assets/linux/associations.properties",
+                    '--file-associations', "${projectDir}/package/linux/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the
@@ -802,7 +790,7 @@ jlink {
                     // minus (-) signs, and periods (.). They must be at least
                     // two characters long and must start with an alphanumeric
                     // character.
-                    '--linux-bundle-name', 'ru.akman.launcher',
+                    '--linux-bundle-name', 'launcher',
 
                     // Maintainer for .deb bundle
                     '--linux-deb-maintainer', 'Alexander Kapitman <akman.ru@gmail.com>',
@@ -826,19 +814,6 @@ jlink {
         }
     }
 
-}
-
-task jpackageZip(type: Zip, dependsOn: jpackage) {
-    description = 'Creates a zip of the platform-specific runtime image'
-    metadataCharset = defaultEncoding
-    destinationDirectory = jpackageInstallerOutputDir
-    archiveFileName = "${jpackageInstallerName}-${applicationVersion}-${platformNativePrefix}.zip"
-    // into "${jpackageInstallerName}-${applicationVersion}"
-    from {
-        jpackageInstallerOutputDir.listFiles().find {
-            it.isDirectory()
-        }
-    }
 }
 
 release {
@@ -900,7 +875,6 @@ release {
         'clean',
         'check',
         'jacocoTestReport',
-        'jpackage',
     ]
 
     ignoredSnapshotDependencies = []
@@ -936,16 +910,4 @@ release {
 
     }
 
-}
-
-task upload {
-    description = 'Upload GitHub releases assets'
-    doLast {
-        def gitHub = new GitHub()
-        jpackageInstallerOutputDir.eachFile {
-            if (it.isFile()) {
-                gitHub.upload(it)
-            }
-        }
-    }
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# .ci/windows/install.sh
+# ci/windows/install.sh
 
 JPACKAGE_JDK_BASE_URL=https://download.java.net/java/early_access/jpackage/49
 JPACKAGE_JDK_ARCHIVE_NAME=openjdk-13-jpackage+49_windows-x64_bin.zip

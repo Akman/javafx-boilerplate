@@ -21,24 +21,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class PropertiesFile {
+package ru.akman.utils
+
+class PropertiesMap {
     private File file
     private String encoding
-    private Map propertiesMap = [:]
-    PropertiesFile(File file, String encoding = 'UTF-8') {
+    private Map map = [:]
+    PropertiesMap(File file, String encoding = 'UTF-8') {
         this.file = file
         this.encoding = encoding
     }
-    PropertiesFile(String fileName, String encoding = 'UTF-8') {
+    PropertiesMap(String fileName, String encoding = 'UTF-8') {
         this(new File(fileName), encoding)
     }
     Map getProperties() {
-        if (!propertiesMap) {
+        if (!map) {
             Properties properties = new Properties()
             properties.load(new InputStreamReader(
                 new FileInputStream(this.file), this.encoding))
-            properties.each { name, value -> propertiesMap.put(name, value) }
+            properties.each { name, value -> map.put(name, value) }
         }
-        return propertiesMap
+        return map
    }
 }

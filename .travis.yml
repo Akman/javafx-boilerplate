@@ -72,10 +72,10 @@ cache:
 
 before_install:
   - chmod a+x ./gradlew
-  - find .ci -type f -name *.sh -exec chmod a+x {} ';'
+  - find ci -type f -name *.sh -exec chmod a+x {} ';'
 
 install:
-  - .ci/install.sh
+  - ci/install.sh
 
 before_script:
   - source .travis.env
@@ -94,7 +94,7 @@ after_success:
 
 before_deploy:
   - ./gradlew jpackage
-  - .ci/package.sh
+  - ci/package.sh
 
 deploy:
   provider: releases

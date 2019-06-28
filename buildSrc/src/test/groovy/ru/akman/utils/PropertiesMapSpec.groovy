@@ -20,6 +20,41 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package ru.akman.utils
 
-class PropertiesFileTest {
+import spock.lang.Specification
+
+/**
+ * One specification class per class testing
+ * One test per method
+ *   - each unique non-empty constructor counts as a method
+ * One test per method that can throw an exception
+ *   - because testing logic for exceptions typically doesn't complement
+ *     normal testing logic
+ * One test iteration per input combination
+ */
+class PropertiesMapSpec extends Specification {
+    
+    def propertiesMap = null
+
+    def setup() {
+        def file = new File(getClass().getResource('/test.properties').toURI())
+        propertiesMap = new PropertiesMap(file)
+    }
+
+    def "size"() {
+        expect:
+            propertiesMap != null
+            propertiesMap.properties.size() == 2
+    }
+    
+    def "greeting"() {
+        expect:
+            propertiesMap.properties['messages.greeting'] == '再 - Hello!'
+    }
+    
+    def "parting"() {
+        expect:
+            propertiesMap.properties['messages.parting'] == '见 - Good Bye!'
+    }
 }
