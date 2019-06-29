@@ -49,9 +49,16 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
 dependencies {
+
     implementation(
-        'org.codehaus.groovy:groovy-all:2.5.7',
+        localGroovy(),
+        gradleApi()
     )
+
+    // https://docs.gradle.org/current/userguide/test_kit.html
+    // testImplementation(
+    //     gradleTestKit(),
+    // )
 
     // Spock
     testImplementation(
