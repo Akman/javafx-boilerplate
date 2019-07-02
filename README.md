@@ -9,6 +9,7 @@ This project aims to cover best practices for Java application development
 as a whole. It provides tool recommendations for linting, testing and packaging.
 
 [The source for this project is available here][src]
+
 [The latest release for this project is available here][release]
 
 Most of the configuration for project is done in the `build.gradle` file.
