@@ -61,8 +61,6 @@ plugins {
     // id 'eclipse'
 }
 
-apply plugin: ru.akman.plugins.FilteredResourcesPlugin
-
 repositories {
     mavenCentral()
     jcenter()
@@ -168,27 +166,39 @@ license {
     }
 }
 
-processResourcesFiltered {
-    include 'filtered/'
-    filters = [
-      'filters/filter.properties'
-    ]
+task processFilteredResources(type: Copy) {
+    description = 'Processes filtered resources'
+    sourceSets.main.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new ru.akman.utils.PropertiesMap(filterFile)
+        from filteredDir
+        into sourceSets.main.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
 }
 
 processResources {
-    dependsOn processResourcesFiltered
+    dependsOn processFilteredResources
     exclude 'filtered/', 'filters/'
 }
 
-processTestResourcesFiltered {
-    include 'filtered/'
-    filters = [
-      'filters/filter.properties'
-    ]
+task processFilteredTestResources(type: Copy) {
+    description = 'Processes filtered test resources'
+    sourceSets.test.resources.srcDirs.each {
+        def filteredDir = new File(it, 'filtered')
+        def filtersDir = new File(it, 'filters')
+        def filterFile = new File(filtersDir, 'filter.properties')
+        def filter = new ru.akman.utils.PropertiesMap(filterFile)
+        from filteredDir
+        into sourceSets.test.output.resourcesDir
+        expand filter.properties + project.properties + System.properties
+    }
 }
 
 processTestResources {
-    dependsOn processTestResourcesFiltered
+    dependsOn processFilteredTestResources
     exclude 'filtered/', 'filters/'
 }
 

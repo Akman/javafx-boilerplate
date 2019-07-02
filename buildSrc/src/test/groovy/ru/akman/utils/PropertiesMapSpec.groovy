@@ -22,7 +22,9 @@
  */
 package ru.akman.utils
 
+// http://spockframework.org/spock/docs
 import spock.lang.Specification
+import spock.lang.Shared
 
 /**
  * One specification class per class testing
@@ -34,27 +36,71 @@ import spock.lang.Specification
  * One test iteration per input combination
  */
 class PropertiesMapSpec extends Specification {
+
+    // FIELDS
+
+    // To share an object between feature methods declare a @Shared field.
+    // Again it’s best to initialize the field right at the point of
+    // declaration.
+    // Semantically, this is equivalent to initializing the field at the very
+    // beginning of the setupSpec() method.
+    // Note that setupSpec() and cleanupSpec() may not reference
+    // instance fields UNLESS they are annotated with @Shared.
     
-    def propertiesMap = null
+    @Shared propertiesFile = new File(
+        getClass().getResource('/test.properties').toURI()
+    )
 
-    def setup() {
-        def file = new File(getClass().getResource('/test.properties').toURI())
-        propertiesMap = new PropertiesMap(file)
-    }
+    // Instance fields are a good place to store objects belonging to
+    // the specification’s fixture. It is good practice to initialize them
+    // right at the point of declaration.
+    // Semantically, this is equivalent to initializing them at the very
+    // beginning of the setup() method.
+    // Objects stored into instance fields are NOT SHARED between feature
+    // methods. Instead, every feature method gets its own object.
+    // This helps to isolate feature methods from each other, which is often
+    // a desirable goal.
 
-    def "size"() {
+    PropertiesMap propertiesMap = new PropertiesMap(propertiesFile)
+
+    // Static fields should only be used for constants.
+    // Otherwise shared fields are preferable, because their semantics with
+    // respect to sharing are more well-defined.
+
+    // FIXTURE METHODS
+
+    // runs once -  before the FIRST feature method
+    // def setupSpec() {
+    // }
+
+    // runs before EVERY feature method
+    // def setup() {
+    // }
+
+    // runs after EVERY feature method
+    // def cleanup() {
+    // }
+
+    // runs once -  after the LAST feature method
+    // def cleanupSpec() {
+    // }
+
+    // FEATURE METHODS
+
+    def "propertiesMap exists and size = 2"() {
         expect:
             propertiesMap != null
             propertiesMap.properties.size() == 2
     }
     
-    def "greeting"() {
+    def "propertiesMap has property messages.greeting"() {
         expect:
             propertiesMap.properties['messages.greeting'] == '再 - Hello!'
     }
     
-    def "parting"() {
+    def "propertiesMap has property messages.parting"() {
         expect:
             propertiesMap.properties['messages.parting'] == '见 - Good Bye!'
     }
+
 }

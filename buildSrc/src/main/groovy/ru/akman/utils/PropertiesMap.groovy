@@ -24,23 +24,28 @@
 package ru.akman.utils
 
 class PropertiesMap {
+
     private File file
     private String encoding
     private Map map = [:]
+
     PropertiesMap(File file, String encoding = 'UTF-8') {
         this.file = file
         this.encoding = encoding
     }
+
     PropertiesMap(String fileName, String encoding = 'UTF-8') {
         this(new File(fileName), encoding)
     }
+
     Map getProperties() {
         if (!map) {
             Properties properties = new Properties()
             properties.load(new InputStreamReader(
                 new FileInputStream(this.file), this.encoding))
-            properties.each { name, value -> map.put(name, value) }
+            properties.each { key, value -> map[key] = value }
         }
         return map
    }
+
 }
