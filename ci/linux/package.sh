@@ -2,3 +2,4 @@
 
 # ci/linux/package.sh
 
+set -ev

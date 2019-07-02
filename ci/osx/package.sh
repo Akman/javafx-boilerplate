@@ -2,3 +2,4 @@
 
 # ci/osx/package.sh
 
+set -ev
