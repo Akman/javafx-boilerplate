@@ -8,7 +8,8 @@
 This project aims to cover best practices for Java application development
 as a whole. It provides tool recommendations for linting, testing and packaging.
 
-[The source for this project is available here][src].
+[The source for this project is available here][src]
+[The latest release for this project is available here][release]
 
 Most of the configuration for project is done in the `build.gradle` file.
 You should edit this file accordingly to adapt this boilerplate project
@@ -245,4 +246,5 @@ $ ./gradlew properties
 ```
 
 [src]: https://github.com/Akman/java-boilerplate-gradle
-[md]: https://help.github.com/articles/basic-writing-and-formatting-syntax "GitHub Flavored Markdown"
+[release]: https://github.com/Akman/java-boilerplate-gradle/releases/latest
+[md]: https://help.github.com/articles/basic-writing-and-formatting-syntax
