@@ -12,6 +12,8 @@ as a whole. It provides tool recommendations for linting, testing and packaging.
 
 [The latest release for this project is available here][release]
 
+[The documentation for this project is available here][docs]
+
 Most of the configuration for project is done in the `build.gradle` file.
 You should edit this file accordingly to adapt this boilerplate project
 to your needs.
@@ -248,4 +250,5 @@ $ ./gradlew properties
 
 [src]: https://github.com/Akman/java-boilerplate-gradle
 [release]: https://github.com/Akman/java-boilerplate-gradle/releases/latest
+[docs]: https://akman.github.io/java-boilerplate-gradle
 [md]: https://help.github.com/articles/basic-writing-and-formatting-syntax
