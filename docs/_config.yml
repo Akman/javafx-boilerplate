@@ -31,21 +31,29 @@ exclude:
   - Gemfile.lock
   - README.md
 
-# the base hostname & protocol for your site, e.g. http://example.com
-url: 'https://akman.github.io' 
+# Language
+lang: en-US
 
-# the subpath of your site, e.g. /blog
-baseurl: '/java-boilerplate-gradle'
+# Title
+title: Java Boilerplate Project
 
-title: Java Boilerplate Project Documentation
-
-# it will appear in your document head meta and in your feed.xml
+# Description
+# It will appear in your document head meta and in your feed.xml
 description: >-
-  Java Boilerplate Project Site.
-  Documentation.
+  Documentation
 
-twitter_username: Kapitman
+# Google Analytics tracking ID
+google_analytics:
 
-github_username: Akman
+show_downloads: true
 
-email: akman.ru@gmail.com
+# See vars in default.html
+github:
+  # owner_name
+  # owner_url
+  # repository_name
+  # repository_url
+  # is_project_page
+  # project_tagline 
+  zip_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.zip
+  tar_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.tar.gz
