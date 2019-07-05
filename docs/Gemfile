@@ -28,9 +28,6 @@ ruby '~> 2.5.5'
 # https://rubygems.org/gems/jekyll
 gem 'jekyll', '>= 3.8.5'
 
-# https://rubygems.org/gems/jekyll-target-blank
-gem 'jekyll-target-blank', '>= 1.1.1'
-
 # https://rubygems.org/gems/minima
 gem 'minima', '>= 2.5.0'
 
@@ -50,5 +47,11 @@ group :jekyll_plugins do
 
     # https://rubygems.org/gems/jekyll-feed
     gem 'jekyll-feed', '>= 0.11.0'
+
+    # https://rubygems.org/gems/jekyll-seo-tag
+    gem 'jekyll-seo-tag', '>= 2.5.0'
+
+    # https://rubygems.org/gems/jekyll-target-blank
+    gem 'jekyll-target-blank', '>= 1.1.1'
 
 end
