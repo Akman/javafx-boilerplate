@@ -1,4 +1,4 @@
-# Java application boilerplate project site
+# Cayman Blog Theme
 
 All tasks are performed from the site directory itself where placed
 ***Gemfile***.

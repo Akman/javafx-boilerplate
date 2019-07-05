@@ -1,7 +1,7 @@
 @import "normalize";
 @import "rouge-github";
 @import "variables";
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import "blog";
 
 @mixin large {
   @media screen and (min-width: #{$large-breakpoint}) {
@@ -32,24 +32,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: $body-text-color;
-}
-
-#skip-to-content {
-  height: 1px;
-  width: 1px;
-  position: absolute;
-  overflow: hidden;
-  top: -10px;
-
-  &:focus {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    height: auto;
-    width: auto;
-    background: invert($body-link-color);
-    outline: thick solid invert($body-link-color);
-  }
 }
 
 a {
@@ -159,6 +141,25 @@ a {
   }
 }
 
+.project-date {
+  margin-bottom: 0rem;
+  font-weight: normal;
+  opacity: 0.7;
+  font-style: italic;
+
+  @include large {
+    font-size: 1.0rem;
+  }
+
+  @include medium {
+    font-size: 0.95rem;
+  }
+
+  @include small {
+    font-size: 0.75rem;
+  }
+}
+
 .main-content {
   word-wrap: break-word;
 
@@ -168,33 +169,19 @@ a {
 
   @include large {
     max-width: 64rem;
-    padding: 2rem 6rem;
+    padding: 3rem 6rem;
     margin: 0 auto;
     font-size: 1.1rem;
   }
 
   @include medium {
-    padding: 2rem 4rem;
+    padding: 3rem 4rem;
     font-size: 1.1rem;
   }
 
   @include small {
     padding: 2rem 1rem;
     font-size: 1rem;
-  }
-  
-  kbd {
-    background-color: #fafbfc;
-    border: 1px solid #c6cbd1;
-    border-bottom-color: #959da5;
-    border-radius: 3px;
-    box-shadow: inset 0 -1px 0 #959da5;
-    color: #444d56;
-    display: inline-block;
-    font-size: 11px;
-    line-height: 10px;
-    padding: 3px 5px;
-    vertical-align: middle;
   }
 
   img {
@@ -365,6 +352,7 @@ a {
 
   @include small {
     font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -375,4 +363,72 @@ a {
 
 .site-footer-credits {
   color: $blockquote-text-color;
+}
+
+.site-footer {
+
+  @include large {
+  }
+
+  @include medium {
+  }
+
+  @include small {
+  }
+
+  .my-span-icon {
+
+    a {
+    	text-decoration: none;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+
+    @include large {
+      padding: 0px 5px 0px 5px;
+    }
+
+    @include medium {
+      //font-size: 1rem;
+      padding: 0px 10px 10px 10px;
+    }
+
+    @include small {
+      padding: 0px 10px 10px 10px;
+    }
+  }
+
+  .my-svg-icon {
+
+    color: $body-text-color; // IE8
+    fill: $body-text-color; // IE8
+    width: 24px;
+    height: 24px;
+
+    &:hover {
+      text-decoration: none;
+      color: $section-headings-color; // IE8
+      fill: $section-headings-color;
+      transform: scale(1.25);
+      transition: color .5s, transform .2s ease-out
+    }
+
+    @include large {
+      width: 28px;
+      height: 28px;
+    }
+
+    @include medium {
+      width: 32px;
+      height: 32px;
+    }
+
+    @include small {
+      width: 36px;
+      height: 36px;
+    }
+
+  } // social-icons
+
 }

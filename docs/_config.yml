@@ -21,42 +21,73 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-#theme: jekyll-theme-cayman
+#theme: jekyll-theme-cayman-blog
 
 markdown: kramdown
 
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-target-blank
 
 exclude:
-  - Gemfile
-  - Gemfile.lock
   - README.md
 
 # Language
-lang: en-US
+lang: en
 
 # Title
-title: Java Boilerplate Project
+title: Documentation
 
 # Description
 # It will appear in your document head meta and in your feed.xml
 description: >-
-  Documentation
+  Cayman Blog Theme is a clean, responsive blogging theme for Jekyll
+  and Gitlab/GitHub Pages
+
+# OG default site image
+image: /thumbnail-jumbo.png
+
+# Author name
+author:
+  name: Alexander Kapitman
+
+# Twitter creator
+twitter:
+  site: Kapitman
+  username: Kapitman
+
+# change this to the base hostname & protocol for your site
+# url: https://akman.github.io
+
+# change this to the subpath of your site, e.g. /blog. Leave it empty if you don't need it.
+# baseurl: /java-boilerplate-gradle
+
+# header pages
+header_pages:
+#  - blog.md
+#  - about.md
+#  - contact.md
+
+blog:
+  # https://shopify.github.io/liquid/filters/date/
+  date_format: '%d.%m.%Y'
 
 # Google Analytics tracking ID
 google_analytics:
 
 show_downloads: true
 
-# See vars in default.html
 github:
   # owner_name
   # owner_url
   # repository_name
   # repository_url
   # is_project_page
-  # project_tagline 
+  # project_tagline
   zip_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.zip
   tar_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.tar.gz
+
+# jekyll-target-blank
+target-blank:
+    rel: nofollow

@@ -1,11 +1,11 @@
 ---
-layout: home
+layout: blog
+title: Blog
+tagline: My personal blog
 # permalink: /page-file-name.html
 # lang: ru
-# title: page title
 # description: page description
 # excerpt: page excerpt
-# tagline: page tagline
 # keywords: page, keywords, separated, by, comma, plus, blank
 # category: page category
 # categories:
@@ -34,6 +34,4 @@ This theme has instead all you need to start today blogging with Jekyll, and no 
 
 Have a look at the Github page for more information.
 
-You find this descriptive text in the `index.md` file, so you can change it, or remove it completely, according to your needs.
-
-[See additional information](/info-page.html)
+You find this descriptive text in the `blog.md` file, so you can change it, or remove it completely, according to your needs.
