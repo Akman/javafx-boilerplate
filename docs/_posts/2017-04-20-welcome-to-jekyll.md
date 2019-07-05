@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Welcome to Jekyll
-# permalink: /page-file-name.html
+# permalink: page-file-name.html
 # lang: ru
 # description: page description
 # excerpt: page excerpt
@@ -20,7 +20,7 @@ title: Welcome to Jekyll
 #   - the
 #   - page
 #   - tags
-# image: /page-og-image.png
+# image: page-og-image.png
 # author:
 #   name: page author name
 # twitter:

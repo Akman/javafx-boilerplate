@@ -3,7 +3,7 @@ layout: post
 title: Some articles are just so long they deserve a really long title to see if things will break well
 categories:
   - misc
-# permalink: /page-file-name.html
+# permalink: page-file-name.html
 # lang: ru
 # description: page description
 # excerpt: page excerpt
@@ -16,7 +16,7 @@ categories:
 #   - the
 #   - page
 #   - tags
-# image: /page-og-image.png
+# image: page-og-image.png
 # author:
 #   name: page author name
 # twitter:

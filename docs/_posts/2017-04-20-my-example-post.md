@@ -1,6 +1,6 @@
 ---
 layout: post
-# permalink: /page-file-name.html
+# permalink: page-file-name.html
 # lang: ru
 # title: page title
 # description: page description
@@ -20,7 +20,7 @@ layout: post
 #   - the
 #   - page
 #   - tags
-# image: /page-og-image.png
+# image: page-og-image.png
 # author:
 #   name: page author name
 # twitter:

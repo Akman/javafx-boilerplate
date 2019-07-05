@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Example content
-# permalink: /page-file-name.html
+# permalink: page-file-name.html
 # lang: ru
 # description: page description
 # excerpt: page excerpt
@@ -20,7 +20,7 @@ title: Example content
 #   - the
 #   - page
 #   - tags
-# image: /page-og-image.png
+# image: page-og-image.png
 # author:
 #   name: page author name
 # twitter:
@@ -30,7 +30,7 @@ title: Example content
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-[Link to another page: About]({{ site.baseurl }}/about).
+[Link to another page: About](about.html).
 
 There should be whitespace between paragraphs.
 

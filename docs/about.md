@@ -2,9 +2,9 @@
 layout: page
 title: About
 tagline: A few more words about me
-permalink: /about.html
-image: /thumbnail-jumbo.png
-# permalink: /page-file-name.html
+permalink: about.html
+image: thumbnail-jumbo.png
+# permalink: page-file-name.html
 # lang: ru
 # description: page description
 # excerpt: page excerpt
@@ -37,4 +37,4 @@ You can find the source code for _Jekyll_ at [jekyll](https://github.com/jekyll/
 
 [Go to the Home Page]({{ site.url }}{{ site.baseurl }})
 
-[image_thumbnail]: /thumbnail-jumbo.png
+[image_thumbnail]: thumbnail-jumbo.png

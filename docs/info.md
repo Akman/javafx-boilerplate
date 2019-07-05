@@ -1,5 +1,5 @@
 ---
-permalink: /info-page.html
+permalink: info-page.html
 layout: page
 lang: ru
 title: Info
@@ -14,7 +14,7 @@ categories:
 tags:
   - onetag
   - twotag
-image: /thumbnail-mobile.png
+image: thumbnail-mobile.png
 author:
   name: Alexander Kapitman
 twitter:
@@ -28,4 +28,4 @@ Jekyll is a great tool to create static sites but with static site, there's no b
 
 [Go to the Home Page]({{ site.url }}{{ site.baseurl }})
 
-[image_thumbnail]: /thumbnail-mobile.png
+[image_thumbnail]: thumbnail-mobile.png

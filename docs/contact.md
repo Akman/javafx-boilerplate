@@ -2,7 +2,7 @@
 layout: page
 title: Contact
 tagline: Create a contact form and you are good to go
-# permalink: /page-file-name.html
+# permalink: page-file-name.html
 # lang: ru
 # description: page description
 # excerpt: page excerpt
@@ -20,7 +20,7 @@ tagline: Create a contact form and you are good to go
 #   - the
 #   - page
 #   - tags
-# image: /page-og-image.png
+# image: page-og-image.png
 # author:
 #   name: page author name
 # twitter:
