@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: default
 # permalink: page-file-name.html
 # lang: ru
 # title: page title
