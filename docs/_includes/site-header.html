@@ -5,7 +5,7 @@
     {% assign page_paths = site.header_pages %}
 
     {% if page_paths %}
-      {% if page.layout != 'home' %}
+      {% if page.layout != 'home' or site.baseurl %}
         <a class="site-title" href="{{ site.url }}/">{{ site.header_home.title | default: site.title | escape }}</a>
       {% endif %}
       <nav class="site-nav">

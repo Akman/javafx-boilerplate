@@ -26,6 +26,4 @@ Jekyll is a great tool to create static sites but with static site, there's no b
 
 ![Thumbnail)][image_thumbnail]
 
-[Go to the Home Page]({{ site.url }}{{ site.baseurl }})
-
 [image_thumbnail]: thumbnail-mobile.png

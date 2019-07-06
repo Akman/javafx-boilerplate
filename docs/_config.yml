@@ -58,10 +58,10 @@ twitter:
   username: Kapitman
 
 # change this to the base hostname & protocol for your site
-url: https://akman.github.io
+# url: https://akman.github.io
 
 # change this to the subpath of your site, e.g. /blog. Leave it empty if you don't need it.
-baseurl: /java-boilerplate-gradle
+# baseurl: /java-boilerplate-gradle
 
 # header pages
 header_pages:
