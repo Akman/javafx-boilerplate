@@ -14,7 +14,7 @@ categories:
 tags:
   - onetag
   - twotag
-image: thumbnail-mobile.png
+image: {{ site.url }}/{{ site.baseurl }}/thumbnail-mobile.png
 author:
   name: Alexander Kapitman
 twitter:
@@ -24,6 +24,6 @@ twitter:
 
 Jekyll is a great tool to create static sites but with static site, there's no backend to send your data to: that is why you need a third part service.
 
-![Thumbnail)][image_thumbnail]
+![Thumbnail][image_thumbnail]
 
-[image_thumbnail]: thumbnail-mobile.png
+[image_thumbnail]: {{ site.url }}/{{ site.baseurl }}/thumbnail-mobile.png
