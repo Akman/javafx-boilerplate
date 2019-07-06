@@ -86,14 +86,15 @@ google_analytics:
 show_downloads: true
 
 github:
+  download_url: https://github.com/Akman/java-boilerplate-gradle/releases/latest
   # owner_name
   # owner_url
   # repository_name
   # repository_url
   # is_project_page
   # project_tagline
-  zip_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.zip
-  tar_url: https://github.com/Akman/java-boilerplate-gradle/archive/v0.18.0.tar.gz
+  # zip_url
+  # tar_url
 
 # jekyll-target-blank
 target-blank:
