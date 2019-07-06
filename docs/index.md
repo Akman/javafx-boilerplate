@@ -36,4 +36,4 @@ Have a look at the Github page for more information.
 
 You find this descriptive text in the `index.md` file, so you can change it, or remove it completely, according to your needs.
 
-[See additional information](/info-page.html)
+[See additional information](info-page.html)
