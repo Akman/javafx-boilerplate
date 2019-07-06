@@ -87,7 +87,7 @@ a {
   }
 }
 
-.page-header {
+.main-header {
   color: $header-heading-color;
   text-align: center;
   background-color: $header-bg-color;
@@ -337,7 +337,7 @@ a {
   }
 }
 
-.site-footer {
+.main-content-footer {
   padding-top: 2rem;
   margin-top: 2rem;
   border-top: solid 1px $hr-border-color;
@@ -356,16 +356,16 @@ a {
   }
 }
 
-.site-footer-owner {
+.main-content-footer-owner {
   display: block;
   font-weight: bold;
 }
 
-.site-footer-credits {
+.main-content-footer-credits {
   color: $blockquote-text-color;
 }
 
-.site-footer {
+.main-content-footer {
 
   @include large {
   }
