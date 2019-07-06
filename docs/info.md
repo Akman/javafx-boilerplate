@@ -14,7 +14,7 @@ categories:
 tags:
   - onetag
   - twotag
-image: {{ site.url }}/{{ site.baseurl }}/thumbnail-mobile.png
+image: thumbnail-project.png
 author:
   name: Alexander Kapitman
 twitter:
@@ -26,4 +26,4 @@ Jekyll is a great tool to create static sites but with static site, there's no b
 
 ![Thumbnail][image_thumbnail]
 
-[image_thumbnail]: {{ site.url }}/{{ site.baseurl }}/thumbnail-mobile.png
+[image_thumbnail]: thumbnail-project.png
