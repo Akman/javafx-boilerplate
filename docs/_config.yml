@@ -65,9 +65,16 @@ baseurl: /java-boilerplate-gradle
 
 # header pages
 header_pages:
-#  - blog.md
-#  - about.md
-#  - contact.md
+  - url: /blog.html
+    title: Blog
+  - url: /about.html
+    title: About
+  - url: /contact.html
+    title: Contact
+
+# header home
+header_home:
+  title: Akman
 
 blog:
   # https://shopify.github.io/liquid/filters/date/
