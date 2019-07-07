@@ -339,6 +339,38 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
        xml.withMessages true
        html.enabled false
    }
+   // Generate HTML output.
+   // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
+   // the HTML. Variants of this include:
+   // plain.xsl - does not use Javascript or DOM, and may work better with
+   //             older web browsers, or for printing.
+   // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
+   //             presentation
+   // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
+   //                  an extensive use of DOM and Javascript for dynamically
+   //                  filtering the lists of bugs.
+   // All needed stylesheet files could be downloaded from:
+   // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
+   // and placed into ${projectDir}/config/spotbugs/xsl directory.
+   doLast {
+       def configDir = new File("${projectDir}/config/spotbugs/xsl")
+       def xslFile = new File(configDir, 'fancy.xsl')
+       def xsl = new javax.xml.transform.stream.StreamSource(
+           new StringReader(xslFile.getText()))
+       def transformer = javax.xml.transform.TransformerFactory.newInstance()
+           .newTransformer(xsl)
+       def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
+       xmlTree.getFiles().each {
+           def htmlFileName =
+               it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+           def htmlFile = new File(it.getParentFile(), htmlFileName)
+           def html = new javax.xml.transform.stream.StreamResult(
+               new FileOutputStream(htmlFile))
+           def xml = new javax.xml.transform.stream.StreamSource(
+               new StringReader(it.getText()))
+           transformer.transform(xml, html)
+       }   
+   }
 }
 
 jacoco {
