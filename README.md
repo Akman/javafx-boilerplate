@@ -44,6 +44,29 @@ ships with the binaries.
 ./gradlew wrapper --gradle-version 5.4.1 --distribution-type bin
 ```
 
+## Setup gradle properties
+
+Edit default gradle properties in file: ***$HOME/.gradle/gradle.properties***
+
+For example on Windows you can set default system encoding to UTF-8,
+set gradle console output to plain mode,
+set running gradle builds without gradle daemon, and
+avoid groovy warning "An illegal reflective access operation has occurred" by
+set --illegal-access=deny.
+
+```properties
+org.gradle.daemon = false
+org.gradle.parallel = true
+org.gradle.console = plain
+org.gradle.jvmargs = --illegal-access=deny -Xms256m -Xmx1024m -Dfile.encoding=UTF-8
+```
+
+Or you can set above settings by export environment variable GRADLE_OPTS:
+
+```bash
+export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.console=plain -Dfile.encoding=UTF-8 -Xms256m -Xmx1024m --illegal-access=deny"
+```
+
 ## Display available tasks
 
 To see which tasks are available for our build we can run:
