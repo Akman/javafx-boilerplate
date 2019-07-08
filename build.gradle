@@ -54,6 +54,9 @@ plugins {
     // https://docs.gradle.org/current/userguide/pmd_plugin.html
     id 'pmd'
 
+    // https://github.com/aaschmid/gradle-cpd-plugin
+    id 'de.aaschmid.cpd' version '2.0'
+
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 
@@ -282,9 +285,63 @@ pmd {
     // See the official list of built-in rule sets:
     // https://pmd.github.io/pmd-6.8.0/pmd_rules_java.html
     ruleSets = [
+        'category/java/bestpractices.xml',
         'category/java/errorprone.xml',
-        'category/java/bestpractices.xml'
+        'category/java/codestyle.xml',
+        'category/java/design.xml',
+        'category/java/documentation.xml',
+        'category/java/security.xml',
+        'category/java/performance.xml',
+        'category/java/multithreading.xml'
     ]
+}
+
+cpd {
+    // The version of the code quality tool to be used.
+    toolVersion = '6.15.0'
+    language = 'java'
+    ignoreFailures = true
+    ignoreAnnotations = false
+    ignoreIdentifiers = false
+    ignoreLiterals = false
+    minimumTokenCount = 50
+    skipDuplicateFiles = false
+    skipLexicalErrors = false
+}
+
+cpdCheck {
+    reports {
+        text.enabled = true
+        xml.enabled = true
+    }
+    // Generate HTML output.
+    // Stylesheet file could be downloaded from:
+    // https://github.com/pmd/pmd/blob/master/pmd-core/etc/xslt/cpdhtml.xslt
+    // Remove "illegal" attribute 'xpath-default-namespace' from this file:
+    // xpath-default-namespace="http://pmd.sourceforge.net/report/2.0.0"
+    // change "//duplication[@lines>30]" to "//duplication[@lines>10]"
+    // and placed into ${projectDir}/config/cpd/xsl directory.
+    doLast {
+        def configDir = new File("${projectDir}/config/cpd/xsl")
+        def reportDir = new File("${project.reporting.baseDir}/cpd")
+        def xslFile = new File(configDir, 'cpdhtml.xslt')
+        def xsl = new javax.xml.transform.stream.StreamSource(
+            new StringReader(xslFile.getText()))
+        def transformer = javax.xml.transform.TransformerFactory.newInstance()
+            .newTransformer(xsl)
+        def xmlTree = fileTree(dir: reportDir, include: '*.xml')
+        xmlTree.getFiles().each {
+            def htmlFileName =
+                it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+            def htmlFile = new File(it.getParentFile(), htmlFileName)
+            def html = new javax.xml.transform.stream.StreamResult(
+                new FileOutputStream(htmlFile))
+            def xml = new javax.xml.transform.stream.StreamSource(
+                new StringReader(it.getText()))
+            println "See the html report at: ${htmlFile}"
+            transformer.transform(xml, html)
+        }   
+    }
 }
 
 spotbugs {
@@ -334,43 +391,44 @@ spotbugs {
 }
 
 tasks.withType(com.github.spotbugs.SpotBugsTask) {
-   reports {
-       xml.enabled true
-       xml.withMessages true
-       html.enabled false
-   }
-   // Generate HTML output.
-   // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
-   // the HTML. Variants of this include:
-   // plain.xsl - does not use Javascript or DOM, and may work better with
-   //             older web browsers, or for printing.
-   // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
-   //             presentation
-   // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
-   //                  an extensive use of DOM and Javascript for dynamically
-   //                  filtering the lists of bugs.
-   // All needed stylesheet files could be downloaded from:
-   // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
-   // and placed into ${projectDir}/config/spotbugs/xsl directory.
-   doLast {
-       def configDir = new File("${projectDir}/config/spotbugs/xsl")
-       def xslFile = new File(configDir, 'fancy.xsl')
-       def xsl = new javax.xml.transform.stream.StreamSource(
-           new StringReader(xslFile.getText()))
-       def transformer = javax.xml.transform.TransformerFactory.newInstance()
-           .newTransformer(xsl)
-       def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
-       xmlTree.getFiles().each {
-           def htmlFileName =
-               it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-           def htmlFile = new File(it.getParentFile(), htmlFileName)
-           def html = new javax.xml.transform.stream.StreamResult(
-               new FileOutputStream(htmlFile))
-           def xml = new javax.xml.transform.stream.StreamSource(
-               new StringReader(it.getText()))
-           transformer.transform(xml, html)
-       }   
-   }
+    reports {
+        xml.enabled true
+        xml.withMessages true
+        html.enabled false
+    }
+    // Generate HTML output.
+    // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
+    // the HTML. Variants of this include:
+    // plain.xsl - does not use Javascript or DOM, and may work better with
+    //             older web browsers, or for printing.
+    // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
+    //             presentation
+    // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
+    //                  an extensive use of DOM and Javascript for dynamically
+    //                  filtering the lists of bugs.
+    // All needed stylesheet files could be downloaded from:
+    // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
+    // and placed into ${projectDir}/config/spotbugs/xsl directory.
+    doLast {
+        def configDir = new File("${projectDir}/config/spotbugs/xsl")
+        def xslFile = new File(configDir, 'fancy.xsl')
+        def xsl = new javax.xml.transform.stream.StreamSource(
+            new StringReader(xslFile.getText()))
+        def transformer = javax.xml.transform.TransformerFactory.newInstance()
+            .newTransformer(xsl)
+        def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
+        xmlTree.getFiles().each {
+            def htmlFileName =
+                it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+            def htmlFile = new File(it.getParentFile(), htmlFileName)
+            def html = new javax.xml.transform.stream.StreamResult(
+                new FileOutputStream(htmlFile))
+            def xml = new javax.xml.transform.stream.StreamSource(
+                new StringReader(it.getText()))
+            println "See the html report at: ${htmlFile}"
+            transformer.transform(xml, html)
+        }   
+    }
 }
 
 jacoco {
