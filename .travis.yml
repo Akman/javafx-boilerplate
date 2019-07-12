@@ -1,3 +1,7 @@
+# Java Boilerplate Project
+#
+# https://github.com/akman/java-boilerplate-gradle
+#
 # The MIT License (MIT)
 # 
 # Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
@@ -72,10 +76,10 @@ cache:
 
 before_install:
   - chmod a+x ./gradlew
-  - find ci -type f -name *.sh -exec chmod a+x {} ';'
+  - find ./ci -type f -name *.sh -exec chmod a+x {} ';'
 
 install:
-  - ci/install.sh
+  - ./ci/install.sh
 
 before_script:
   - source .travis.env
@@ -93,8 +97,8 @@ after_success:
 # after_failure:
 
 before_deploy:
-  - ./gradlew jpackage
-  - ci/package.sh
+  - ./gradlew jpackage && 
+  - ./ci/package.sh
 
 deploy:
   provider: releases
