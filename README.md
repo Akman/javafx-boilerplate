@@ -42,6 +42,7 @@ ships with the binaries.
 
 ```bash
 ./gradlew wrapper --gradle-version 5.4.1 --distribution-type bin
+./gradlew wrapper --gradle-version 5.5 --distribution-type all
 ```
 
 ## Setup gradle properties
@@ -58,13 +59,13 @@ set --illegal-access=deny.
 org.gradle.daemon = false
 org.gradle.parallel = true
 org.gradle.console = plain
-org.gradle.jvmargs = --illegal-access=deny -Xms256m -Xmx1024m -Dfile.encoding=UTF-8
+org.gradle.jvmargs = -Xms256m -Xmx1024m -Dfile.encoding=UTF-8
 ```
 
 Or you can set above settings by export environment variable GRADLE_OPTS:
 
 ```bash
-export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.console=plain -Dfile.encoding=UTF-8 -Xms256m -Xmx1024m --illegal-access=deny"
+export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.console=plain -Dfile.encoding=UTF-8 -Xms256m -Xmx1024m"
 ```
 
 ## Display available tasks

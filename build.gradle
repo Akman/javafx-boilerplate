@@ -1,4 +1,8 @@
 /**
+ * Java Boilerplate Project
+ *
+ * https://github.com/akman/java-boilerplate-gradle
+ *
  * The MIT License (MIT)
  *
  * Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
@@ -59,9 +63,6 @@ plugins {
 
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
-
-    // id 'idea'
-    // id 'eclipse'
 }
 
 repositories {
@@ -151,21 +152,35 @@ clean {
 }
 
 license {
+    // Specify location of header to use in comparisons,
+    // default to project.file('LICENSE')
     header file("${projectDir}/config/license/LICENSE")
-    skipExistingHeaders true
+    // Skip over files that have some header already, which might not be
+    // the one specified in the header parameter, defaults to false
+    skipExistingHeaders false
+    // Prevent tasks from stopping the build, defaults to false
     ignoreFailures true
-    strictCheck false
+    // Be extra strict in the formatting of existing headers, defaults to false
+    strictCheck true
     mapping([
         'fxml': 'XML_STYLE',
     ])
     excludes([
+        '**/log4j*.xml',
         '**/*.properties',
         '**/*.png',
     ])
     ext {
-        year = Calendar.getInstance().get(Calendar.YEAR)
-        name = 'Alexander Kapitman'
-        email = 'akman.ru@gmail.com'
+        projectName = 'Java Boilerplate Project'
+        projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
+        inceptionYear = 2019
+        currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        copyrightYear = "${inceptionYear}"
+        if (inceptionYear != currentYear) {
+            copyrightYear += " - ${currentYear}"
+        }
+        copyrightName = 'Alexander Kapitman'
+        copyrightEmail = 'akman.ru@gmail.com'
     }
 }
 

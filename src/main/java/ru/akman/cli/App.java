@@ -1,4 +1,8 @@
 /**
+ * Java Boilerplate Project
+ *
+ * https://github.com/akman/java-boilerplate-gradle
+ *
  * The MIT License (MIT)
  *
  * Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>

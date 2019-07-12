@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Java Boilerplate Project
+
+    https://github.com/akman/java-boilerplate-gradle
+
     The MIT License (MIT)
 
     Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
@@ -23,7 +27,6 @@
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -->
-
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
