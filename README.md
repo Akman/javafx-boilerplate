@@ -1,9 +1,9 @@
 # Java application boilerplate project
 
-[![Build Status](https://travis-ci.org/Akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/Akman/java-boilerplate-gradle)
-[![Code Coverage](https://codecov.io/gh/Akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/Akman/java-boilerplate-gradle)
-[![Latest Release](https://img.shields.io/github/downloads/Akman/java-boilerplate-gradle/latest/total.svg)](https://github.com/Akman/java-boilerplate-gradle/releases/latest)
-[![License](https://img.shields.io/github/license/Akman/java-boilerplate-gradle.svg)](https://github.com/Akman/java-boilerplate-gradle/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/akman/java-boilerplate-gradle)
+[![Code Coverage](https://codecov.io/gh/akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/akman/java-boilerplate-gradle)
+[![Latest Release](https://img.shields.io/github/downloads/akman/java-boilerplate-gradle/latest/total.svg)](https://github.com/akman/java-boilerplate-gradle/releases/latest)
+[![License](https://img.shields.io/github/license/akman/java-boilerplate-gradle.svg)](https://github.com/akman/java-boilerplate-gradle/blob/master/LICENSE)
 
 This project aims to cover best practices for Java application development
 as a whole. It provides tool recommendations for linting, testing and packaging.
@@ -272,7 +272,7 @@ Display the properties of the project.
 $ ./gradlew properties
 ```
 
-[src]: https://github.com/Akman/java-boilerplate-gradle
-[release]: https://github.com/Akman/java-boilerplate-gradle/releases/latest
+[src]: https://github.com/akman/java-boilerplate-gradle
+[release]: https://github.com/akman/java-boilerplate-gradle/releases/latest
 [docs]: https://akman.github.io/java-boilerplate-gradle
 [md]: https://help.github.com/articles/basic-writing-and-formatting-syntax
