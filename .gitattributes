@@ -6,3 +6,6 @@
 *.ico  binary
 *.gif  binary
 *.png  binary
+
+config/* linguist-vendored
+docs/* linguist-documentation

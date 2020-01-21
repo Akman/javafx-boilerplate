@@ -5,7 +5,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
+ * Copyright (C) 2019, 2020 Alexander Kapitman <akman.ru@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -29,7 +29,7 @@ plugins {
     id 'application'
 
     // https://docs.gradle.com/build-scan-plugin
-    id 'com.gradle.build-scan' version '2.3'
+    // id 'com.gradle.build-scan' version '2.3'
 
     // https://github.com/openjfx/javafx-gradle-plugin
     id 'org.openjfx.javafxplugin' version '0.0.7'
@@ -41,6 +41,11 @@ plugins {
     id 'org.beryx.jlink' version '2.11.1'
 
     // https://github.com/hierynomus/license-gradle-plugin
+    // TODO: This behaviour has been deprecated and is scheduled to be removed!
+    // Following properties are not annotated with an input or output annotation:
+    // 'check', 'dryRun', 'encoding', 'headerDefinitions', 'inheritedMappings',
+    // 'inheritedProperties', 'internalMappings', 'skipExistingHeaders',
+    // 'strictCheck', 'URI', 'useDefaultMappings', 'validHeaders'
     id 'com.github.hierynomus.license' version '0.15.0'
 
     // https://github.com/ben-manes/gradle-versions-plugin
@@ -59,19 +64,22 @@ plugins {
     id 'pmd'
 
     // https://github.com/aaschmid/gradle-cpd-plugin
-    id 'de.aaschmid.cpd' version '2.0'
+    id 'de.aaschmid.cpd' version '3.1'
 
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 }
 
 repositories {
-    mavenCentral()
+    // mavenCentral()
     jcenter()
 }
 
 ext {
+    applicationName = 'launcher'
     applicationVersion = version.replaceAll('-SNAPSHOT', '')
+    applicationModuleName = 'ru.akman.launcher'
+    applicationClassName = 'ru.akman.launcher.Launcher'
     javaVersion = JavaVersion.current()
     javaFXVersion = '11.0.2'
     os = org.gradle.internal.os.OperatingSystem.current()
@@ -79,7 +87,6 @@ ext {
     platformNativePrefix = os.getNativePrefix()
     defaultEncoding = 'UTF-8'
     logDir = file("${projectDir}/log")
-    mainClass = 'ru.akman.launcher.Launcher'
     jpackageOutputDir = 'jpackage'
     jpackageImageOutputDir = file("${buildDir}/${jpackageOutputDir}")
     jpackageImageName = 'Launcher'
@@ -127,10 +134,13 @@ dependencies {
 }
 
 application {
-    applicationName = "launcher"
-    mainClassName = "${moduleName}/${mainClass}"
+    applicationName = "${applicationName}"
+    mainClassName = "${applicationModuleName}/${applicationClassName}"
     applicationDefaultJvmArgs = [
-        "-Dfile.encoding=${defaultEncoding}".toString(),
+        '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
+        '"-Duser.country=' + System.properties['user.country'] + '"',
+        '"-Duser.language=' + System.properties['user.language'] + '"',
+        '"-Duser.variant=' + System.properties['user.variant'] + '"',
     ]
 }
 
@@ -142,10 +152,10 @@ javafx {
     ]
 }
 
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-}
+// buildScan {
+//     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+//     termsOfServiceAgree = 'yes'
+// }
 
 clean {
     delete "${logDir}"
@@ -524,7 +534,7 @@ jar {
     manifest {
         attributes(
             'Implementation-Title': "${applicationName}",
-            'Main-Class': "${mainClass}"
+            'Main-Class': "${applicationClassName}"
         )
     }
 }
@@ -568,22 +578,26 @@ jar {
 // --no-gui                                                <<<<<<< +---- !!!
 //
 run {
-    // doFirst {
-    //     println '*** doFirst ***'
-    //     println '==============='
-    //     commandLine.each { println it }
-    //     println '==============='
-    // }
-    // doLast {
-    //     println '*** doLast ***'
-    //     println '==============='
-    //     commandLine.each { println it }
-    //     println '==============='
-    // }
     standardInput = System.in
     args = [
-        '--no-gui'
+        // '--no-gui',
+        '--debug',
+        '--verbose=full'
     ]
+    doFirst {
+        jvmArgs = [
+            '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
+            '"-Duser.country=' + System.properties['user.country'] + '"',
+            '"-Duser.language=' + System.properties['user.language'] + '"',
+            '"-Duser.variant=' + System.properties['user.variant'] + '"',
+            '--module-path', classpath.asPath,
+            '--patch-module', "${applicationModuleName}=" +
+                files(sourceSets.main.output.resourcesDir).asPath,
+            '--module', mainClassName,
+        ] + args
+        classpath = files()
+        main = ''
+    }
 }
 
 jlink {
@@ -718,7 +732,7 @@ jlink {
             '--vendor', 'Akman',
 
             // Copyright for the application
-            '--copyright', 'Copyright (C) 2019 A.Kapitman',
+            '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
         ]
 
         // The argument passed to the --name option when running jpackage
@@ -738,7 +752,7 @@ jlink {
             '--vendor', 'Akman',
 
             // Copyright for the application
-            '--copyright', 'Copyright (C) 2019 A.Kapitman',
+            '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
 
             // An identifier that uniquely identifies the application.
             // Defaults to the main class name.
