@@ -43,6 +43,9 @@ gem 'tzinfo-data', '>= 1.2019.3', platforms: [:mingw, :mswin, :x64_mingw, :jruby
 # https://rubygems.org/gems/wdm
 gem 'wdm', '~> 0.1.1' if Gem.win_platform?
 
+# https://rubygems.org/gems/faraday
+gem 'faraday', '~> 0.17.3'
+
 group :jekyll_plugins do
 
     # https://rubygems.org/gems/jekyll-feed
