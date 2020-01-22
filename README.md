@@ -217,13 +217,13 @@ $ ./gradlew jlink
 ## Run
 
 ```bash
-$ ./gradlew run --agrs="--no-gui"
+$ ./gradlew exec
 ```
 
 Run created modular runtime image.
 
 ```bash
-$ ./build/image/bin/launcher --no-gui
+$ ./build/image/bin/launcher
 ```
 
 ## Distribute

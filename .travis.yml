@@ -58,13 +58,13 @@ matrix:
       dist: xenial
       language: java
       jdk:
-        - openjdk11
+        - openjdk13
 
     - os: osx
       osx_image: xcode10.1
       language: java
       jdk:
-        - openjdk11
+        - openjdk13
 
     - os: windows
       language: bash

@@ -17,6 +17,3 @@ build
 # ignore logs
 log
 *.log
-
-# ignore etc
-etc

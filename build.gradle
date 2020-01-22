@@ -28,25 +28,16 @@
 plugins {
     id 'application'
 
-    // https://docs.gradle.com/build-scan-plugin
-    // id 'com.gradle.build-scan' version '2.3'
-
-    // https://github.com/openjfx/javafx-gradle-plugin
-    id 'org.openjfx.javafxplugin' version '0.0.7'
-
-    // https://github.com/java9-modularity/gradle-modules-plugin
-    // id 'org.javamodularity.moduleplugin' version '1.5.0'
-
     // https://badass-jlink-plugin.beryx.org
     id 'org.beryx.jlink' version '2.11.1'
 
     // https://github.com/hierynomus/license-gradle-plugin
+    id 'com.github.hierynomus.license' version '0.15.0'
     // TODO: This behaviour has been deprecated and is scheduled to be removed!
     // Following properties are not annotated with an input or output annotation:
     // 'check', 'dryRun', 'encoding', 'headerDefinitions', 'inheritedMappings',
     // 'inheritedProperties', 'internalMappings', 'skipExistingHeaders',
     // 'strictCheck', 'URI', 'useDefaultMappings', 'validHeaders'
-    id 'com.github.hierynomus.license' version '0.15.0'
 
     // https://github.com/ben-manes/gradle-versions-plugin
     id 'com.github.ben-manes.versions' version '0.21.0'
@@ -71,7 +62,6 @@ plugins {
 }
 
 repositories {
-    // mavenCentral()
     jcenter()
 }
 
@@ -80,118 +70,91 @@ ext {
     applicationVersion = version.replaceAll('-SNAPSHOT', '')
     applicationModuleName = 'ru.akman.launcher'
     applicationClassName = 'ru.akman.launcher.Launcher'
+    applicationJvmArgs = [
+        '-Xms256m',
+        '-Xmx512m',
+    ]
+    applicationArgs = [
+        // '--no-gui',
+    ]
     javaVersion = JavaVersion.current()
-    javaFXVersion = '11.0.2'
+    javaFXVersion = '13.0.1'
     os = org.gradle.internal.os.OperatingSystem.current()
     platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
     platformNativePrefix = os.getNativePrefix()
+    jvm = org.gradle.internal.jvm.Jvm.current()
     defaultEncoding = 'UTF-8'
     logDir = file("${projectDir}/log")
     jpackageOutputDir = 'jpackage'
     jpackageImageOutputDir = file("${buildDir}/${jpackageOutputDir}")
-    jpackageImageName = 'Launcher'
+    jpackageImageName = applicationName.capitalize()
     jpackageInstallerOutputDir = file("${buildDir}/${jpackageOutputDir}")
-    jpackageInstallerName = 'Launcher' // "-${platformNativePrefix}"
+    jpackageInstallerName = jpackageImageName // "-${platformNativePrefix}"
 }
 
-defaultTasks 'clean', 'check', 'jacocoTestReport'
-
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+java {
+    sourceCompatibility = JavaVersion.VERSION_13
+    targetCompatibility = JavaVersion.VERSION_13
+}
 
 // https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
 dependencies {
     implementation(
-        'org.apache.logging.log4j:log4j-api:2.11.2',
-        'org.apache.logging.log4j:log4j-core:2.11.2',
+        'org.apache.logging.log4j:log4j-api:2.13.0',
+        'org.apache.logging.log4j:log4j-core:2.13.0',
+        "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
+        "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
+        "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
+        "org.openjfx:javafx-fxml:${javaFXVersion}:${platform}",
+        //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
+        //"org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
+        //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
     )
     testImplementation(
         'org.junit.jupiter:junit-jupiter-api:5.4.2',
         'org.junit.jupiter:junit-jupiter-params:5.4.2',
-        'org.mockito:mockito-junit-jupiter:2.28.2',
-    )
-    testRuntimeOnly(
         'org.junit.jupiter:junit-jupiter-engine:5.4.2',
+        'org.mockito:mockito-junit-jupiter:3.2.4',
     )
 }
 
-// [compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+clean {
+    delete "${logDir}"
+}
+
 [compileJava, compileTestJava].each {
     it.options.encoding = defaultEncoding
     it.options.compilerArgs += [
         // Give more detail for unchecked conversion warnings that are mandated
         // by the Java Language Specification.
         '-Xlint:unchecked',
-
         // Show a description of each use or override of a deprecated member
         // or class. Without this, javac shows a summary of the source files
         // that use or override deprecated members or classes.
         '-Xlint:deprecation',
-
         // Terminate compilation if warnings occur.
         '-Werror',
     ]
 }
 
-application {
-    applicationName = "${applicationName}"
-    mainClassName = "${applicationModuleName}/${applicationClassName}"
-    applicationDefaultJvmArgs = [
-        '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
-        '"-Duser.country=' + System.properties['user.country'] + '"',
-        '"-Duser.language=' + System.properties['user.language'] + '"',
-        '"-Duser.variant=' + System.properties['user.variant'] + '"',
-    ]
-}
-
-javafx {
-    version = "${javaFXVersion}"
-    modules = [
-        'javafx.controls',
-        'javafx.fxml',
-    ]
-}
-
-// buildScan {
-//     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-//     termsOfServiceAgree = 'yes'
-// }
-
-clean {
-    delete "${logDir}"
-}
-
-license {
-    // Specify location of header to use in comparisons,
-    // default to project.file('LICENSE')
-    header file("${projectDir}/config/license/LICENSE")
-    // Skip over files that have some header already, which might not be
-    // the one specified in the header parameter, defaults to false
-    skipExistingHeaders false
-    // Prevent tasks from stopping the build, defaults to false
-    ignoreFailures true
-    // Be extra strict in the formatting of existing headers, defaults to false
-    strictCheck true
-    mapping([
-        'fxml': 'XML_STYLE',
-    ])
-    excludes([
-        '**/log4j*.xml',
-        '**/*.properties',
-        '**/*.png',
-    ])
-    ext {
-        projectName = 'Java Boilerplate Project'
-        projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
-        inceptionYear = 2019
-        currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        copyrightYear = "${inceptionYear}"
-        if (inceptionYear != currentYear) {
-            copyrightYear += " - ${currentYear}"
-        }
-        copyrightName = 'Alexander Kapitman'
-        copyrightEmail = 'akman.ru@gmail.com'
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls',
+            '--add-modules', 'javafx.fxml',
+            //'--add-modules', 'javafx.web',
+            //'--add-modules', 'javafx.swing',
+            //'--add-modules', 'javafx.media',
+        ]
+        classpath = files()
     }
+}
+
+application {
+    applicationName = applicationName
+    mainClassName = "${applicationModuleName}/${applicationClassName}"
+    applicationDefaultJvmArgs = applicationJvmArgs
 }
 
 task processFilteredResources(type: Copy) {
@@ -232,27 +195,107 @@ processTestResources {
 
 test {
     useJUnitPlatform()
+    jvmArgs = []
     testLogging {
+        showStandardStreams = true
+        showStackTraces = true
+        displayGranularity = 2
         exceptionFormat 'short'
         events(
             //'started',
             'passed',
             'skipped',
             'failed',
-            'standardOut',
-            'standardError'
         )
         debug {
+            displayGranularity = 0
             exceptionFormat 'full'
             events(
                 'started',
                 'passed',
                 'skipped',
                 'failed',
-                'standardOut',
-                'standardError'
             )
         }
+    }
+}
+
+javadoc {
+    exclude '**/module-info.java'
+    options.addBooleanOption 'html5', true
+    options.encoding defaultEncoding
+}
+
+task srcJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task docJar(type: Jar, dependsOn: classes) {
+    classifier 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives srcJar, docJar
+}
+
+jar {
+    manifest {
+        attributes(
+            //'Automatic-Module-Name': "${applicationModuleName}",
+            'Implementation-Title': "${applicationName}",
+            'Main-Class': "${applicationModuleName}/${applicationClassName}"
+        )
+    }
+}
+
+task fatJar(type: Jar) {
+    archiveAppendix = 'full'
+    manifest {
+        attributes(
+            //'Automatic-Module-Name': "${applicationModuleName}",
+            'Implementation-Title': "${applicationName}",
+            'Main-Class': "${applicationModuleName}/${applicationClassName}"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+license {
+    // Specify location of header to use in comparisons,
+    // default to project.file('LICENSE')
+    header file("${projectDir}/config/license/LICENSE")
+    // Skip over files that have some header already, which might not be
+    // the one specified in the header parameter, defaults to false
+    skipExistingHeaders false
+    // Prevent tasks from stopping the build, defaults to false
+    ignoreFailures true
+    // Be extra strict in the formatting of existing headers, defaults to false
+    strictCheck true
+    mapping([
+        'fxml': 'XML_STYLE',
+    ])
+    excludes([
+        '**/log4j*.xml',
+        '**/*.properties',
+        '**/*.png',
+    ])
+    ext {
+        projectName = 'Java Boilerplate Project'
+        projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
+        inceptionYear = 2019
+        currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        copyrightYear = "${inceptionYear}"
+        if (inceptionYear != currentYear) {
+            copyrightYear += " - ${currentYear}"
+        }
+        copyrightName = 'Alexander Kapitman'
+        copyrightEmail = 'akman.ru@gmail.com'
     }
 }
 
@@ -473,131 +516,82 @@ jacocoTestReport {
     }
 }
 
-task srcJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-// task docJar(type: Jar, dependsOn: classes) {
-//     classifier "javadoc"
-//     from javadoc
-// }
-
-artifacts {
-    archives srcJar // , docJar
-}
-
-//
-// TODO: Task :javadoc FAILED
-//
-// Error: module not found: org.apache.logging.log4j
-// .../src/main/java/module-info.java:27
-// requires org.apache.logging.log4j;
-//
-// Error: package org.apache.logging.log4j is not visible
-// .../src/main/java/ru/akman/cli/App.java:32
-// import org.apache.logging.log4j.LogManager;
-// package org.apache.logging.log4j is declared in module log4j.api,
-// which is not in the module graph
-//
-// --module-path
-//   build/classes/java/main
-//   build/resources/main
-//   org.apache.logging.log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar
-//   org.apache.logging.log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar
-//   org.openjfx/javafx-fxml/11.0.2/javafx-fxml-11.0.2-win.jar
-//   org.openjfx/javafx-controls/11.0.2/javafx-controls-11.0.2-win.jar
-//   org.openjfx/javafx-controls/11.0.2/javafx-controls-11.0.2.jar
-//   org.openjfx/javafx-graphics/11.0.2/javafx-graphics-11.0.2-win.jar
-//   org.openjfx/javafx-graphics/11.0.2/javafx-graphics-11.0.2.jar
-//   org.openjfx/javafx-base/11.0.2/javafx-base-11.0.2-win.jar
-//   org.openjfx/javafx-base/11.0.2/javafx-base-11.0.2.jar
-// -d build/docs/javadoc
-// -doctitle 'java-boilerplate-gradle 1.0.1 API'
-// -html5
-// -quiet
-// -windowtitle 'java-boilerplate-gradle 1.0.1 API'
-// src/main/java/module-info.java
-// src/main/java/ru/akman/cli/App.java
-// src/main/java/ru/akman/commons/Utils.java
-// src/main/java/ru/akman/gui/App.java
-// src/main/java/ru/akman/gui/PrimaryController.java
-// src/main/java/ru/akman/gui/SecondaryController.java
-// src/main/java/ru/akman/launcher/Launcher.java
-//
-// javadoc {
-//     exclude '**/module-info.java'
-//     options.addBooleanOption 'html5', true
-// }
-
-jar {
-    manifest {
-        attributes(
-            'Implementation-Title': "${applicationName}",
-            'Main-Class': "${applicationClassName}"
-        )
+startScripts {
+    doFirst {
+        defaultJvmOpts = [
+            '--module-path', 'APP_HOME_LIB',
+            '--module', "${applicationModuleName}/${applicationClassName}"
+        ]
+        classpath = files()
+    }
+    doLast{
+        def bashFile = new File(outputDir, applicationName)
+        String bashContent = bashFile.text
+        bashFile.text = bashContent
+            .replaceFirst('APP_HOME_LIB',
+                java.util.regex.Matcher.quoteReplacement('$APP_HOME/lib'))
+            .replaceFirst(/(?m)^CLASSPATH=$/, '')
+            .replaceFirst(/(?m)^\s*CLASSPATH=`.+`$/, '')
+            .replaceFirst(/-classpath "\\".+\\""/, '')
+            .replaceFirst(/(?m)^eval set -- .+$/,
+                java.util.regex.Matcher.quoteReplacement(
+                'eval set -- $JAVA_OPTS $DEFAULT_JVM_OPTS "$APP_ARGS"'))
+        def batFile = new File(outputDir, applicationName + ".bat")
+        String batContent = batFile.text
+        batFile.text = batContent
+            .replaceFirst('APP_HOME_LIB',
+                java.util.regex.Matcher.quoteReplacement('%APP_HOME%\\lib'))
+            .replaceFirst(/(?m)^set CLASSPATH=$/, '')
+            .replaceFirst(/-classpath "%CLASSPATH%"/, '')
+            .replaceFirst(/(?m)^"%JAVA_EXE%" %DEFAULT_JVM_OPTS% .+$/,
+                java.util.regex.Matcher.quoteReplacement(
+                '"%JAVA_EXE%" %JAVA_OPTS% %DEFAULT_JVM_OPTS% %CMD_LINE_ARGS%'))
     }
 }
 
-//
-// TODO: Task :run FAILED
-//
-// Illegal option order in command line
-//
-// java [-options] -jar jarfile [args...]
-//
-// *** doFirst { commandLine } ***
-//
-// D:\Programs\Java\jdk-11.0.2\bin\java.exe
-// -Dfile.encoding=UTF-8                          >>> +
-// -Duser.country=RU                              >>> +
-// -Duser.language=ru                             >>> +
-// -Duser.variant                                 >>> +
-// -cp                                                |
-// F:\Workspace\java\java-boilerplate-grad ...        |
-// null                                               |    <<<<<<< +---- ???
-// --no-gui                                           |
-//                                                    |
-// *** doLast { commandLine } ***                     |
-//                                                    |
-// D:\Programs\Java\jdk-11.0.2\bin\java.exe           |
-//                           <<<<<<< +----------------+
-// --add-modules                                      |
-// javafx.controls,javafx.fxml                        |
-// --module-path                                      |
-// F:\Workspace\java\console-gradle\buil ...          |
-// --patch-module                                     |
-// ru.akman.launcher=F:\Workspace\java\co ...         |
-// --module                                           |
-// ru.akman.launcher/ru.akman.launcher.Launcher       |
-// -Dfile.encoding=UTF-8                          >>> +
-// -Duser.country=RU                              >>> +
-// -Duser.language=ru                             >>> +
-// -Duser.variant                                 >>> +
-// ru.akman.launcher/ru.akman.launcher.Launcher            <<<<<<< +---- ??? 
-// --no-gui                                                <<<<<<< +---- !!!
-//
 run {
     standardInput = System.in
-    args = [
-        // '--no-gui',
-        '--debug',
-        '--verbose=full'
-    ]
     doFirst {
-        jvmArgs = [
+        main = ''
+        args = []
+        jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
+        jvmArgs += [
             '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
             '"-Duser.country=' + System.properties['user.country'] + '"',
             '"-Duser.language=' + System.properties['user.language'] + '"',
             '"-Duser.variant=' + System.properties['user.variant'] + '"',
+        ]
+        jvmArgs += [
             '--module-path', classpath.asPath,
             '--patch-module', "${applicationModuleName}=" +
-                files(sourceSets.main.output.resourcesDir).asPath,
-            '--module', mainClassName,
-        ] + args
+            files(sourceSets.main.output.resourcesDir).asPath,
+            '--module', "${applicationModuleName}/${applicationClassName}",
+        ]
+        jvmArgs += applicationArgs
         classpath = files()
-        main = ''
     }
+}
+
+task exec(type: Exec) {
+    description 'Executes this project as a JVM application'
+    group 'application'
+    dependsOn classes
+    standardInput = System.in
+    executable = jvm.javaExecutable
+    args = applicationJvmArgs
+    args += [
+        '-Dfile.encoding=' + System.properties['file.encoding'],
+        '-Duser.country=' + System.properties['user.country'],
+        '-Duser.language=' + System.properties['user.language'],
+        '-Duser.variant=' + System.properties['user.variant'],
+    ]
+    args += [
+        '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
+        '--patch-module', "${applicationModuleName}=" +
+            files(sourceSets.main.output.resourcesDir).asPath,
+        '--module', "${applicationModuleName}/${applicationClassName}",
+    ]
+    args += applicationArgs
 }
 
 jlink {
@@ -1030,3 +1024,5 @@ release {
     }
 
 }
+
+defaultTasks 'clean', 'check', 'jacocoTestReport'
