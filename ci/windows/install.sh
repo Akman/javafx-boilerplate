@@ -13,8 +13,9 @@ wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 
 choco install adoptopenjdk -y
-echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-13.0.1+9"' >> .travis.env
-echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.1+9/bin":$PATH' >> .travis.env
+
+echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot"' >> .travis.env
+echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot/bin":$PATH' >> .travis.env
 
 echo 'export GRADLE_OPTS="-Dfile.encoding=utf-8 -Dorg.gradle.daemon=false"' >> .travis.env
 
