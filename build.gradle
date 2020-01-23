@@ -400,9 +400,9 @@ release {
     ]
 
     buildTasks = [
-        'clean',
-        'check',
-        'jacocoTestReport',
+        // 'clean',
+        // 'check',
+        // 'jacocoTestReport',
     ]
 
     ignoredSnapshotDependencies = []
