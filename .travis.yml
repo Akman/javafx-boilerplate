@@ -23,13 +23,14 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# branch:
+# Branch value equals:
 #   - name of the branch (TRAVIS_BRANCH) for push builds, or builds not
 #     triggered by a pull request
 #   - name of the branch targeted by the pull request (TRAVIS_BRANCH) for
 #     builds triggered by a pull request
 #   - name of the tag (TRAVIS_TAG) for builds triggered by a tag
-#     FOR TAGS, GIT DOES NOT STORE THE BRANCH FROM WHICH A COMMIT WAS TAGGED
+#     CAUTION: For tags, git does not store the branch from which a commit
+#     was tagged, so TRAVIS_BRANCH = TRAVIS_TAG
 
 if: branch =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
 
@@ -81,7 +82,6 @@ cache:
     - $HOME/.gradle/caches/
 
 before_install:
-  - env
   - chmod a+x ./gradlew
   - find ./ci -type f -name *.sh -exec chmod a+x {} ';'
 
@@ -104,7 +104,7 @@ after_success:
 # after_failure:
 
 before_deploy:
-  - ./gradlew jpackage && 
+  - ./gradlew jpackage
   - ./ci/package.sh
 
 deploy:
