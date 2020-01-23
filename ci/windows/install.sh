@@ -12,10 +12,14 @@ wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 7z x -bd $JPACKAGE_JDK_ARCHIVE_NAME
 echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 
-choco install adoptopenjdk -y
-
-echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot"' >> .travis.env
-echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot/bin":$PATH' >> .travis.env
+# FeatureMain	Core AdoptOpenJDK installation (DEFAULT)
+# FeatureEnvironment	Update the PATH environment variable (DEFAULT)
+# FeatureJarFileRunWith	Associate .jar files with Java applications (DEFAULT)
+# FeatureJavaHome	Update the JAVA_HOME environment variable
+# FeatureIcedTeaWeb	Install IcedTea-Web
+# FeatureJNLPFileRunWith	Associate .jnlp files with IcedTea-web
+# FeatureOracleJavaSoft	Updates registry keys HKLM/SOFTWARE/JavaSoft/
+choco install adoptopenjdk --version 13.0.2.8 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
 
 echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
 

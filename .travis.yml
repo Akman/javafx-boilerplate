@@ -62,7 +62,7 @@ matrix:
   include:
 
     - os: linux
-      dist: xenial
+      dist: bionic
       language: java
       jdk:
         - openjdk13

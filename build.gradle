@@ -985,33 +985,31 @@ jlink {
                     // or relative to the current directory)
                     '--icon', "${projectDir}/package/mac/launcher.icns",
 
-                    // Name of the application as it appears in the Menu Bar.
-                    // This can be different from the application name.
-                    // This name must be less than 16 characters long and
-                    // be suitable for displaying in the menu bar and the
-                    // application Info window. Defaults to the application name.
-                    '--mac-bundle-name', applicationName.capitalize(),
+                    // Name of the application as it appears in the menu bar
+                    // (defaults to the application name; must be less than 16
+                    // characters long and be suitable for displaying in the
+                    // menu bar and the application Info window)
+                    '--mac-package-name', applicationName.capitalize(),
 
                     // An identifier that uniquely identifies the application
-                    // for MacOSX. Defaults to the value of --identifier option.
-                    // May only use alphanumeric (A-Z,a-z,0-9), hyphen (-), and
-                    // period (.) characters.
-                    '--mac-bundle-identifier', "${applicationClassName}",
+                    // for macOS (defaults to the main class name; limited to
+                    // alphanumeric, hyphen, and period characters)
+                    '--mac-package-identifier', "${applicationClassName}",
 
                     // Request that the bundle be signed
                     // '--mac-sign',
 
-                    // Path of the keychain to use (absolute path or relative
-                    // to the current directory). If not specified, the standard
-                    // keychains are used.
+                    // Path of the keychain to search for the signing identity
+                    // (defaults to the standard keychains)
                     // '--mac-signing-keychain <file path>',
 
-                    // User name portion of the typical signing key
-                    // '--mac-signing-key-user-name <user name>',
+                    // Team name portion of the Apple signing identity
+                    // (for example, "Developer ID Application: ")
+                    // '--mac-signing-key-user-name <team name>',
 
-                    // When signing the application bundle, this value is
-                    // prefixed to all components that need to be signed that
-                    // don't have an existing bundle identifier.
+                    // When signing the application bundle, the value prepended
+                    // to all components that need to be signed but don't have
+                    // an existing bundle identifier
                     // '--mac-bundle-signing-prefix <prefix string>',
                 ]
                 installerOptions += [
@@ -1041,9 +1039,9 @@ jlink {
                     // or relative to the current directory)
                     '--icon', "${projectDir}/package/windows/launcher.ico",
 
-                    // Creates a console launcher for the application, should be
-                    // specified for application which requires to show console
-                    // at start.
+                    // Creates a console launcher for the application (should
+                    // be specified for applications which require console
+                    // interactions)
                     // '--win-console',
                 ]
                 installerOptions += [
@@ -1061,20 +1059,19 @@ jlink {
                     '--install-dir', applicationName.capitalize(),
 
                     // Adds a dialog to enable the user to choose a directory
-                    // in which the product is installed
+                    // in which to install the application
                     '--win-dir-chooser',
 
                     // Adds the application to the system menu
                     '--win-menu',
 
-                    // Start Menu group this application is placed in.
-                    // Wix fails when it uses Parent/Child menu group.
+                    // Start Menu group in which to place this application
                     '--win-menu-group', applicationName.capitalize(),
 
-                    // Request to perform an install on a per-user basis
+                    // Install the application on a per-user basis
                     '--win-per-user-install',
 
-                    // Creates a desktop shortcut for the application
+                    // Create a desktop shortcut for the application
                     '--win-shortcut',
 
                     // UUID associated with upgrades for this package
@@ -1107,13 +1104,9 @@ jlink {
                     // "Program Files" or "AppData" on Windows.
                     // '--install-dir <file path>',
 
-                    // Name for Linux bundle, defaults to the application name.
-                    // Valid Debian package name must consist only of
-                    // LOWER CASE LETTERS (a-z), digits (0-9), plus (+) and
-                    // minus (-) signs, and periods (.). They must be at least
-                    // two characters long and must start with an alphanumeric
-                    // character.
-                    '--linux-bundle-name', applicationName.toLowerCase(),
+                    // Name for the Linux package, defaults to the
+                    // application name
+                    // '--linux-package-name', applicationName,
 
                     // Maintainer for .deb bundle
                     '--linux-deb-maintainer', applicationAuthor,
@@ -1123,6 +1116,17 @@ jlink {
 
                     // Required packages or capabilities for the application
                     // '--linux-package-deps',
+
+                    // Release value of the RPM spec file, or the Debian
+                    // revision value of the DEB control file
+                    // '--linux-app-release', '',
+
+                    // Creates a shortcut for the application
+                    '--linux-shortcut',
+
+                    // Group value of the RPM spec file, or the Section
+                    // value of the DEB control file
+                    '--linux-app-category', 'utils',
 
                     // Type of the license ("License: " of the RPM .spec)
                     '--linux-rpm-license-type', applicationLicenseType,
