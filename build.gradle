@@ -374,14 +374,14 @@ release {
 
     // The commit message used to commit the non-SNAPSHOT version
     // if SNAPSHOT was used.
-    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+    preTagCommitMessage = 'SNAPSHOT was used to commit the non-SNAPSHOT version'
 
     // The commit message used when creating the tag.
     // Not used with BZR projects.
-    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+    tagCommitMessage = 'Release version'
 
     // The commit message used when committing the next version.
-    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+    newVersionCommitMessage = 'Bump version'
 
     versionPropertyFile = 'gradle.properties'
 

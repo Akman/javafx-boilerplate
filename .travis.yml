@@ -27,6 +27,8 @@
 # https://docs.travis-ci.com/user/tutorial/
 #
 
+if: branch = master and commit_message =~ /^Release version/
+
 git:
 
   # Travis CI can clone repositories to a maximum depth of 50 commits,
