@@ -20,6 +20,7 @@ echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.en
 # FeatureJNLPFileRunWith	Associate .jnlp files with IcedTea-web
 # FeatureOracleJavaSoft	Updates registry keys HKLM/SOFTWARE/JavaSoft/
 choco install adoptopenjdk --version 13.102.8 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
+refreshenv
 
 echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
 
