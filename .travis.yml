@@ -23,12 +23,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#
-# https://docs.travis-ci.com/user/tutorial/
-#
+# branch:
+#   - name of the branch (TRAVIS_BRANCH) for push builds, or builds not
+#     triggered by a pull request
+#   - name of the branch targeted by the pull request (TRAVIS_BRANCH) for
+#     builds triggered by a pull request
+#   - name of the tag (TRAVIS_TAG) for builds triggered by a tag
+#     FOR TAGS, GIT DOES NOT STORE THE BRANCH FROM WHICH A COMMIT WAS TAGGED
 
-if: branch = master AND tag IS present
-# tag =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
+if: branch =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
 
 git:
 
@@ -78,6 +81,7 @@ cache:
     - $HOME/.gradle/caches/
 
 before_install:
+  - env
   - chmod a+x ./gradlew
   - find ./ci -type f -name *.sh -exec chmod a+x {} ';'
 
