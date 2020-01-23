@@ -67,6 +67,12 @@ repositories {
 
 ext {
     applicationName = 'launcher'
+    applicationDescription = 'Launcher Application'
+    applicationVendor = 'Akman'
+    applicationAuthor = 'Alexander Kapitman <akman.ru@gmail.com>'
+    applicationCopyright = 'Copyright (C) 2019, 2020 A.Kapitman'
+    applicationLicenseFile = 'LICENSE'
+    applicationLicenseType = 'MIT'
     applicationVersion = version.replaceAll('-SNAPSHOT', '')
     applicationModuleName = 'ru.akman.launcher'
     applicationClassName = 'ru.akman.launcher.Launcher'
@@ -928,7 +934,7 @@ jlink {
         // when executing the jpackage task.
         // defaultValue: the name value configured in the launcher block or
         // project.name
-        installerName = "${imageName}"
+        installerName = "${imageName}-installer"
 
         // The argument passed to the --app-version option when running
         // jpackage when executing the jpackage and jpackageImage tasks.
@@ -949,34 +955,34 @@ jlink {
         // when executing the jpackageImage task.
         // defaultValue: empty list
         imageOptions = [
-            //+++ Description of the application
-            '--description', 'Launcher Application',
-            //+++ Vendor of the application
-            '--vendor', 'Akman',
-            //+++ Copyright for the application
-            '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
+            // Description of the application
+            '--description', applicationDescription,
+            // Vendor of the application
+            '--vendor', applicationVendor,
+            // Copyright for the application
+            '--copyright', applicationCopyright,
         ]
 
         // List of additional options to be passed to the jpackage executable
         // when executing the jpackage task.
         // defaultValue: empty list
         installerOptions = [
-            //+++ Description of the application
-            '--description', 'Launcher Installer',
-            //+++ Vendor of the application
-            '--vendor', 'Akman',
-            //+++ Copyright for the application
-            '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
-            //+++ Path to the license file (absolute path or relative to the
-            //+++ current directory)
-            '--license-file', 'LICENSE',
+            // Description of the application
+            '--description', applicationDescription,
+            // Vendor of the application
+            '--vendor', applicationVendor,
+            // Copyright for the application
+            '--copyright', applicationCopyright,
+            // Path to the license file (absolute path or relative to the
+            // current directory)
+            '--license-file', applicationLicenseFile,
         ]
 
         switch (platform) {
             case 'mac':
                 imageOptions += [
-                    //+++ Path of the icon of the application bundle (absolute path
-                    //+++ or relative to the current directory)
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
                     '--icon', "${projectDir}/package/mac/launcher.icns",
 
                     // Name of the application as it appears in the Menu Bar.
@@ -984,7 +990,7 @@ jlink {
                     // This name must be less than 16 characters long and
                     // be suitable for displaying in the menu bar and the
                     // application Info window. Defaults to the application name.
-                    '--mac-bundle-name', 'Launcher',
+                    '--mac-bundle-name', applicationName.capitalize(),
 
                     // An identifier that uniquely identifies the application
                     // for MacOSX. Defaults to the value of --identifier option.
@@ -1009,18 +1015,18 @@ jlink {
                     // '--mac-bundle-signing-prefix <prefix string>',
                 ]
                 installerOptions += [
-                    //+++ Path to a Properties file that contains list of
-                    //+++ key, value pairs (absolute path or relative to the
-                    //+++ current directory). The keys: "extension", "mime-type",
-                    //+++ "icon", and "description" can be used to describe the
-                    //+++ association. This option can be used multiple times.
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/mac/associations.properties",
 
-                    //+++ Absolute path of the installation directory of the
-                    //+++ application on OS X or Linux. Relative sub-path of the
-                    //+++ installation location of the application such as
-                    //+++ "Program Files" or "AppData" on Windows.
-                    //+++ '--install-dir <file path>',
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    // '--install-dir <file path>',
                 ]
                 // The type of the installer to create. Valid values are: "exe",
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
@@ -1031,47 +1037,47 @@ jlink {
                 break
             case 'win':
                 imageOptions += [
-                    //+++ Path of the icon of the application bundle (absolute path
-                    //+++ or relative to the current directory)
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
                     '--icon', "${projectDir}/package/windows/launcher.ico",
 
-                    //+++ Creates a console launcher for the application, should be
-                    //+++ specified for application which requires to show console
-                    //+++ at start.
-                    //+++ '--win-console',
+                    // Creates a console launcher for the application, should be
+                    // specified for application which requires to show console
+                    // at start.
+                    // '--win-console',
                 ]
                 installerOptions += [
-                    //+++ Path to a Properties file that contains list of
-                    //+++ key, value pairs (absolute path or relative to the
-                    //+++ current directory). The keys: "extension", "mime-type",
-                    //+++ "icon", and "description" can be used to describe the
-                    //+++ association. This option can be used multiple times.
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/windows/associations.properties",
 
-                    //+++ Absolute path of the installation directory of the
-                    //+++ application on OS X or Linux. Relative sub-path of the
-                    //+++ installation location of the application such as
-                    //+++ "Program Files" or "AppData" on Windows.
-                    '--install-dir', 'Launcher',
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    '--install-dir', applicationName.capitalize(),
 
-                    //+++ Adds a dialog to enable the user to choose a directory
-                    //+++ in which the product is installed
+                    // Adds a dialog to enable the user to choose a directory
+                    // in which the product is installed
                     '--win-dir-chooser',
 
-                    //+++ Adds the application to the system menu
+                    // Adds the application to the system menu
                     '--win-menu',
 
-                    //+++ Start Menu group this application is placed in.
-                    //+++ Wix fails when it uses Parent/Child menu group.
-                    '--win-menu-group', 'Launcher',
+                    // Start Menu group this application is placed in.
+                    // Wix fails when it uses Parent/Child menu group.
+                    '--win-menu-group', applicationName.capitalize(),
 
-                    //+++ Request to perform an install on a per-user basis
+                    // Request to perform an install on a per-user basis
                     '--win-per-user-install',
 
-                    //+++ Creates a desktop shortcut for the application
+                    // Creates a desktop shortcut for the application
                     '--win-shortcut',
 
-                    //+++ UUID associated with upgrades for this package
+                    // UUID associated with upgrades for this package
                     '--win-upgrade-uuid', '8C5094E6-C97E-47D8-8465-1DF16124700F',
                 ]
                 // The type of the installer to create. Valid values are: "exe",
@@ -1083,23 +1089,23 @@ jlink {
                 break
             case 'linux':
                 imageOptions += [
-                    //+++ Path of the icon of the application bundle (absolute path
-                    //+++ or relative to the current directory)
+                    // Path of the icon of the application bundle (absolute path
+                    // or relative to the current directory)
                     '--icon', "${projectDir}/package/linux/launcher.png",
                 ]
                 installerOptions += [
-                    //+++ Path to a Properties file that contains list of
-                    //+++ key, value pairs (absolute path or relative to the
-                    //+++ current directory). The keys: "extension", "mime-type",
-                    //+++ "icon", and "description" can be used to describe the
-                    //+++ association. This option can be used multiple times.
+                    // Path to a Properties file that contains list of
+                    // key, value pairs (absolute path or relative to the
+                    // current directory). The keys: "extension", "mime-type",
+                    // "icon", and "description" can be used to describe the
+                    // association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/linux/associations.properties",
 
-                    //+++ Absolute path of the installation directory of the
-                    //+++ application on OS X or Linux. Relative sub-path of the
-                    //+++ installation location of the application such as
-                    //+++ "Program Files" or "AppData" on Windows.
-                    //+++ '--install-dir <file path>',
+                    // Absolute path of the installation directory of the
+                    // application on OS X or Linux. Relative sub-path of the
+                    // installation location of the application such as
+                    // "Program Files" or "AppData" on Windows.
+                    // '--install-dir <file path>',
 
                     // Name for Linux bundle, defaults to the application name.
                     // Valid Debian package name must consist only of
@@ -1107,19 +1113,19 @@ jlink {
                     // minus (-) signs, and periods (.). They must be at least
                     // two characters long and must start with an alphanumeric
                     // character.
-                    '--linux-bundle-name', 'launcher',
+                    '--linux-bundle-name', applicationName.toLowerCase(),
 
                     // Maintainer for .deb bundle
-                    '--linux-deb-maintainer', 'Alexander Kapitman <akman.ru@gmail.com>',
+                    '--linux-deb-maintainer', applicationAuthor,
 
                     // Menu group this application is placed in
-                    '--linux-menu-group', 'Akman',
+                    '--linux-menu-group', applicationVendor,
 
                     // Required packages or capabilities for the application
                     // '--linux-package-deps',
 
                     // Type of the license ("License: " of the RPM .spec)
-                    '--linux-rpm-license-type', 'MIT',
+                    '--linux-rpm-license-type', applicationLicenseType,
                 ]
                 // The type of the installer to create. Valid values are: "exe",
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
