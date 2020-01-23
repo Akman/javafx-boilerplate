@@ -27,7 +27,7 @@
 # https://docs.travis-ci.com/user/tutorial/
 #
 
-if: branch = master and commit_message =~ /^Release version/
+if: branch = master and tag =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
 
 git:
 
