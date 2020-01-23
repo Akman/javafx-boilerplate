@@ -27,3 +27,4 @@ echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.2.8-hotspot/bin":$PATH
 echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
 
 choco install innosetup --version 5.6.1 -y
+choco install wixtoolset
