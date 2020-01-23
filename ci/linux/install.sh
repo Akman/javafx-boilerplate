@@ -12,8 +12,6 @@ wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 tar xzfp $JPACKAGE_JDK_ARCHIVE_NAME
 echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 
-echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=true"' >> .travis.env
-
 sudo apt-get update -y
 sudo apt-get install -y fakeroot
 sudo apt-get install -y rpm
