@@ -23,15 +23,10 @@ choco install adoptopenjdk --version 13.102.8 -y -ia ADDLOCAL=FeatureMain,Featur
 
 echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-13.0.2.8-hotspot"' >> .travis.env
 
-#choco install innosetup -y
-#choco install innosetup --version 5.6.1 -y
+choco install nuget.commandline
+nuget install WiX.Toolset
 
-#choco install dotnet3.5 -y
-#choco install chocolatey-core.extension -y
-choco install wixtoolset --version 3.11.2 -y
 echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.2.8-hotspot/bin":"/c/Program Files (x86)/WiX Toolset v3.11/bin":$PATH' >> .travis.env
-
-#echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.2.8-hotspot/bin":$PATH' >> .travis.env
 
 #echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
 
