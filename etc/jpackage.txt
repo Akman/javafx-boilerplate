@@ -1,6 +1,3 @@
-https://jdk.java.net/14/
-https://openjdk.java.net/jeps/343
-
 Usage: jpackage <options>
 
 Sample usages:

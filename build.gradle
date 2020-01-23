@@ -28,8 +28,11 @@
 plugins {
     id 'application'
 
+    // https://github.com/researchgate/gradle-release
+    id 'net.researchgate.release' version '2.8.1'
+
     // https://badass-jlink-plugin.beryx.org
-    id 'org.beryx.jlink' version '2.11.1'
+    id 'org.beryx.jlink' version '2.17.0'
 
     // https://github.com/hierynomus/license-gradle-plugin
     id 'com.github.hierynomus.license' version '0.15.0'
@@ -45,9 +48,6 @@ plugins {
     // https://spotbugs.github.io
     id 'com.github.spotbugs' version '2.0.0'
 
-    // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '2.8.1'
-    
     // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
     id 'checkstyle'
 
@@ -71,8 +71,8 @@ ext {
     applicationModuleName = 'ru.akman.launcher'
     applicationClassName = 'ru.akman.launcher.Launcher'
     applicationJvmArgs = [
-        '-Xms256m',
-        '-Xmx512m',
+        // '-Xms256m',
+        // '-Xmx512m',
     ]
     applicationArgs = [
         // '--no-gui',
@@ -85,11 +85,6 @@ ext {
     jvm = org.gradle.internal.jvm.Jvm.current()
     defaultEncoding = 'UTF-8'
     logDir = file("${projectDir}/log")
-    jpackageOutputDir = 'jpackage'
-    jpackageImageOutputDir = file("${buildDir}/${jpackageOutputDir}")
-    jpackageImageName = applicationName.capitalize()
-    jpackageInstallerOutputDir = file("${buildDir}/${jpackageOutputDir}")
-    jpackageInstallerName = jpackageImageName // "-${platformNativePrefix}"
 }
 
 java {
@@ -97,11 +92,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_13
 }
 
-// https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
 dependencies {
     implementation(
-        'org.apache.logging.log4j:log4j-api:2.13.0',
-        'org.apache.logging.log4j:log4j-core:2.13.0',
         "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
         "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
         "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
@@ -109,6 +101,8 @@ dependencies {
         //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
         //"org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
         //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
+        'org.apache.logging.log4j:log4j-api:2.13.0',
+        'org.apache.logging.log4j:log4j-core:2.13.0',
     )
     testImplementation(
         'org.junit.jupiter:junit-jupiter-api:5.4.2',
@@ -265,6 +259,182 @@ task fatJar(type: Jar) {
         }
     }
 }
+
+startScripts {
+    doFirst {
+        defaultJvmOpts = [
+            '--module-path', 'APP_HOME_LIB',
+            '--module', "${applicationModuleName}/${applicationClassName}"
+        ]
+        classpath = files()
+    }
+    doLast{
+        def bashFile = new File(outputDir, applicationName)
+        String bashContent = bashFile.text
+        bashFile.text = bashContent
+            .replaceFirst('APP_HOME_LIB',
+                java.util.regex.Matcher.quoteReplacement('$APP_HOME/lib'))
+            .replaceFirst(/(?m)^CLASSPATH=$/, '')
+            .replaceFirst(/(?m)^\s*CLASSPATH=`.+`$/, '')
+            .replaceFirst(/-classpath "\\".+\\""/, '')
+            .replaceFirst(/(?m)^eval set -- .+$/,
+                java.util.regex.Matcher.quoteReplacement(
+                'eval set -- $JAVA_OPTS $DEFAULT_JVM_OPTS "$APP_ARGS"'))
+        def batFile = new File(outputDir, applicationName + ".bat")
+        String batContent = batFile.text
+        batFile.text = batContent
+            .replaceFirst('APP_HOME_LIB',
+                java.util.regex.Matcher.quoteReplacement('%APP_HOME%\\lib'))
+            .replaceFirst(/(?m)^set CLASSPATH=$/, '')
+            .replaceFirst(/-classpath "%CLASSPATH%"/, '')
+            .replaceFirst(/(?m)^"%JAVA_EXE%" %DEFAULT_JVM_OPTS% .+$/,
+                java.util.regex.Matcher.quoteReplacement(
+                '"%JAVA_EXE%" %JAVA_OPTS% %DEFAULT_JVM_OPTS% %CMD_LINE_ARGS%'))
+    }
+}
+
+run {
+    standardInput = System.in
+    doFirst {
+        main = ''
+        args = []
+        jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
+        jvmArgs += [
+            '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
+            '"-Duser.country=' + System.properties['user.country'] + '"',
+            '"-Duser.language=' + System.properties['user.language'] + '"',
+            '"-Duser.variant=' + System.properties['user.variant'] + '"',
+        ]
+        jvmArgs += [
+            '--module-path', classpath.asPath,
+            '--patch-module', "${applicationModuleName}=" +
+            files(sourceSets.main.output.resourcesDir).asPath,
+            '--module', "${applicationModuleName}/${applicationClassName}",
+        ]
+        jvmArgs += applicationArgs
+        classpath = files()
+    }
+}
+
+task exec(type: Exec) {
+    description 'Executes this project as a JVM application'
+    group 'application'
+    dependsOn classes
+    standardInput = System.in
+    executable = jvm.javaExecutable
+    args = applicationJvmArgs
+    args += [
+        '-Dfile.encoding=' + System.properties['file.encoding'],
+        '-Duser.country=' + System.properties['user.country'],
+        '-Duser.language=' + System.properties['user.language'],
+        '-Duser.variant=' + System.properties['user.variant'],
+    ]
+    args += [
+        '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
+        '--patch-module', "${applicationModuleName}=" +
+            files(sourceSets.main.output.resourcesDir).asPath,
+        '--module', "${applicationModuleName}/${applicationClassName}",
+    ]
+    args += applicationArgs
+}
+
+release {
+
+    // Fail when there un-committed changes.
+    failOnCommitNeeded = true
+
+    // Fail when there are local commits that haven't been published upstream.
+    failOnPublishNeeded = true
+
+    // Fail when the project has dependencies on SNAPSHOT versions unless
+    // those SNAPSHOT dependencies have been defined
+    // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
+    failOnSnapshotDependencies = true
+
+    // Fail when files are found that are not under version control.
+    failOnUnversionedFiles = true
+
+    // Fail when the source needs to be updated, or there are changes
+    // available upstream that haven't been pulled.
+    failOnUpdateNeeded = true
+
+    // Should the plugin revert it's changes to gradle.properties
+    // when a failure occurs.
+    revertOnFail = true
+
+    // The string template which is used to generate the tag name.
+    // Possible variables are $version and $name.
+    // Always ensure to use single-quotes, otherwise "$" is interpreted
+    // already in your build script.
+    tagTemplate = 'v${version}'
+
+    // This will be prepended to all commits done by the plugin.
+    // A good place for code review, or ticket numbers.
+    preCommitText = ''
+
+    // The commit message used to commit the non-SNAPSHOT version
+    // if SNAPSHOT was used.
+    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+
+    // The commit message used when creating the tag.
+    // Not used with BZR projects.
+    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+
+    // The commit message used when committing the next version.
+    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+
+    versionPropertyFile = 'gradle.properties'
+
+    versionProperties = []
+
+    versionPatterns = [
+        /(\d+)\.(\d+)\.(\d+)(.*$)/: { java.util.regex.Matcher m, Project p ->
+            m.replaceAll("${m[0][1]}.${(m[0][2] as int) + 1}.0${m[0][4]}")
+        },
+    ]
+
+    buildTasks = [
+        'clean',
+        'check',
+        'jacocoTestReport',
+    ]
+
+    ignoredSnapshotDependencies = []
+
+    // (GIT only) If set to the name of a branch, the "release" task will
+    // commit the release on this branch, and the next version
+    // on the working branch.
+    pushReleaseVersionBranch = false
+
+    git {
+
+        // Defines the branch which releases must be done off of.
+        // Eg. set to "release" to require releases are done on
+        // the "release" branch (or use a regular expression to allow releases
+        // from multiple branches, e.g. "/release|master/").
+        // Set to '' to ignore.
+        requireBranch = 'master'
+
+        pushToBranchPrefix = ''
+
+        pushToRemote = 'origin'
+
+        commitVersionFileOnly = false
+
+        // Adds `-s` parameter to the tag command
+        signTag = false
+
+        // Defines an array of options to add to the git adapter during a push.
+        // This could be useful to have the vc hooks skipped during a release.
+        // pushOptions = [
+        //     '--no-verify',
+        // ]
+
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 license {
     // Specify location of header to use in comparisons,
@@ -516,112 +686,64 @@ jacocoTestReport {
     }
 }
 
-startScripts {
-    doFirst {
-        defaultJvmOpts = [
-            '--module-path', 'APP_HOME_LIB',
-            '--module', "${applicationModuleName}/${applicationClassName}"
-        ]
-        classpath = files()
-    }
-    doLast{
-        def bashFile = new File(outputDir, applicationName)
-        String bashContent = bashFile.text
-        bashFile.text = bashContent
-            .replaceFirst('APP_HOME_LIB',
-                java.util.regex.Matcher.quoteReplacement('$APP_HOME/lib'))
-            .replaceFirst(/(?m)^CLASSPATH=$/, '')
-            .replaceFirst(/(?m)^\s*CLASSPATH=`.+`$/, '')
-            .replaceFirst(/-classpath "\\".+\\""/, '')
-            .replaceFirst(/(?m)^eval set -- .+$/,
-                java.util.regex.Matcher.quoteReplacement(
-                'eval set -- $JAVA_OPTS $DEFAULT_JVM_OPTS "$APP_ARGS"'))
-        def batFile = new File(outputDir, applicationName + ".bat")
-        String batContent = batFile.text
-        batFile.text = batContent
-            .replaceFirst('APP_HOME_LIB',
-                java.util.regex.Matcher.quoteReplacement('%APP_HOME%\\lib'))
-            .replaceFirst(/(?m)^set CLASSPATH=$/, '')
-            .replaceFirst(/-classpath "%CLASSPATH%"/, '')
-            .replaceFirst(/(?m)^"%JAVA_EXE%" %DEFAULT_JVM_OPTS% .+$/,
-                java.util.regex.Matcher.quoteReplacement(
-                '"%JAVA_EXE%" %JAVA_OPTS% %DEFAULT_JVM_OPTS% %CMD_LINE_ARGS%'))
-    }
-}
-
-run {
-    standardInput = System.in
-    doFirst {
-        main = ''
-        args = []
-        jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
-        jvmArgs += [
-            '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
-            '"-Duser.country=' + System.properties['user.country'] + '"',
-            '"-Duser.language=' + System.properties['user.language'] + '"',
-            '"-Duser.variant=' + System.properties['user.variant'] + '"',
-        ]
-        jvmArgs += [
-            '--module-path', classpath.asPath,
-            '--patch-module', "${applicationModuleName}=" +
-            files(sourceSets.main.output.resourcesDir).asPath,
-            '--module', "${applicationModuleName}/${applicationClassName}",
-        ]
-        jvmArgs += applicationArgs
-        classpath = files()
-    }
-}
-
-task exec(type: Exec) {
-    description 'Executes this project as a JVM application'
-    group 'application'
-    dependsOn classes
-    standardInput = System.in
-    executable = jvm.javaExecutable
-    args = applicationJvmArgs
-    args += [
-        '-Dfile.encoding=' + System.properties['file.encoding'],
-        '-Duser.country=' + System.properties['user.country'],
-        '-Duser.language=' + System.properties['user.language'],
-        '-Duser.variant=' + System.properties['user.variant'],
-    ]
-    args += [
-        '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
-        '--patch-module', "${applicationModuleName}=" +
-            files(sourceSets.main.output.resourcesDir).asPath,
-        '--module', "${applicationModuleName}/${applicationClassName}",
-    ]
-    args += applicationArgs
-}
+////////////////////////////////////////////////////////////////////////////////
 
 jlink {
+    // The path to the JDK providing the tools needed
+    // by the plugin (javac, jar, jlink etc.).
+    // defaultValue: the first non-empty value from:
+    //  - the badass.jlink.java.home system property
+    //  - the BADASS_JLINK_JAVA_HOME environment variable
+    //  - the java.home system property (only if it points to a JRE containing
+    //    the javac, jar, and jlink tools)
+    //  - the JAVA_HOME environment variable
+    // javaHome = '/usr/lib/jvm/open-jdk'
+
+    // The name of the Gradle dependency configuration used to
+    // execute your application.
+    // defaultValue: 'runtimeClasspath'
+    // configuration = 'myAppRuntime'
 
     // The directory into which the custom runtime image should be generated.
     // If you use the targetPlatform method to generate images for
     // other platforms, the corresponding images will be created in
     // subdirectories of imageDir.
-    imageDir = file("${buildDir}/jlinkimage")
-    
+    imageDir = file("${buildDir}/jlink/image")
+
     // The file into which a zip archive of the custom runtime image
     // should be created.
-    imageZip = file("${buildDir}/${applicationName}-jlinkimage-${applicationVersion}.zip")
+    imageZip = file("${buildDir}/jlink/${applicationName}-${applicationVersion}.zip")
 
-    // Include all dependencies matching the given prefixes into
-    // the merged module. This method is useful when it should handle one or
-    // more modular jars as non-modular. You can call this method multiple times.
-    // https://github.com/beryx/badass-jlink-plugin/issues/14#issuecomment-447351574
-    forceMerge('log4j-api')
+    // Convenience property for setting the values
+    // of both imageDir and imageZip as follows:
+    // imageDir <- buildDir/imageName
+    // imageZip <- buildDir/imageName.zip
+    // imageName = applicationName
 
-    launcher {
-        name = "${applicationName}"
-        args [
-        ]
-        jvmArgs = [
-            "-Dfile.encoding=${defaultEncoding}".toString(),
-        ]
-        unixScriptTemplate = file("${projectDir}/package/nix-script.template")
-        windowsScriptTemplate = file("${projectDir}/package/win-script.template")
-    }
+    // The path to the base directory that will be used by the plugin
+    // to store intermediate outputs.
+    // defaultValue: "${buildDir}/jlinkbase"
+    jlinkBasePath = "${buildDir}/jlink/base"
+
+    // The main class to be provided as part of the --launcher option of jlink.
+    // defaultValue: project.mainClassName from the Application plugin
+    mainClass = applicationClassName
+
+    // The module name of this application.
+    // defaultValue: the module name specified in the module-info.java
+    moduleName = applicationModuleName
+
+    // The name of the merged module.
+    // defaultValue: moduleName.merged.module
+    // mergedModuleName = "${moduleName}.merged.module"
+
+    // The base name of the jar containing the merged module.
+    // defaultValue: archiveBaseName.merged.module
+    // mergedModuleJarName = "${archiveBaseName}.merged.module"
+
+    // The version of the jar containing the merged module.
+    // defaultValue: project.version
+    // mergedModuleJarVersion = version
 
     // Options for creating the runtime image
     options = [
@@ -634,13 +756,10 @@ jlink {
         // JARs aren’t copied to the runtime image.
         // '--ignore-signing-information',
 
-        // Excludes native commands from the image
-        // '--strip-native-commands',
-
-        // Strips debug information from the output image
+        // Strips debug information
         '--strip-debug',
 
-        // Excludes header files
+        // Excludes include header files
         '--no-header-files',
 
         // Excludes man pages
@@ -651,123 +770,213 @@ jlink {
         '--compress', '2',
     ]
 
-    // Configure the module descriptor of the merged module.
-    // It provides a DSL that matches the syntax of the directives in
-    // a module declaration file (module-info.java), but it requires quotes
-    // around the names of modules, services, and service implementation classes.
-    // DSL does not support exports directives because automatically exports
-    // all packages found in the merged module.
+    // addOptions(String... options)
+    // Adds options to be passed to jlink. It is an alternative way of
+    // setting the options property. You can call this method multiple times.
+    // addOptions '--no-header-files', '--no-man-pages'
+
+    // Include all dependencies matching the given prefixes into
+    // the merged module. This method is useful when it should handle one or
+    // more modular jars as non-modular. You can call this method multiple times.
+    // https://github.com/beryx/badass-jlink-plugin/issues/14#issuecomment-447351574
+    forceMerge 'log4j-api'
+
+    // addExtraDependencies(String... jarPrefixes)
+    // Instructs the plugin to treat all jars matching the given prefixes
+    // as dependencies of the merged module.
+    // A typical situation where this method is needed involves libraries
+    // using JavaFX. Some libraries do not specify their JavaFX dependencies,
+    // because JavaFX was part of the JDK before being removed in Java 11.
+    // Including addExtraDependencies("javafx") into the jlink block solves
+    // this problem.
+    // addExtraDependencies 'javafx'
+
+    // addExtraModulePath(String modulePath)
+    // Instructs the plugin to include the specified modulePath in the list of
+    // paths passed to the --module-path option of jlink.
+    // You can call this method multiple times.
+    // addExtraModulePath '/usr/lib/jmods'
+
+    // targetPlatform(String name, String jdkHome, List<String> options = [])
+    // targetPlatform('linux-x64', '/usr/lib/jvm/jdk_x64_linux_hotspot_11_28')
+    // targetPlatform(
+    //     'linux-s390x',
+    //     '/usr/lib/jvm/jdk_s390x_linux_hotspot_11_28',
+    //     [
+    //         '--endian', 'big'
+    //     ]
+    // )
+
+    // targetPlatform(String name, Action<TargetPlatform> action)
+    // targetPlatform("linux-s390x") {
+    //     jdkHome = "/usr/lib/jvm/linux-s390x/jdk-11.0.2+9"
+    //     addOptions("--endian", "big")
+    //     addExtraModulePath("/usr/lib/openjfx/linux-s390x/jmods")
+    // }
+    // targetPlatform("mac") {
+    //     jdkHome = "/usr/lib/jvm/mac/jdk-11.0.2+9"
+    //     addExtraModulePath("/usr/lib/openjfx/mac/jmods")
+    // }
+    // targetPlatform("win") {
+    //     jdkHome = "/usr/lib/jvm/win/jdk-11.0.2+9"
+    //     addExtraModulePath("/usr/lib/openjfx/win/jmods")
+    // }
+
+    launcher {
+        name = applicationName
+        moduleName = applicationModuleName
+        mainClassName = applicationClassName
+        jvmArgs = applicationJvmArgs
+        args = applicationArgs
+        unixScriptTemplate = file("${projectDir}/package/nix-script.template")
+        windowsScriptTemplate = file("${projectDir}/package/win-script.template")
+    }
+
+    // The plugin can generate script files for additional applications besides
+    // the main one. For each additional application you configure a
+    // secondaryLauncher block. This block supports all properties
+    // of the launcher block and also the following ones:
+    //     mainClass - the main class of this additional application.
+    //     moduleName - the module containing the main class of this additional
+    //                  application. defaultValue: the value of the moduleName
+    //                  property in the enclosing jlink extension
+    // secondaryLauncher {
+    //     name = 'my-additional-app'
+    //     mainClass = 'org.example.MyAdditionalApp'
+    //     args = ['--user', 'emma']
+    // }
+
     // mergedModule {
-    //
     //     additive = true
-    //
     //     requires 'java.desktop'
     //     requires transitive 'java.sql'
     //     uses 'java.sql.Driver'
     //     provides 'java.sql.Driver' with 'org.hsqldb.jdbc.JDBCDriver'
+    //     excludeRequires 'java.compiler', 'java.rmi'
+    //     excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage.ThreadInfoFactory'
+    //     excludeProvides servicePattern: 'org.apache.logging.*'
     // }
 
-    // targetPlatform('linux-s390x') {
-    //     jdkHome = '/usr/lib/jvm/linux-s390x/jdk-11.0.2+9'
-    //     addOptions('--endian', 'big')
-    //     addExtraModulePath('/usr/lib/openjfx/linux-s390x/jmods')
-    // }
-    // targetPlatform('mac') {
-    //     jdkHome = '/usr/lib/jvm/mac/jdk-11.0.2+9'
-    //     addExtraModulePath('/usr/lib/openjfx/mac/jmods')
-    // }
-    // targetPlatform('win') {
-    //     jdkHome = '/usr/lib/jvm/win/jdk-11.0.2+9'
-    //     addExtraModulePath('/usr/lib/openjfx/win/jmods')
+    // By default, all application modules are included in the custom runtime
+    // image. This block allows you to create a custom runtime image containing
+    // only some of the application modules.
+    // If the customImage block is empty, the plugin will create a JRE
+    // containing only the JDK modules required by your application.
+    // The plugin figures out by itself which JDK modules are needed,
+    // but you can use the below property to request a different set of modules.
+    // customImage {
+    //     jdkModules = ['java.desktop', 'java.xml', 'jdk.unsupported']
+    //     appModules = ['my.merged.module']
     // }
 
     // Create a platform-specific application image and installer
-    // Set the environment variable BADASS_JLINK_JPACKAGE_HOME to JDK home
-    // directory with jpackage tool.
+    // https://openjdk.java.net/jeps/343
+    // 
     jpackage {
 
-        skipInstaller = false
+        // The path to the JDK providing the jpackage tool.
+        // defaultValue: the first non-empty value from:
+        //  - the badass.jlink.jpackage.home system property
+        //  - the BADASS_JLINK_JPACKAGE_HOME environment variable
+        //  - the java.home system property (only if it points to a JRE
+        //    containing the jpackage tool)
+        //  - the JAVA_HOME environment variable
+        // jpackageHome = "/usr/lib/jvm/jdk14"
 
         // Convenience property for setting both imageOutputDir and
         // installerOutputDir with the value "${buildDir}/${outputDir}".
-        outputDir = jpackageOutputDir
-        
-        // The directory passed as argument to the --output option when running
-        // jpackage in the create-app-image mode.
-        imageOutputDir = jpackageImageOutputDir
-        
-        // The directory passed as argument to the --output option when running
-        // jpackage in the create-installer-image mode.
-        installerOutputDir = jpackageInstallerOutputDir
+        // defaultValue: "jpackage"
+        outputDir = 'jpackage'
 
-        // https://jdk.java.net/jpackage/
-        // https://download.java.net/java/early_access/jpackage/49/openjdk-13-jpackage+49_windows-x64_bin.zip
-        // Known issues:
-        // JDK-8215447: Investigate if current implementation of --license-file is correct for RPM packages
-        // JDK-8220806: invalid --app-version causes failure in windows exe installer
-        // JDK-8204991: Cannot start application (WinLauncher) if path contains non-ascii character
+        // The directory passed as argument to the --output option of jpackage
+        // when executing the jpackageImage task.
+        // defaultValue: buildDir/outputDir
+        imageOutputDir = file("${buildDir}/${outputDir}")
 
-        // https://openjdk.java.net/jeps/343
+        // The argument passed to the --name option when executing the
+        // jpackageImage task.
+        // defaultValue: the name value configured in the launcher block
+        // or project.name
+        imageName = applicationName.capitalize()
+
+        // The directory passed as argument to the --resource-dir option
+        // when running jpackage to create an application installer.
+        // It is also applicable when creating an application image
+        // when you want your own application image
+        // instead of the default java image.
+        // resourceDir = file("${buildDir}/my-packaging-resources")
+
+        // This property is required only when using the targetPlatform method.
+        // It specifies which of the images produced by jlink should be used as
+        // runtime image by jpackage. Its value must match the name provided
+        // in one of the calls to the targetPlatform method.
+        // defaultValue: null
+        // targetPlatform = "linux"
+
+        // Boolean value that lets you generate only the platform-specific
+        // application image and skip the generation of the platform-specific
+        // application installer.
+        // defaultValue: false
+        skipInstaller = false
+
+        // The directory passed as argument to the --output option when running
+        // jpackage when executing the jpackage task.
+        // defaultValue: ${buildDir}/${outputDir}
+        installerOutputDir = file("${buildDir}/${outputDir}")
 
         // The argument passed to the --name option when running jpackage
-        // in the create-app-image mode.
-        imageName = jpackageImageName
+        // when executing the jpackage task.
+        // defaultValue: the name value configured in the launcher block or
+        // project.name
+        installerName = "${imageName}"
+
+        // The argument passed to the --app-version option when running
+        // jpackage when executing the jpackage and jpackageImage tasks.
+        // defaultValue: the project version
+        // appVersion = applicationVersion
+
+        // List of JVM arguments to be passed to the virtual machine.
+        // defaultValue: the jvmArgs value configured in the launcher block or
+        // an empty list
+        jvmArgs = applicationJvmArgs
+
+        // The type of installer to be generated.
+        // defaultValue: null (all supported types for the current platform
+        // will be generated)
+        // installerType = "rpm"
 
         // List of additional options to be passed to the jpackage executable
-        // in the create-app-image mode.
+        // when executing the jpackageImage task.
+        // defaultValue: empty list
         imageOptions = [
-            // Version of the application
-            '--app-version', "${version}",
-
-            // Description of the application
+            //+++ Description of the application
             '--description', 'Launcher Application',
-
-            // Vendor of the application
+            //+++ Vendor of the application
             '--vendor', 'Akman',
-
-            // Copyright for the application
+            //+++ Copyright for the application
             '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
         ]
 
-        // The argument passed to the --name option when running jpackage
-        // in the create-installer mode.
-        installerName = jpackageInstallerName
-
-        // Options for creating the application installer
+        // List of additional options to be passed to the jpackage executable
+        // when executing the jpackage task.
+        // defaultValue: empty list
         installerOptions = [
-
-            // Version of the application
-            '--app-version', "${applicationVersion}",
-
-            // Description of the application
+            //+++ Description of the application
             '--description', 'Launcher Installer',
-
-            // Vendor of the application
+            //+++ Vendor of the application
             '--vendor', 'Akman',
-
-            // Copyright for the application
+            //+++ Copyright for the application
             '--copyright', 'Copyright (C) 2019, 2020 A.Kapitman',
-
-            // An identifier that uniquely identifies the application.
-            // Defaults to the main class name.
-            // The value should be a valid DNS name.
-            '--identifier', 'ru.akman.launcher',
-
-            // Path to the license file (absolute path or relative to the
-            // current directory)
+            //+++ Path to the license file (absolute path or relative to the
+            //+++ current directory)
             '--license-file', 'LICENSE',
-
-            // Path to override jpackage resources. Icons, template files,
-            // and other resources of jpackage can be over-ridden by adding
-            // replacement resources to this directory. (absolute path or
-            // relative to the current directory)
-            // '--resource-dir <path>',
         ]
+
         switch (platform) {
             case 'mac':
                 imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
+                    //+++ Path of the icon of the application bundle (absolute path
+                    //+++ or relative to the current directory)
                     '--icon', "${projectDir}/package/mac/launcher.icns",
 
                     // Name of the application as it appears in the Menu Bar.
@@ -781,7 +990,7 @@ jlink {
                     // for MacOSX. Defaults to the value of --identifier option.
                     // May only use alphanumeric (A-Z,a-z,0-9), hyphen (-), and
                     // period (.) characters.
-                    '--mac-bundle-identifier', 'ru.akman.launcher',
+                    '--mac-bundle-identifier', "${applicationClassName}",
 
                     // Request that the bundle be signed
                     // '--mac-sign',
@@ -800,18 +1009,18 @@ jlink {
                     // '--mac-bundle-signing-prefix <prefix string>',
                 ]
                 installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
+                    //+++ Path to a Properties file that contains list of
+                    //+++ key, value pairs (absolute path or relative to the
+                    //+++ current directory). The keys: "extension", "mime-type",
+                    //+++ "icon", and "description" can be used to describe the
+                    //+++ association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/mac/associations.properties",
 
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
-                    // '--install-dir <file path>',
+                    //+++ Absolute path of the installation directory of the
+                    //+++ application on OS X or Linux. Relative sub-path of the
+                    //+++ installation location of the application such as
+                    //+++ "Program Files" or "AppData" on Windows.
+                    //+++ '--install-dir <file path>',
                 ]
                 // The type of the installer to create. Valid values are: "exe",
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
@@ -822,52 +1031,47 @@ jlink {
                 break
             case 'win':
                 imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
+                    //+++ Path of the icon of the application bundle (absolute path
+                    //+++ or relative to the current directory)
                     '--icon', "${projectDir}/package/windows/launcher.ico",
 
-                    // Creates a console launcher for the application, should be
-                    // specified for application which requires to show console
-                    // at start.
-                    // '--win-console',
+                    //+++ Creates a console launcher for the application, should be
+                    //+++ specified for application which requires to show console
+                    //+++ at start.
+                    //+++ '--win-console',
                 ]
                 installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
+                    //+++ Path to a Properties file that contains list of
+                    //+++ key, value pairs (absolute path or relative to the
+                    //+++ current directory). The keys: "extension", "mime-type",
+                    //+++ "icon", and "description" can be used to describe the
+                    //+++ association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/windows/associations.properties",
 
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
+                    //+++ Absolute path of the installation directory of the
+                    //+++ application on OS X or Linux. Relative sub-path of the
+                    //+++ installation location of the application such as
+                    //+++ "Program Files" or "AppData" on Windows.
                     '--install-dir', 'Launcher',
 
-                    // Adds a dialog to enable the user to choose a directory
-                    // in which the product is installed
+                    //+++ Adds a dialog to enable the user to choose a directory
+                    //+++ in which the product is installed
                     '--win-dir-chooser',
 
-                    // Adds the application to the system menu
+                    //+++ Adds the application to the system menu
                     '--win-menu',
 
-                    // Start Menu group this application is placed in.
-                    // Wix fails when it uses Parent/Child menu group.
+                    //+++ Start Menu group this application is placed in.
+                    //+++ Wix fails when it uses Parent/Child menu group.
                     '--win-menu-group', 'Launcher',
 
-                    // Request to perform an install on a per-user basis
+                    //+++ Request to perform an install on a per-user basis
                     '--win-per-user-install',
 
-                    // Name of the application for registry references.
-                    // The default is the Application Name with only
-                    // alphanumerics, dots, and dashes (no whitespace)
-                    '--win-registry-name', 'Launcher',
-
-                    // Creates a desktop shortcut for the application
+                    //+++ Creates a desktop shortcut for the application
                     '--win-shortcut',
 
-                    // UUID associated with upgrades for this package
+                    //+++ UUID associated with upgrades for this package
                     '--win-upgrade-uuid', '8C5094E6-C97E-47D8-8465-1DF16124700F',
                 ]
                 // The type of the installer to create. Valid values are: "exe",
@@ -879,23 +1083,23 @@ jlink {
                 break
             case 'linux':
                 imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
+                    //+++ Path of the icon of the application bundle (absolute path
+                    //+++ or relative to the current directory)
                     '--icon', "${projectDir}/package/linux/launcher.png",
                 ]
                 installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
+                    //+++ Path to a Properties file that contains list of
+                    //+++ key, value pairs (absolute path or relative to the
+                    //+++ current directory). The keys: "extension", "mime-type",
+                    //+++ "icon", and "description" can be used to describe the
+                    //+++ association. This option can be used multiple times.
                     '--file-associations', "${projectDir}/package/linux/associations.properties",
 
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
-                    // '--install-dir <file path>',
+                    //+++ Absolute path of the installation directory of the
+                    //+++ application on OS X or Linux. Relative sub-path of the
+                    //+++ installation location of the application such as
+                    //+++ "Program Files" or "AppData" on Windows.
+                    //+++ '--install-dir <file path>',
 
                     // Name for Linux bundle, defaults to the application name.
                     // Valid Debian package name must consist only of
@@ -926,103 +1130,8 @@ jlink {
                 break
         }
     }
-
 }
 
-release {
-
-    // Fail when there un-committed changes.
-    failOnCommitNeeded = true
-
-    // Fail when there are local commits that haven't been published upstream.
-    failOnPublishNeeded = true
-
-    // Fail when the project has dependencies on SNAPSHOT versions unless
-    // those SNAPSHOT dependencies have been defined
-    // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
-    failOnSnapshotDependencies = true
-
-    // Fail when files are found that are not under version control.
-    failOnUnversionedFiles = true
-
-    // Fail when the source needs to be updated, or there are changes
-    // available upstream that haven't been pulled.
-    failOnUpdateNeeded = true
-
-    // Should the plugin revert it's changes to gradle.properties
-    // when a failure occurs.
-    revertOnFail = true
-
-    // The string template which is used to generate the tag name.
-    // Possible variables are $version and $name.
-    // Always ensure to use single-quotes, otherwise "$" is interpreted
-    // already in your build script.
-    tagTemplate = 'v${version}'
-
-    // This will be prepended to all commits done by the plugin.
-    // A good place for code review, or ticket numbers.
-    preCommitText = ''
-
-    // The commit message used to commit the non-SNAPSHOT version
-    // if SNAPSHOT was used.
-    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
-
-    // The commit message used when creating the tag.
-    // Not used with BZR projects.
-    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
-
-    // The commit message used when committing the next version.
-    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
-
-    versionPropertyFile = 'gradle.properties'
-
-    versionProperties = []
-
-    versionPatterns = [
-        /(\d+)\.(\d+)\.(\d+)(.*$)/: { java.util.regex.Matcher m, Project p ->
-            m.replaceAll("${m[0][1]}.${(m[0][2] as int) + 1}.0${m[0][4]}")
-        },
-    ]
-
-    buildTasks = [
-        'clean',
-        'check',
-        'jacocoTestReport',
-    ]
-
-    ignoredSnapshotDependencies = []
-
-    // (GIT only) If set to the name of a branch, the "release" task will
-    // commit the release on this branch, and the next version
-    // on the working branch.
-    pushReleaseVersionBranch = false
-
-    git {
-
-        // Defines the branch which releases must be done off of.
-        // Eg. set to "release" to require releases are done on
-        // the "release" branch (or use a regular expression to allow releases
-        // from multiple branches, e.g. "/release|master/").
-        // Set to '' to ignore.
-        requireBranch = 'master'
-
-        pushToBranchPrefix = ''
-
-        pushToRemote = 'origin'
-
-        commitVersionFileOnly = false
-
-        // Adds `-s` parameter to the tag command
-        signTag = false
-
-        // Defines an array of options to add to the git adapter during a push.
-        // This could be useful to have the vc hooks skipped during a release.
-        // pushOptions = [
-        //     '--no-verify',
-        // ]
-
-    }
-
-}
+////////////////////////////////////////////////////////////////////////////////
 
 defaultTasks 'clean', 'check', 'jacocoTestReport'

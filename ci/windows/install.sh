@@ -17,6 +17,6 @@ choco install adoptopenjdk -y
 echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot"' >> .travis.env
 echo 'export PATH="/c/Program Files/AdoptOpenJDK/jdk-13.0.1.9-hotspot/bin":$PATH' >> .travis.env
 
-echo 'export GRADLE_OPTS="-Dfile.encoding=utf-8 -Dorg.gradle.daemon=false"' >> .travis.env
+echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
 
 choco install innosetup --version 5.6.1 -y
