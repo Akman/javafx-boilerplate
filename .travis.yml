@@ -27,7 +27,8 @@
 # https://docs.travis-ci.com/user/tutorial/
 #
 
-if: branch = master and tag =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
+if: branch = master AND tag IS present
+# tag =~ /^v\d+\.\d+\.\d+(-SNAPSHOT.*)?$/
 
 git:
 
