@@ -1,29 +1,30 @@
-/**
- * Java Boilerplate Project
- *
- * https://github.com/akman/java-boilerplate-gradle
- *
- * The MIT License (MIT)
- *
- * Copyright (C) 2019, 2020 Alexander Kapitman <akman.ru@gmail.com>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+/*
+    Java Boilerplate Project
+    
+    https://github.com/akman/java-boilerplate-gradle
+    
+    The MIT License (MIT)
+    
+    Copyright (C) 2019, 2020 Alexander Kapitman <akman.ru@gmail.com>
+    
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom
+    the Software is furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+*/
 
 plugins {
     id 'application'
@@ -36,11 +37,6 @@ plugins {
 
     // https://github.com/hierynomus/license-gradle-plugin
     id 'com.github.hierynomus.license' version '0.15.0'
-    // TODO: This behaviour has been deprecated and is scheduled to be removed!
-    // Following properties are not annotated with an input or output annotation:
-    // 'check', 'dryRun', 'encoding', 'headerDefinitions', 'inheritedMappings',
-    // 'inheritedProperties', 'internalMappings', 'skipExistingHeaders',
-    // 'strictCheck', 'URI', 'useDefaultMappings', 'validHeaders'
 
     // https://github.com/ben-manes/gradle-versions-plugin
     id 'com.github.ben-manes.versions' version '0.21.0'
@@ -718,7 +714,9 @@ jlink {
 
     // The file into which a zip archive of the custom runtime image
     // should be created.
-    imageZip = file("${buildDir}/jlink/${applicationName}-${applicationVersion}.zip")
+    imageZip = file(
+        "${buildDir}/jlink/${applicationName}-${applicationVersion}.zip"
+    )
 
     // Convenience property for setting the values
     // of both imageDir and imageZip as follows:
@@ -783,8 +781,8 @@ jlink {
 
     // Include all dependencies matching the given prefixes into
     // the merged module. This method is useful when it should handle one or
-    // more modular jars as non-modular. You can call this method multiple times.
-    // https://github.com/beryx/badass-jlink-plugin/issues/14#issuecomment-447351574
+    // more modular jars as non-modular. You can call this method multiple
+    // times.
     forceMerge 'log4j-api'
 
     // addExtraDependencies(String... jarPrefixes)
@@ -835,7 +833,9 @@ jlink {
         jvmArgs = applicationJvmArgs
         args = applicationArgs
         unixScriptTemplate = file("${projectDir}/package/nix-script.template")
-        windowsScriptTemplate = file("${projectDir}/package/win-script.template")
+        windowsScriptTemplate = file(
+            "${projectDir}/package/win-script.template"
+        )
     }
 
     // The plugin can generate script files for additional applications besides
@@ -859,7 +859,7 @@ jlink {
     //     uses 'java.sql.Driver'
     //     provides 'java.sql.Driver' with 'org.hsqldb.jdbc.JDBCDriver'
     //     excludeRequires 'java.compiler', 'java.rmi'
-    //     excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage.ThreadInfoFactory'
+    //     excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage'
     //     excludeProvides servicePattern: 'org.apache.logging.*'
     // }
 
@@ -877,7 +877,6 @@ jlink {
 
     // Create a platform-specific application image and installer
     // https://openjdk.java.net/jeps/343
-    // 
     jpackage {
 
         // The path to the JDK providing the jpackage tool.
@@ -1019,7 +1018,8 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/package/mac/associations.properties",
+                    '--file-associations',
+                    "${projectDir}/package/mac/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the
@@ -1045,7 +1045,8 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/package/windows/associations.properties",
+                    '--file-associations',
+                    "${projectDir}/package/windows/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the
@@ -1070,12 +1071,14 @@ jlink {
                     '--win-shortcut',
 
                     // UUID associated with upgrades for this package
-                    '--win-upgrade-uuid', '8C5094E6-C97E-47D8-8465-1DF16124700F',
+                    '--win-upgrade-uuid',
+                    '8C5094E6-C97E-47D8-8465-1DF16124700F',
                 ]
                 // The type of the installer to create. Valid values are: "exe",
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
-                // installable packages for the current platform will be created.
+                // installable packages for the current platform will be
+                // created.
                 installerType = 'msi'
                 break
             case 'linux':
@@ -1090,7 +1093,8 @@ jlink {
                     // current directory). The keys: "extension", "mime-type",
                     // "icon", and "description" can be used to describe the
                     // association. This option can be used multiple times.
-                    '--file-associations', "${projectDir}/package/linux/associations.properties",
+                    '--file-associations',
+                    "${projectDir}/package/linux/associations.properties",
 
                     // Absolute path of the installation directory of the
                     // application on OS X or Linux. Relative sub-path of the

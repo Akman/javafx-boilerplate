@@ -28,4 +28,5 @@ echo 'export WIX=$(pwd)/wixtoolset' >> .travis.env
 
 echo 'export PATH="$JAVA_HOME/bin":"$WIX":$PATH' >> .travis.env
 
+# special for Windows
 echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false"' >> .travis.env
