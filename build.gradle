@@ -400,9 +400,9 @@ release {
     ]
 
     buildTasks = [
-        // 'clean',
-        // 'check',
-        // 'jacocoTestReport',
+        'clean',
+        'check',
+        'jacocoTestReport',
     ]
 
     ignoredSnapshotDependencies = []
@@ -829,7 +829,7 @@ jlink {
     // }
 
     launcher {
-        name = applicationName
+        name = applicationName.capitalize()
         moduleName = applicationModuleName
         mainClassName = applicationClassName
         jvmArgs = applicationJvmArgs
@@ -934,7 +934,7 @@ jlink {
         // when executing the jpackage task.
         // defaultValue: the name value configured in the launcher block or
         // project.name
-        installerName = "${imageName}-installer"
+        // installerName = !BUG! <- if set then jpackage fail
 
         // The argument passed to the --app-version option when running
         // jpackage when executing the jpackage and jpackageImage tasks.
@@ -945,11 +945,6 @@ jlink {
         // defaultValue: the jvmArgs value configured in the launcher block or
         // an empty list
         jvmArgs = applicationJvmArgs
-
-        // The type of installer to be generated.
-        // defaultValue: null (all supported types for the current platform
-        // will be generated)
-        // installerType = "rpm"
 
         // List of additional options to be passed to the jpackage executable
         // when executing the jpackageImage task.
@@ -962,6 +957,12 @@ jlink {
             // Copyright for the application
             '--copyright', applicationCopyright,
         ]
+
+        // The type of the installer to create. Valid values are: "exe",
+        // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+        // specified (in create-installer mode) all supported types of
+        // installable packages for the current platform will be created.
+        // installerType = 'pkg'
 
         // List of additional options to be passed to the jpackage executable
         // when executing the jpackage task.
@@ -1026,12 +1027,6 @@ jlink {
                     // "Program Files" or "AppData" on Windows.
                     // '--install-dir <file path>',
                 ]
-                // The type of the installer to create. Valid values are: "exe",
-                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
-                // specified (in create-installer mode) all supported types of
-                // installable packages for the current platform will be created.
-                // installerType = 'pkg'
-                // installerType = 'dmg'
                 break
             case 'win':
                 imageOptions += [
@@ -1081,8 +1076,7 @@ jlink {
                 // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
                 // specified (in create-installer mode) all supported types of
                 // installable packages for the current platform will be created.
-                // installerType = 'exe' // Inno Setup 5.6.1
-                // installerType = 'msi' // WiX Toolset 3.11
+                installerType = 'msi'
                 break
             case 'linux':
                 imageOptions += [
@@ -1131,12 +1125,6 @@ jlink {
                     // Type of the license ("License: " of the RPM .spec)
                     '--linux-rpm-license-type', applicationLicenseType,
                 ]
-                // The type of the installer to create. Valid values are: "exe",
-                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
-                // specified (in create-installer mode) all supported types of
-                // installable packages for the current platform will be created.
-                // installerType = 'deb' // fakeroot
-                // installerType = 'rpm' // rpm
                 break
         }
     }
