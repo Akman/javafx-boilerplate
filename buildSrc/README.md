@@ -1,16 +1,9 @@
-# Java application boilerplate project
+# Gradle Build Boilerplate Project
 
-[![Build Status](https://travis-ci.org/akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/akman/java-boilerplate-gradle)
-[![Code Coverage](https://codecov.io/gh/akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/akman/java-boilerplate-gradle)
-[![Latest Release](https://img.shields.io/github/downloads/akman/java-boilerplate-gradle/latest/total.svg)](https://github.com/akman/java-boilerplate-gradle/releases/latest)
-[![License](https://img.shields.io/github/license/akman/java-boilerplate-gradle.svg)](https://github.com/akman/java-boilerplate-gradle/blob/master/LICENSE)
-
-This project aims to cover best practices for Java application development
+This project aims to cover best practices for gradle build development
 as a whole. It provides tool recommendations for linting, testing and packaging.
 
 [The source for this project is available here][src]
-
-[The latest release for this project is available here][release]
 
 [The documentation for this project is available here][docs]
 
@@ -106,11 +99,8 @@ Run all checks.
 The following plugins are used to check the project:
 
 - license
-- checkstyle
-- pmd
-- spotbugs
-- junit
-- jacoco
+- codenarc
+- spok
 
 You can use all of these tools separately.
 
@@ -140,65 +130,22 @@ Generate reports on your runtime dependencies.
 ./gradlew downloadLicenses
 ```
 
-### CheckStyle
+### CodeNarc
 
-The Checkstyle plugin performs quality checks on your project’s Java source
-files using Checkstyle and generates reports from these checks.
-
-```bash
-./gradlew checkstyleMain
-./gradlew checkstyleTest
-```
-
-### PMD
-
-The PMD plugin performs quality checks on your project’s Java source files
-using PMD and generates reports from these checks.
+The CodeNarc plugin performs quality checks on your project’s Groovy source
+files and generates reports from these checks.
 
 ```bash
-./gradlew pmdMain
-./gradlew pmdTest
+./gradlew codenarcMain
+./gradlew codenarcTest
 ```
 
-### SpotBugs
-
-SpotBugs plugin performs static analysis to look for bugs in Java code using
-SpotBugs and generates reports from these analysis.
-
-```bash
-./gradlew spotbugsMain
-./gradlew spotbugsTest
-```
-
-### JUnit
+### Spok
 
 Run unit tests.
 
 ```bash
 ./gradlew test
-```
-
-### JaCoCo
-
-The JaCoCo plugin provides code coverage metrics for Java code via integration
-with JaCoCo.
-
-Verify code coverage metrics based on specified rules for the test task.
-
-```bash
-./gradlew jacocoTestCoverageVerification
-```
-
-## Reports
-
-Plugins used to check the project generate reports also, but JaCoCo do not.
-
-### JaCoCo Code Coverage
-
-Generate code coverage report for the test task.
-
-```bash
-./gradlew jacocoTestReport
 ```
 
 ## Build project
@@ -207,38 +154,6 @@ Assemble and test this project.
 
 ```bash
 ./gradlew build
-```
-
-Create a modular runtime image.
-
-```bash
-./gradlew jlink
-```
-
-## Run
-
-```bash
-./gradlew exec
-```
-
-Run created modular runtime image.
-
-```bash
-./build/image/bin/launcher
-```
-
-## Distribute
-
-Create a zip of the modular runtime image.
-
-```bash
-./gradlew jlinkZip
-```
-
-Create an installable image.
-
-```bash
-./gradlew jpackage
 ```
 
 ## Dependencies
@@ -270,7 +185,6 @@ Display the properties of the project.
 ./gradlew properties
 ```
 
-[src]: https://github.com/akman/java-boilerplate-gradle
-[release]: https://github.com/akman/java-boilerplate-gradle/releases/latest
-[docs]: https://akman.github.io/java-boilerplate-gradle
+[src]: https://github.com/akman/java-boilerplate-gradle/buildSrc
+[docs]: https://akman.github.io/java-boilerplate-gradle/buildSrc
 [md]: https://help.github.com/articles/basic-writing-and-formatting-syntax

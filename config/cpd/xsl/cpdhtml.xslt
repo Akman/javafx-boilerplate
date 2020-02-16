@@ -2,9 +2,8 @@
 <!-- Stylesheet to turn the XML output of CPD into a nice-looking HTML page -->
 <!-- $Id$ -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
-<xsl:output method="html" encoding="UTF-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" 
+<xsl:output method="html" encoding="UTF-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
 	doctype-system="http://www.w3.org/TR/html4/loose.dtd" indent="yes"/>
-
 <xsl:template match="pmd-cpd">
 <html>
 	<head>
@@ -32,7 +31,7 @@
 			.ExpandButton  { background-color: #FFFFFF; font-size: 8pt; width: 20px; height: 20px; margin:0px; }
 		</style>
 	</head>
-<body>
+  <body>
     <h2>Summary of duplicated code</h2>
     This page summarizes the code fragments that have been found to be replicated in the code.
     Only those fragments longer than 10 lines of code are shown.
@@ -89,10 +88,7 @@
         <tr><td colspan="2"><hr/></td></tr>
     </xsl:for-each>
     </table>
-    
-    
-</body>
+  </body>
 </html>
 </xsl:template>
-
 </xsl:stylesheet>

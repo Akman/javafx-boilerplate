@@ -1,116 +1,136 @@
-/**
- *     Java Boilerplate Project
- *
- *     https://github.com/akman/java-boilerplate-gradle
- *
- *     The MIT License (MIT)
- *
- *     Copyright (C) 2919 - 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
- *
- *     Permission is hereby granted, free of charge, to any person obtaining
- *     a copy of this software and associated documentation files (the "Software"),
- *     to deal in the Software without restriction, including without limitation
- *     the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *     and/or sell copies of the Software, and to permit persons to whom
- *     the Software is furnished to do so, subject to the following conditions:
- *
- *     The above copyright notice and this permission notice shall be included
- *     in all copies or substantial portions of the Software.
- *
- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *     FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
- *     THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- *     DEALINGS IN THE SOFTWARE.
- */
+/*
+  Java Boilerplate Project
+
+  https://github.com/akman/java-boilerplate-gradle
+
+  The MIT License (MIT)
+
+  Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom
+  the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included
+  in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+*/
+
 package ru.akman.launcher;
 
 import java.io.IOException;
-
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-import ru.akman.commons.Utils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.akman.commons.CommonUtils;
 
 /**
- * Launcher
- *
+ * Application launcher.
  */
-public class Launcher {
+public final class Launcher {
 
-    private static final Logger log = LogManager.getLogger(Launcher.class);
+  /**
+   * CLI option to run the application without GUI.
+   */
+  private static final String CLI_NO_GUI = "--no-gui";
 
-    private static final Charset CHARSET = Charset.defaultCharset();
+  /**
+   * Default logger.
+   */
+  private static final Logger LOG = LogManager.getLogger(Launcher.class);
 
-    private static ResourceBundle messages =
-        ResourceBundle.getBundle("messages", Locale.getDefault());
+  /**
+   * Default charset.
+   */
+  private static final Charset CHARSET = Charset.defaultCharset();
 
-    public static String getGreeting() {
-        return messages.getString("app.greeting");
-    }
+  /**
+   * Message strings from resource bundle.
+   */
+  private static ResourceBundle messages =
+      ResourceBundle.getBundle("messages", Locale.getDefault());
 
-    public static String getParting() {
-        return messages.getString("app.parting");
-    }
+  private Launcher() {
+    // not called
+    throw new UnsupportedOperationException();
+  }
 
-    public static void main(final String... args) throws IOException {
+  /**
+   * Get greeting string from the application resources.
+   * @return greeting string
+   */
+  public static String getGreeting() {
+    return messages.getString("app.greeting");
+  }
 
-        log.debug("file.encoding: " +
-            System.getProperty("file.encoding"));
-        log.debug("sun.jnu.encoding: " +
-            System.getProperty("sun.jnu.encoding"));
-        log.debug("Default encoding: " +
-            Utils.getDefaultEncoding());
-        log.debug("Default locale: " +
-            Locale.getDefault());
-        log.debug("Default charset: " +
-            Charset.defaultCharset().name());
+  /**
+   * Get parting string from the application resources.
+   * @return parting string
+   */
+  public static String getParting() {
+    return messages.getString("app.parting");
+  }
 
-        System.setOut(new PrintStream(System.out, true, CHARSET));
-        System.setErr(new PrintStream(System.err, true, CHARSET));
+  /**
+   * Main entry point of application.
+   * @param args system CLI arguments
+   * @throws IOException uses console IO
+   */
+  public static void main(final String... args) throws IOException {
 
-        Properties properties = new Properties();
-        String resourceName = "/application.properties";
-        URL resourceURL = Launcher.class.getResource(resourceName);
-        if (resourceURL == null) {
-            log.error("Resource not found: '" + resourceName + "'");
-        } else {
-            log.debug("Loading resource: " + resourceURL);
-            try {
-                properties.load(
-                    new InputStreamReader(resourceURL.openStream(), CHARSET));
-            } catch (IOException e) {
-                log.error("Can't load resource: " + resourceURL);
-            }
+    CommonUtils.dumpEncoding(LOG);
+
+    System.setOut(new PrintStream(System.out, true, CHARSET));
+    System.setErr(new PrintStream(System.err, true, CHARSET));
+
+    try {
+      final Properties properties = CommonUtils.loadResource(
+          "/application.properties", CHARSET);
+      properties.stringPropertyNames().forEach(name -> {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(name + " = " + properties.getProperty(name));
         }
-        properties.stringPropertyNames().forEach(name -> {
-            log.debug(name + " = " + properties.getProperty(name));
-        });
-
-        log.debug(getGreeting());
-        System.err.println(getGreeting());
-
-        if (args.length > 0 && "--no-gui".equals(args[0])) {
-            log.debug("CLI Mode");
-            ru.akman.cli.App.launch(args);
-        } else {
-            log.debug("GUI Mode");
-            ru.akman.gui.App.launch(args);
-        }
-
-        log.debug(getParting());
-        System.err.println(getParting());
-
+      });
+    } catch (IOException ex) {
+      LOG.error(ex);
     }
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(getGreeting());
+    }
+    System.out.println(getGreeting());
+
+    if (args.length > 0 && CLI_NO_GUI.equals(args[0])) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("CLI Mode");
+      }
+      ru.akman.cli.LauncherHelper.run(args);
+    } else {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("GUI Mode");
+      }
+      ru.akman.gui.LauncherHelper.run(args);
+    }
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(getParting());
+    }
+    System.err.println(getParting());
+
+  }
 
 }

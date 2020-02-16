@@ -1,1137 +1,1267 @@
 /*
-    Java Boilerplate Project
-    
-    https://github.com/akman/java-boilerplate-gradle
-    
-    The MIT License (MIT)
-    
-    Copyright (C) 2019, 2020 Alexander Kapitman <akman.ru@gmail.com>
-    
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the "Software"),
-    to deal in the Software without restriction, including without limitation
-    the rights to use, copy, modify, merge, publish, distribute, sublicense,
-    and/or sell copies of the Software, and to permit persons to whom
-    the Software is furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
-    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-    DEALINGS IN THE SOFTWARE.
+  Java Boilerplate Project
+
+  https://github.com/akman/java-boilerplate-gradle
+
+  The MIT License (MIT)
+
+  Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom
+  the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included
+  in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
 */
 
 plugins {
-    id 'application'
+  id 'application'
 
-    // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '2.8.1'
+  id 'eclipse'
 
-    // https://badass-jlink-plugin.beryx.org
-    id 'org.beryx.jlink' version '2.17.0'
+  // https://github.com/researchgate/gradle-release
+  id 'net.researchgate.release' version '2.8.1'
 
-    // https://github.com/hierynomus/license-gradle-plugin
-    id 'com.github.hierynomus.license' version '0.15.0'
+  // https://badass-jlink-plugin.beryx.org
+  id 'org.beryx.jlink' version '2.17.0'
 
-    // https://github.com/ben-manes/gradle-versions-plugin
-    id 'com.github.ben-manes.versions' version '0.21.0'
+  // https://github.com/hierynomus/license-gradle-plugin
+  id 'com.github.hierynomus.license' version '0.15.0'
 
-    // https://spotbugs.github.io
-    id 'com.github.spotbugs' version '2.0.0'
+  // https://github.com/ben-manes/gradle-versions-plugin
+  id 'com.github.ben-manes.versions' version '0.21.0'
 
-    // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
-    id 'checkstyle'
+  // https://spotbugs.github.io
+  id 'com.github.spotbugs' version '2.0.0'
 
-    // https://docs.gradle.org/current/userguide/pmd_plugin.html
-    id 'pmd'
+  // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
+  id 'checkstyle'
 
-    // https://github.com/aaschmid/gradle-cpd-plugin
-    id 'de.aaschmid.cpd' version '3.1'
+  // https://docs.gradle.org/current/userguide/pmd_plugin.html
+  id 'pmd'
 
-    // https://docs.gradle.org/current/userguide/jacoco_plugin.html
-    id 'jacoco'
+  // https://github.com/aaschmid/gradle-cpd-plugin
+  id 'de.aaschmid.cpd' version '3.1'
+
+  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  id 'jacoco'
 }
 
 repositories {
-    jcenter()
+  jcenter()
 }
 
 ext {
-    applicationName = 'launcher'
-    applicationDescription = 'Launcher Application'
-    applicationVendor = 'Akman'
-    applicationAuthor = 'Alexander Kapitman <akman.ru@gmail.com>'
-    applicationCopyright = 'Copyright (C) 2019, 2020 A.Kapitman'
-    applicationLicenseFile = 'LICENSE'
-    applicationLicenseType = 'MIT'
-    applicationVersion = version.replaceAll('-SNAPSHOT', '')
-    applicationModuleName = 'ru.akman.launcher'
-    applicationClassName = 'ru.akman.launcher.Launcher'
-    applicationJvmArgs = [
-        // '-Xms256m',
-        // '-Xmx512m',
-    ]
-    applicationArgs = [
-        // '--no-gui',
-    ]
-    javaVersion = JavaVersion.current()
-    javaFXVersion = '13.0.1'
-    os = org.gradle.internal.os.OperatingSystem.current()
-    platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
-    platformNativePrefix = os.getNativePrefix()
-    jvm = org.gradle.internal.jvm.Jvm.current()
-    defaultEncoding = 'UTF-8'
-    logDir = file("${projectDir}/log")
+  applicationName = 'launcher'
+  applicationDescription = 'Launcher Application'
+  applicationVendor = 'Akman'
+  applicationAuthor = 'Alexander Kapitman <akman.ru@gmail.com>'
+  applicationCopyright = 'Copyright (C) 2019, 2020 A.Kapitman'
+  applicationLicenseFile = 'LICENSE'
+  applicationLicenseType = 'MIT'
+  applicationVersion = version.replaceAll('-SNAPSHOT', '')
+  applicationModuleName = 'ru.akman.launcher'
+  applicationClassName = 'ru.akman.launcher.Launcher'
+  applicationJvmArgs = [
+    // '-Xms256m',
+    // '-Xmx512m',
+  ]
+  applicationArgs = [
+    // '--no-gui',
+  ]
+  javaVersion = JavaVersion.current()
+  javaFXVersion = '13.0.1'
+  os = org.gradle.internal.os.OperatingSystem.current()
+  platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
+  platformNativePrefix = os.getNativePrefix()
+  jvm = org.gradle.internal.jvm.Jvm.current()
+  defaultEncoding = 'UTF-8'
+  logDir = file("${projectDir}/log")
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_13
-    targetCompatibility = JavaVersion.VERSION_13
+  sourceCompatibility = JavaVersion.VERSION_13
+  targetCompatibility = JavaVersion.VERSION_13
 }
 
 dependencies {
-    implementation(
-        "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
-        "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
-        "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
-        "org.openjfx:javafx-fxml:${javaFXVersion}:${platform}",
-        //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
-        //"org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
-        //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
-        'org.apache.logging.log4j:log4j-api:2.13.0',
-        'org.apache.logging.log4j:log4j-core:2.13.0',
-    )
-    testImplementation(
-        'org.junit.jupiter:junit-jupiter-api:5.4.2',
-        'org.junit.jupiter:junit-jupiter-params:5.4.2',
-        'org.junit.jupiter:junit-jupiter-engine:5.4.2',
-        'org.mockito:mockito-junit-jupiter:3.2.4',
-    )
+  implementation(
+    "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
+    "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
+    "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
+    "org.openjfx:javafx-fxml:${javaFXVersion}:${platform}",
+    //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
+    //"org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
+    //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
+    'org.apache.logging.log4j:log4j-api:2.13.0',
+    'org.apache.logging.log4j:log4j-core:2.13.0',
+  )
+  testImplementation(
+    'org.junit.jupiter:junit-jupiter-api:5.4.2',
+    'org.junit.jupiter:junit-jupiter-params:5.4.2',
+    'org.junit.jupiter:junit-jupiter-engine:5.4.2',
+    'org.mockito:mockito-junit-jupiter:3.2.4',
+  )
+}
+
+eclipse {
+  classpath {
+    containers 'org.eclipse.buildship.core.gradleclasspathcontainer'
+    file {
+      whenMerged {
+        entries
+            .findAll {
+              it.properties.kind.equals('lib') &&
+                  !it.properties.path.contains("junit")
+            }
+            .each {
+              it.entryAttributes['module'] = 'true'
+            }
+        entries
+            .findAll {
+              it.properties.path.startsWith(
+                  'org.eclipse.jdt.launching.JRE_CONTAINER')
+            }
+            .each {
+              it.entryAttributes['module'] = 'true'
+            }
+      }
+    }
+  }
+}
+
+task vscodeTasks {
+  description 'Generates VS Code tasks file with all available gradle tasks'
+  def vscSettingsDir = new File(projectDir, '.vscode')
+  def vscTasksFile = new File(vscSettingsDir, 'tasks.json')
+  def jsonSlurper = new groovy.json.JsonSlurper()
+  def jsonOutput = new groovy.json.JsonOutput()
+  def vscTasksMap = [:]
+  vscSettingsDir.mkdirs()
+  if (vscTasksFile.exists()) {
+    try {
+      def json = vscTasksFile.getText()
+      if (json.length() != 0) {
+        vscTasksMap = jsonSlurper.parseText(json)
+      }
+    } catch (Exception ex) {
+      println "Could not load file: '${vscTasksFile.path}'\n${ex}"
+      throw ex
+    }
+    if (!(vscTasksMap instanceof Map)) {
+      println "Could not load file: '${vscTasksFile.path}'"
+      throw new Exception('Text must be a valid JSON map object')
+    }
+  }
+  if (!vscTasksMap.containsKey('version')) {
+    vscTasksMap['version'] = '2.0.0'
+  }
+  if (!vscTasksMap.containsKey('tasks')) {
+    vscTasksMap['tasks'] = []
+  }
+  doLast {
+    getTasks().each { task ->
+      def label = task.name
+      def description = task.description ?: ''
+      def group = 'none'
+      switch (task.group) {
+        case 'build':
+          group = 'build'
+          break
+        case 'verification':
+          group = 'test'
+          break
+      }
+      if (!vscTasksMap.tasks.any { it.group == group && it.label == label &&
+          it.detail == description}) {
+        println "Task added: ${label} [${group}] - ${description}"
+        vscTasksMap.tasks << [
+          'group': group,
+          'label': label,
+          'detail': description,
+          'args': [ task.name ],
+          'promptOnClose': true,
+          'presentation': [
+            'group': 'gradle',
+            'echo': true,
+            'reveal': 'always',
+            'focus': false,
+            'panel': 'shared',
+            'showReuseMessage': true,
+            'clear': false
+          ],
+          'type': 'shell',
+          'command': './gradlew',
+          'problemMatcher': [],
+        ]
+      }
+    }
+    try {
+      vscTasksFile.setText(
+          jsonOutput.prettyPrint(jsonOutput.toJson(vscTasksMap)))
+    } catch (Exception ex) {
+      println "Could not save file: '${vscTasksFile.path}'\n${ex}"
+      throw ex
+    }
+  }
 }
 
 clean {
-    delete "${logDir}"
+  delete "${logDir}"
 }
 
 [compileJava, compileTestJava].each {
-    it.options.encoding = defaultEncoding
-    it.options.compilerArgs += [
-        // Give more detail for unchecked conversion warnings that are mandated
-        // by the Java Language Specification.
-        '-Xlint:unchecked',
-        // Show a description of each use or override of a deprecated member
-        // or class. Without this, javac shows a summary of the source files
-        // that use or override deprecated members or classes.
-        '-Xlint:deprecation',
-        // Terminate compilation if warnings occur.
-        '-Werror',
-    ]
+  it.options.encoding = defaultEncoding
+  it.options.compilerArgs += [
+    // Give more detail for unchecked conversion warnings that are mandated
+    // by the Java Language Specification.
+    '-Xlint:unchecked',
+    // Show a description of each use or override of a deprecated member
+    // or class. Without this, javac shows a summary of the source files
+    // that use or override deprecated members or classes.
+    '-Xlint:deprecation',
+    // Terminate compilation if warnings occur.
+    '-Werror',
+  ]
 }
 
 compileJava {
-    doFirst {
-        options.compilerArgs = [
-            '--module-path', classpath.asPath,
-            '--add-modules', 'javafx.controls',
-            '--add-modules', 'javafx.fxml',
-            //'--add-modules', 'javafx.web',
-            //'--add-modules', 'javafx.swing',
-            //'--add-modules', 'javafx.media',
-        ]
-        classpath = files()
-    }
+  doFirst {
+    options.compilerArgs = [
+      '--module-path', classpath.asPath,
+      '--add-modules', 'javafx.base',
+      '--add-modules', 'javafx.graphics',
+      '--add-modules', 'javafx.controls',
+      '--add-modules', 'javafx.fxml',
+      //'--add-modules', 'javafx.web',
+      //'--add-modules', 'javafx.swing',
+      //'--add-modules', 'javafx.media',
+      '--add-modules', 'org.apache.logging.log4j',
+    ]
+    classpath = files()
+  }
 }
 
 application {
-    applicationName = applicationName
-    mainClassName = "${applicationModuleName}/${applicationClassName}"
-    applicationDefaultJvmArgs = applicationJvmArgs
+  applicationName = applicationName
+  mainClassName = "${applicationModuleName}/${applicationClassName}"
+  applicationDefaultJvmArgs = applicationJvmArgs
 }
 
 task processFilteredResources(type: Copy) {
-    description = 'Processes filtered resources'
-    sourceSets.main.resources.srcDirs.each {
-        def filteredDir = new File(it, 'filtered')
-        def filtersDir = new File(it, 'filters')
-        def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new ru.akman.utils.PropertiesMap(filterFile)
-        from filteredDir
-        into sourceSets.main.output.resourcesDir
-        expand filter.properties + project.properties + System.properties
-    }
+  description = 'Processes filtered resources'
+  sourceSets.main.resources.srcDirs.each {
+    def filteredDir = new File(it, 'filtered')
+    def filtersDir = new File(it, 'filters')
+    def filterFile = new File(filtersDir, 'filter.properties')
+    def filter = new ru.akman.utils.PropertiesMap(filterFile)
+    from filteredDir
+    into sourceSets.main.output.resourcesDir
+    expand filter.properties + project.properties + System.properties
+  }
 }
 
 processResources {
-    dependsOn processFilteredResources
-    exclude 'filtered/', 'filters/'
+  dependsOn processFilteredResources
+  exclude 'filtered/', 'filters/'
 }
 
 task processFilteredTestResources(type: Copy) {
-    description = 'Processes filtered test resources'
-    sourceSets.test.resources.srcDirs.each {
-        def filteredDir = new File(it, 'filtered')
-        def filtersDir = new File(it, 'filters')
-        def filterFile = new File(filtersDir, 'filter.properties')
-        def filter = new ru.akman.utils.PropertiesMap(filterFile)
-        from filteredDir
-        into sourceSets.test.output.resourcesDir
-        expand filter.properties + project.properties + System.properties
-    }
+  description = 'Processes filtered test resources'
+  sourceSets.test.resources.srcDirs.each {
+    def filteredDir = new File(it, 'filtered')
+    def filtersDir = new File(it, 'filters')
+    def filterFile = new File(filtersDir, 'filter.properties')
+    def filter = new ru.akman.utils.PropertiesMap(filterFile)
+    from filteredDir
+    into sourceSets.test.output.resourcesDir
+    expand filter.properties + project.properties + System.properties
+  }
 }
 
 processTestResources {
-    dependsOn processFilteredTestResources
-    exclude 'filtered/', 'filters/'
+  dependsOn processFilteredTestResources
+  exclude 'filtered/', 'filters/'
 }
 
 test {
-    useJUnitPlatform()
-    jvmArgs = []
-    testLogging {
-        showStandardStreams = true
-        showStackTraces = true
-        displayGranularity = 2
-        exceptionFormat 'short'
-        events(
-            //'started',
-            'passed',
-            'skipped',
-            'failed',
-        )
-        debug {
-            displayGranularity = 0
-            exceptionFormat 'full'
-            events(
-                'started',
-                'passed',
-                'skipped',
-                'failed',
-            )
-        }
+  useJUnitPlatform()
+  jvmArgs = []
+  testLogging {
+    showStandardStreams = true
+    showStackTraces = true
+    displayGranularity = 2
+    exceptionFormat 'short'
+    events(
+      //'started',
+      'passed',
+      'skipped',
+      'failed',
+    )
+    debug {
+      displayGranularity = 0
+      exceptionFormat 'full'
+      events(
+        'started',
+        'passed',
+        'skipped',
+        'failed',
+      )
     }
+  }
 }
 
 javadoc {
-    exclude '**/module-info.java'
-    options.addBooleanOption 'html5', true
-    options.encoding defaultEncoding
+  exclude '**/module-info.java'
+  options.addBooleanOption 'html5', true
+  options.encoding defaultEncoding
 }
 
 task srcJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+  // classifier = 'sources'
+  from sourceSets.main.allSource
 }
 
 task docJar(type: Jar, dependsOn: classes) {
-    classifier 'javadoc'
-    from javadoc
+  classifier 'javadoc'
+  from javadoc
 }
 
 artifacts {
-    archives srcJar, docJar
+  archives srcJar, docJar
 }
 
 jar {
-    manifest {
-        attributes(
-            //'Automatic-Module-Name': "${applicationModuleName}",
-            'Implementation-Title': "${applicationName}",
-            'Main-Class': "${applicationModuleName}/${applicationClassName}"
-        )
-    }
+  manifest {
+    attributes(
+      //'Automatic-Module-Name': "${applicationModuleName}",
+      'Implementation-Title': "${applicationName}",
+      'Main-Class': "${applicationModuleName}/${applicationClassName}"
+    )
+  }
 }
 
 task fatJar(type: Jar) {
-    archiveAppendix = 'full'
-    manifest {
-        attributes(
-            //'Automatic-Module-Name': "${applicationModuleName}",
-            'Implementation-Title': "${applicationName}",
-            'Main-Class': "${applicationModuleName}/${applicationClassName}"
-        )
+  archiveAppendix = 'full'
+  manifest {
+    attributes(
+      //'Automatic-Module-Name': "${applicationModuleName}",
+      'Implementation-Title': "${applicationName}",
+      'Main-Class': "${applicationModuleName}/${applicationClassName}"
+    )
+  }
+  from {
+    configurations.runtimeClasspath.collect {
+      it.isDirectory() ? it : zipTree(it)
     }
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
+  }
 }
 
 startScripts {
-    doFirst {
-        defaultJvmOpts = [
-            '--module-path', 'APP_HOME_LIB',
-            '--module', "${applicationModuleName}/${applicationClassName}"
-        ]
-        classpath = files()
-    }
-    doLast{
-        def bashFile = new File(outputDir, applicationName)
-        String bashContent = bashFile.text
-        bashFile.text = bashContent
-            .replaceFirst('APP_HOME_LIB',
-                java.util.regex.Matcher.quoteReplacement('$APP_HOME/lib'))
-            .replaceFirst(/(?m)^CLASSPATH=$/, '')
-            .replaceFirst(/(?m)^\s*CLASSPATH=`.+`$/, '')
-            .replaceFirst(/-classpath "\\".+\\""/, '')
-            .replaceFirst(/(?m)^eval set -- .+$/,
-                java.util.regex.Matcher.quoteReplacement(
+  doFirst {
+    defaultJvmOpts = [
+      '--module-path', 'APP_HOME_LIB',
+      '--module', "${applicationModuleName}/${applicationClassName}"
+    ]
+    classpath = files()
+  }
+  doLast{
+    def bashFile = new File(outputDir, applicationName)
+    String bashContent = bashFile.text
+    bashFile.text = bashContent
+        .replaceFirst('APP_HOME_LIB',
+            java.util.regex.Matcher.quoteReplacement('$APP_HOME/lib'))
+        .replaceFirst(/(?m)^CLASSPATH=$/, '')
+        .replaceFirst(/(?m)^\s*CLASSPATH=`.+`$/, '')
+        .replaceFirst(/-classpath "\\".+\\""/, '')
+        .replaceFirst(/(?m)^eval set -- .+$/,
+            java.util.regex.Matcher.quoteReplacement(
                 'eval set -- $JAVA_OPTS $DEFAULT_JVM_OPTS "$APP_ARGS"'))
-        def batFile = new File(outputDir, applicationName + ".bat")
-        String batContent = batFile.text
-        batFile.text = batContent
-            .replaceFirst('APP_HOME_LIB',
-                java.util.regex.Matcher.quoteReplacement('%APP_HOME%\\lib'))
-            .replaceFirst(/(?m)^set CLASSPATH=$/, '')
-            .replaceFirst(/-classpath "%CLASSPATH%"/, '')
-            .replaceFirst(/(?m)^"%JAVA_EXE%" %DEFAULT_JVM_OPTS% .+$/,
-                java.util.regex.Matcher.quoteReplacement(
+    def batFile = new File(outputDir, applicationName + ".bat")
+    String batContent = batFile.text
+    batFile.text = batContent
+        .replaceFirst('APP_HOME_LIB',
+            java.util.regex.Matcher.quoteReplacement('%APP_HOME%\\lib'))
+        .replaceFirst(/(?m)^set CLASSPATH=$/, '')
+        .replaceFirst(/-classpath "%CLASSPATH%"/, '')
+        .replaceFirst(/(?m)^"%JAVA_EXE%" %DEFAULT_JVM_OPTS% .+$/,
+            java.util.regex.Matcher.quoteReplacement(
                 '"%JAVA_EXE%" %JAVA_OPTS% %DEFAULT_JVM_OPTS% %CMD_LINE_ARGS%'))
-    }
+  }
 }
 
 run {
-    standardInput = System.in
-    doFirst {
-        main = ''
-        args = []
-        jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
-        jvmArgs += [
-            '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
-            '"-Duser.country=' + System.properties['user.country'] + '"',
-            '"-Duser.language=' + System.properties['user.language'] + '"',
-            '"-Duser.variant=' + System.properties['user.variant'] + '"',
-        ]
-        jvmArgs += [
-            '--module-path', classpath.asPath,
-            '--patch-module', "${applicationModuleName}=" +
-            files(sourceSets.main.output.resourcesDir).asPath,
-            '--module', "${applicationModuleName}/${applicationClassName}",
-        ]
-        jvmArgs += applicationArgs
-        classpath = files()
-    }
+  standardInput = System.in
+  doFirst {
+    main = ''
+    args = []
+    jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
+    jvmArgs += [
+      '"-Dfile.encoding=' + System.properties['file.encoding'] + '"',
+      '"-Duser.country=' + System.properties['user.country'] + '"',
+      '"-Duser.language=' + System.properties['user.language'] + '"',
+      '"-Duser.variant=' + System.properties['user.variant'] + '"',
+    ]
+    jvmArgs += [
+      '--module-path', classpath.asPath,
+      '--patch-module', "${applicationModuleName}=" +
+      files(sourceSets.main.output.resourcesDir).asPath,
+      '--module', "${applicationModuleName}/${applicationClassName}",
+    ]
+    jvmArgs += applicationArgs
+    classpath = files()
+  }
 }
 
 task exec(type: Exec) {
-    description 'Executes this project as a JVM application'
-    group 'application'
-    dependsOn classes
-    standardInput = System.in
-    executable = jvm.javaExecutable
-    args = applicationJvmArgs
-    args += [
-        '-Dfile.encoding=' + System.properties['file.encoding'],
-        '-Duser.country=' + System.properties['user.country'],
-        '-Duser.language=' + System.properties['user.language'],
-        '-Duser.variant=' + System.properties['user.variant'],
-    ]
-    args += [
-        '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
-        '--patch-module', "${applicationModuleName}=" +
-            files(sourceSets.main.output.resourcesDir).asPath,
-        '--module', "${applicationModuleName}/${applicationClassName}",
-    ]
-    args += applicationArgs
+  description 'Executes this project as a JVM application'
+  group 'application'
+  dependsOn classes
+  standardInput = System.in
+  executable = jvm.javaExecutable
+  args = applicationJvmArgs
+  args += [
+    '-Dfile.encoding=' + System.properties['file.encoding'],
+    '-Duser.country=' + System.properties['user.country'],
+    '-Duser.language=' + System.properties['user.language'],
+    '-Duser.variant=' + System.properties['user.variant'],
+  ]
+  args += [
+    '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
+    '--patch-module', "${applicationModuleName}=" +
+        files(sourceSets.main.output.resourcesDir).asPath,
+    '--module', "${applicationModuleName}/${applicationClassName}",
+  ]
+  args += applicationArgs
 }
 
 release {
 
-    // Fail when there un-committed changes.
-    failOnCommitNeeded = true
+  // Fail when there un-committed changes.
+  failOnCommitNeeded = true
 
-    // Fail when there are local commits that haven't been published upstream.
-    failOnPublishNeeded = true
+  // Fail when there are local commits that haven't been published upstream.
+  failOnPublishNeeded = true
 
-    // Fail when the project has dependencies on SNAPSHOT versions unless
-    // those SNAPSHOT dependencies have been defined
-    // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
-    failOnSnapshotDependencies = true
+  // Fail when the project has dependencies on SNAPSHOT versions unless
+  // those SNAPSHOT dependencies have been defined
+  // as 'ignoredSnapshotDependencies' using the syntax '$group:$name'.
+  failOnSnapshotDependencies = true
 
-    // Fail when files are found that are not under version control.
-    failOnUnversionedFiles = true
+  // Fail when files are found that are not under version control.
+  failOnUnversionedFiles = true
 
-    // Fail when the source needs to be updated, or there are changes
-    // available upstream that haven't been pulled.
-    failOnUpdateNeeded = true
+  // Fail when the source needs to be updated, or there are changes
+  // available upstream that haven't been pulled.
+  failOnUpdateNeeded = true
 
-    // Should the plugin revert it's changes to gradle.properties
-    // when a failure occurs.
-    revertOnFail = true
+  // Should the plugin revert it's changes to gradle.properties
+  // when a failure occurs.
+  revertOnFail = true
 
-    // The string template which is used to generate the tag name.
-    // Possible variables are $version and $name.
-    // Always ensure to use single-quotes, otherwise "$" is interpreted
-    // already in your build script.
-    tagTemplate = 'v${version}'
+  // The string template which is used to generate the tag name.
+  // Possible variables are $version and $name.
+  // Always ensure to use single-quotes, otherwise "$" is interpreted
+  // already in your build script.
+  tagTemplate = 'v${version}'
 
-    // This will be prepended to all commits done by the plugin.
-    // A good place for code review, or ticket numbers.
-    preCommitText = ''
+  // This will be prepended to all commits done by the plugin.
+  // A good place for code review, or ticket numbers.
+  preCommitText = ''
 
-    // The commit message used to commit the non-SNAPSHOT version
-    // if SNAPSHOT was used.
-    preTagCommitMessage = 'SNAPSHOT was used to commit the non-SNAPSHOT version'
+  // The commit message used to commit the non-SNAPSHOT version
+  // if SNAPSHOT was used.
+  preTagCommitMessage = 'SNAPSHOT was used to commit the non-SNAPSHOT version'
 
-    // The commit message used when creating the tag.
-    // Not used with BZR projects.
-    tagCommitMessage = 'Release version'
+  // The commit message used when creating the tag.
+  // Not used with BZR projects.
+  tagCommitMessage = 'Release version'
 
-    // The commit message used when committing the next version.
-    newVersionCommitMessage = 'Bump version'
+  // The commit message used when committing the next version.
+  newVersionCommitMessage = 'Bump version'
 
-    versionPropertyFile = 'gradle.properties'
+  versionPropertyFile = 'gradle.properties'
 
-    versionProperties = []
+  versionProperties = []
 
-    versionPatterns = [
-        /(\d+)\.(\d+)\.(\d+)(.*$)/: { java.util.regex.Matcher m, Project p ->
-            m.replaceAll("${m[0][1]}.${(m[0][2] as int) + 1}.0${m[0][4]}")
-        },
-    ]
+  versionPatterns = [
+    /(\d+)\.(\d+)\.(\d+)(.*$)/: { java.util.regex.Matcher m, Project p ->
+        m.replaceAll("${m[0][1]}.${(m[0][2] as int) + 1}.0${m[0][4]}") },
+  ]
 
-    buildTasks = [
-        'clean',
-        'check',
-        'jacocoTestReport',
-    ]
+  buildTasks = [
+    'clean',
+    'check',
+    'jacocoTestReport',
+  ]
 
-    ignoredSnapshotDependencies = []
+  ignoredSnapshotDependencies = []
 
-    // (GIT only) If set to the name of a branch, the "release" task will
-    // commit the release on this branch, and the next version
-    // on the working branch.
-    pushReleaseVersionBranch = false
+  // (GIT only) If set to the name of a branch, the "release" task will
+  // commit the release on this branch, and the next version
+  // on the working branch.
+  pushReleaseVersionBranch = false
 
-    git {
+  git {
 
-        // Defines the branch which releases must be done off of.
-        // Eg. set to "release" to require releases are done on
-        // the "release" branch (or use a regular expression to allow releases
-        // from multiple branches, e.g. "/release|master/").
-        // Set to '' to ignore.
-        requireBranch = 'master'
+    // Defines the branch which releases must be done off of.
+    // Eg. set to "release" to require releases are done on
+    // the "release" branch (or use a regular expression to allow releases
+    // from multiple branches, e.g. "/release|master/").
+    // Set to '' to ignore.
+    requireBranch = 'master'
 
-        pushToBranchPrefix = ''
+    pushToBranchPrefix = ''
 
-        pushToRemote = 'origin'
+    pushToRemote = 'origin'
 
-        commitVersionFileOnly = false
+    commitVersionFileOnly = false
 
-        // Adds `-s` parameter to the tag command
-        signTag = false
+    // Adds `-s` parameter to the tag command
+    signTag = false
 
-        // Defines an array of options to add to the git adapter during a push.
-        // This could be useful to have the vc hooks skipped during a release.
-        // pushOptions = [
-        //     '--no-verify',
-        // ]
+    // Defines an array of options to add to the git adapter during a push.
+    // This could be useful to have the vc hooks skipped during a release.
+    // pushOptions = [
+    //   '--no-verify',
+    // ]
 
-    }
+  }
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 license {
-    // Specify location of header to use in comparisons,
-    // default to project.file('LICENSE')
-    header file("${projectDir}/config/license/LICENSE")
-    // Skip over files that have some header already, which might not be
-    // the one specified in the header parameter, defaults to false
-    skipExistingHeaders false
-    // Prevent tasks from stopping the build, defaults to false
-    ignoreFailures true
-    // Be extra strict in the formatting of existing headers, defaults to false
-    strictCheck true
-    mapping([
-        'fxml': 'XML_STYLE',
-    ])
-    excludes([
-        '**/log4j*.xml',
-        '**/*.properties',
-        '**/*.png',
-    ])
-    ext {
-        projectName = 'Java Boilerplate Project'
-        projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
-        inceptionYear = 2019
-        currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        copyrightYear = "${inceptionYear}"
-        if (inceptionYear != currentYear) {
-            copyrightYear += " - ${currentYear}"
-        }
-        copyrightName = 'Alexander Kapitman'
-        copyrightEmail = 'akman.ru@gmail.com'
+  // Specify location of header to use in comparisons,
+  // default to project.file('LICENSE')
+  header file("${projectDir}/config/license/LICENSE")
+  // Skip over files that have some header already, which might not be
+  // the one specified in the header parameter, defaults to false
+  skipExistingHeaders false
+  // Prevent tasks from stopping the build, defaults to false
+  ignoreFailures true
+  // Be extra strict in the formatting of existing headers, defaults to false
+  strictCheck true
+  headerDefinitions {
+    javadoc_style {
+      firstLine = '/*'
+      beforeEachLine = '  '
+      endLine = '*/'
+      afterEachLine = ''
+      // skipLinePattern = ''
+      firstLineDetectionPattern = '(\\s|\\t)*/\\*.*$'
+      lastLineDetectionPattern = '.*\\*/(\\s|\\t)*$'
+      allowBlankLines = true
+      isMultiline = true
+      padLines = false
     }
+    xml_style {
+      firstLine = '<!--'
+      beforeEachLine = '  '
+      endLine = '-->'
+      afterEachLine = ''
+      skipLinePattern = '^<\\?xml.*>$'
+      firstLineDetectionPattern = '(\\s|\\t)*<!--.*$'
+      lastLineDetectionPattern = '.*-->(\\s|\\t)*$'
+      allowBlankLines = true
+      isMultiline = true
+      padLines = false
+    }
+  }
+  mapping([
+    'fxml': 'XML_STYLE',
+  ])
+  excludes([
+    '**/log4j*.xml',
+    '**/*.properties',
+    '**/*.png',
+  ])
+  ext {
+    projectName = 'Java Boilerplate Project'
+    projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
+    inceptionYear = 2019
+    currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    copyrightYear = "${inceptionYear}"
+    if (inceptionYear != currentYear) {
+      copyrightYear += " - ${currentYear}"
+    }
+    copyrightName = 'Alexander Kapitman'
+    copyrightEmail = 'akman.ru@gmail.com'
+  }
 }
 
 checkstyle {
-    // The version of the code quality tool to be used.
-    toolVersion = '8.21'
+  // The version of the code quality tool to be used.
+  toolVersion = '8.29'
 
-    // The Checkstyle configuration file to use.
-    // https://github.com/checkstyle/checkstyle/tree/master/src/main/resources
-    configFile = file("${projectDir}/config/checkstyle/google_checks.xml")
+  // The Checkstyle configuration file to use.
+  // https://github.com/checkstyle/checkstyle/tree/master/src/main/resources
+  configFile = file("${projectDir}/config/checkstyle/google_checks.xml")
 
-    // Whether to allow the build to continue if there are warnings.
-    ignoreFailures = true
+  // Whether to allow the build to continue if there are warnings.
+  ignoreFailures = true
 
-    // The maximum number of errors that are tolerated before breaking
-    // the build or setting the failure property. 
-    // maxErrors = 20
+  // The maximum number of errors that are tolerated before breaking
+  // the build or setting the failure property.
+  // maxErrors = 20
 
-    // The maximum number of warnings that are tolerated before breaking
-    // the build or setting the failure property.
-    // maxWarnings = 50
+  // The maximum number of warnings that are tolerated before breaking
+  // the build or setting the failure property.
+  // maxWarnings = 50
 
-    // Whether rule violations are to be displayed on the console.
-    showViolations = true
+  // Whether rule violations are to be displayed on the console.
+  showViolations = true
 
-    // The directory where reports will be generated.
-    // reportsDir = file("${project.reporting.baseDir}/checkstyle")
+  // The directory where reports will be generated.
+  // reportsDir = file("${project.reporting.baseDir}/checkstyle")
 }
 
 pmd {
-    // The version of the code quality tool to be used.
-    toolVersion = '6.15.0'
+  // The version of the code quality tool to be used.
+  toolVersion = '6.21.0'
 
-    // Whether or not to write PMD results to System.out.
-    consoleOutput = false
+  // Whether or not to write PMD results to System.out.
+  consoleOutput = false
 
-    // Whether to allow the build to continue if there are warnings.
-    ignoreFailures = true
+  // Whether to allow the build to continue if there are warnings.
+  ignoreFailures = true
 
-    // The directory where reports will be generated.
-    // reportsDir = file("${project.reporting.baseDir}/pmd")
+  // The directory where reports will be generated.
+  // reportsDir = file("${project.reporting.baseDir}/pmd")
 
-    // The rule priority threshold; violations for rules with a lower priority
-    // will not be reported.
-    // rulePriority = 5 // all violations will be reported
+  // The rule priority threshold; violations for rules with a lower priority
+  // will not be reported.
+  // rulePriority = 5 // all violations will be reported
 
-    // The target jdk to use with pmd.
-    // targetJdk = sourceCompatibility
+  // The target jdk to use with pmd.
+  // targetJdk = sourceCompatibility
 
-    // The custom rule set files to be used.
-    // If you want to only use custom rule sets, you must clear ruleSets.
-    // ruleSetFiles = files("${projectDir}/config/pmd/ruleset.xml")
+  // The custom rule set files to be used.
+  // If you want to only use custom rule sets, you must clear ruleSets.
+  ruleSetFiles = files("${projectDir}/config/pmd/ruleset.xml")
 
-    // The built-in rule sets to be used.
-    // See the official list of built-in rule sets:
-    // https://pmd.github.io/pmd-6.8.0/pmd_rules_java.html
-    ruleSets = [
-        'category/java/bestpractices.xml',
-        'category/java/errorprone.xml',
-        'category/java/codestyle.xml',
-        'category/java/design.xml',
-        'category/java/documentation.xml',
-        'category/java/security.xml',
-        'category/java/performance.xml',
-        'category/java/multithreading.xml'
-    ]
+  // The built-in rule sets to be used.
+  // See the official list of built-in rule sets:
+  // https://pmd.github.io/pmd-6.21.0/pmd_rules_java.html
+  ruleSets = [
+    // 'category/java/bestpractices.xml',
+    // 'category/java/codestyle.xml',
+    // 'category/java/design.xml',
+    // 'category/java/documentation.xml',
+    // 'category/java/errorprone.xml',
+    // 'category/java/multithreading.xml',
+    // 'category/java/performance.xml',
+    // 'category/java/security.xml',
+  ]
 }
 
 cpd {
-    // The version of the code quality tool to be used.
-    toolVersion = '6.15.0'
-    language = 'java'
-    ignoreFailures = true
-    ignoreAnnotations = false
-    ignoreIdentifiers = false
-    ignoreLiterals = false
-    minimumTokenCount = 50
-    skipDuplicateFiles = false
-    skipLexicalErrors = false
+  // The version of the code quality tool to be used.
+  toolVersion = '6.15.0'
+  language = 'java'
+  ignoreFailures = true
+  ignoreAnnotations = false
+  ignoreIdentifiers = false
+  ignoreLiterals = false
+  minimumTokenCount = 50
+  skipDuplicateFiles = false
+  skipLexicalErrors = false
 }
 
 cpdCheck {
-    reports {
-        text.enabled = true
-        xml.enabled = true
+  reports {
+    text.enabled = true
+    xml.enabled = true
+  }
+  // Generate HTML output.
+  // Stylesheet file could be downloaded from:
+  // https://github.com/pmd/pmd/blob/master/pmd-core/etc/xslt/cpdhtml.xslt
+  // Remove "illegal" attribute 'xpath-default-namespace' from this file:
+  // xpath-default-namespace="http://pmd.sourceforge.net/report/2.0.0"
+  // change "//duplication[@lines>30]" to "//duplication[@lines>10]"
+  // and placed into ${projectDir}/config/cpd/xsl directory.
+  doLast {
+    def configDir = new File("${projectDir}/config/cpd/xsl")
+    def reportDir = new File("${project.reporting.baseDir}/cpd")
+    def xslFile = new File(configDir, 'cpdhtml.xslt')
+    def xsl = new javax.xml.transform.stream.StreamSource(
+        new StringReader(xslFile.getText()))
+    def transformer = javax.xml.transform.TransformerFactory.newInstance()
+        .newTransformer(xsl)
+    def xmlTree = fileTree(dir: reportDir, include: '*.xml')
+    xmlTree.getFiles().each {
+      def htmlFileName =
+          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+      def htmlFile = new File(it.getParentFile(), htmlFileName)
+      def html = new javax.xml.transform.stream.StreamResult(
+          new FileOutputStream(htmlFile))
+      def xml = new javax.xml.transform.stream.StreamSource(
+          new StringReader(it.getText()))
+      println "See the html report at: ${htmlFile}"
+      transformer.transform(xml, html)
     }
-    // Generate HTML output.
-    // Stylesheet file could be downloaded from:
-    // https://github.com/pmd/pmd/blob/master/pmd-core/etc/xslt/cpdhtml.xslt
-    // Remove "illegal" attribute 'xpath-default-namespace' from this file:
-    // xpath-default-namespace="http://pmd.sourceforge.net/report/2.0.0"
-    // change "//duplication[@lines>30]" to "//duplication[@lines>10]"
-    // and placed into ${projectDir}/config/cpd/xsl directory.
-    doLast {
-        def configDir = new File("${projectDir}/config/cpd/xsl")
-        def reportDir = new File("${project.reporting.baseDir}/cpd")
-        def xslFile = new File(configDir, 'cpdhtml.xslt')
-        def xsl = new javax.xml.transform.stream.StreamSource(
-            new StringReader(xslFile.getText()))
-        def transformer = javax.xml.transform.TransformerFactory.newInstance()
-            .newTransformer(xsl)
-        def xmlTree = fileTree(dir: reportDir, include: '*.xml')
-        xmlTree.getFiles().each {
-            def htmlFileName =
-                it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-            def htmlFile = new File(it.getParentFile(), htmlFileName)
-            def html = new javax.xml.transform.stream.StreamResult(
-                new FileOutputStream(htmlFile))
-            def xml = new javax.xml.transform.stream.StreamSource(
-                new StringReader(it.getText()))
-            println "See the html report at: ${htmlFile}"
-            transformer.transform(xml, html)
-        }   
-    }
+  }
 }
 
 spotbugs {
-    // The version of the code quality tool to be used.
-    toolVersion = '4.0.0-beta2'
+  // The version of the code quality tool to be used.
+  toolVersion = '4.0.0-RC3'
 
-    // The source sets to be analyzed as part of the check and build tasks.
-    // sourceSets = [
-    //     sourceSets.main,
-    // ]
+  // The source sets to be analyzed as part of the check and build tasks.
+  // sourceSets = [
+  //   sourceSets.main,
+  // ]
 
-    // Whether or not to allow the build to continue if there are warnings.
-    ignoreFailures = true
+  // Whether or not to allow the build to continue if there are warnings.
+  ignoreFailures = true
 
-    // The directory where reports will be generated.
-    reportsDir = file("${project.reporting.baseDir}/spotbugs")
+  // The directory where reports will be generated.
+  reportsDir = file("${project.reporting.baseDir}/spotbugs")
 
-    // The analysis effort level. The value specified should be one of
-    // min, default, or max. Higher levels increase precision and find more
-    // bugs at the expense of running time and memory consumption.
-    effort = 'max'
+  // The analysis effort level. The value specified should be one of
+  // min, default, or max. Higher levels increase precision and find more
+  // bugs at the expense of running time and memory consumption.
+  effort = 'max'
 
-    // The priority threshold for reporting bugs. If set to low, all bugs
-    // are reported. If set to medium (the default), medium and high priority
-    // bugs are reported. If set to high, only high priority bugs are reported.
-    reportLevel = 'medium'
+  // The priority threshold for reporting bugs. If set to low, all bugs
+  // are reported. If set to medium (the default), medium and high priority
+  // bugs are reported. If set to high, only high priority bugs are reported.
+  reportLevel = 'medium'
 
-    // The bug detectors which should be run. The bug detectors are specified
-    // by their class names, without any package qualification. By default, all
-    // detectors which are not disabled by default are run.
-    // visitors = [
-    //     'FindSqlInjection',
-    //     'SwitchFallthrough',
-    // ]
+  // The bug detectors which should be run. The bug detectors are specified
+  // by their class names, without any package qualification. By default, all
+  // detectors which are not disabled by default are run.
+  // visitors = [
+  //   'FindSqlInjection',
+  //   'SwitchFallthrough',
+  // ]
 
-    // Similar to visitors except that it specifies bug detectors which should
-    // not be run. By default, no visitors are omitted.
-    // omitVisitors = [
-    //     'FindNonShortCircuit',
-    // ]
+  // Similar to visitors except that it specifies bug detectors which should
+  // not be run. By default, no visitors are omitted.
+  // omitVisitors = [
+  //   'FindNonShortCircuit',
+  // ]
 
-    // The filename of a filter specifying which bugs are reported.
-    // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
+  // The filename of a filter specifying which bugs are reported.
+  // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
 
-    // The filename of a filter specifying bugs to exclude from being reported.
-    // excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
+  // The filename of a filter specifying bugs to exclude from being reported.
+  // excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
 }
 
 tasks.withType(com.github.spotbugs.SpotBugsTask) {
-    reports {
-        xml.enabled true
-        xml.withMessages true
-        html.enabled false
+  reports {
+    xml.enabled true
+    xml.withMessages true
+    html.enabled false
+  }
+  // Generate HTML output.
+  // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
+  // the HTML. Variants of this include:
+  // plain.xsl - does not use Javascript or DOM, and may work better with
+  //             older web browsers, or for printing.
+  // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
+  //             presentation
+  // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
+  //                  an extensive use of DOM and Javascript for dynamically
+  //                  filtering the lists of bugs.
+  // All needed stylesheet files could be downloaded from:
+  // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
+  // and placed into ${projectDir}/config/spotbugs/xsl directory.
+  doLast {
+    def configDir = new File("${projectDir}/config/spotbugs/xsl")
+    def xslFile = new File(configDir, 'fancy.xsl')
+    def xsl = new javax.xml.transform.stream.StreamSource(
+        new StringReader(xslFile.getText()))
+    def transformer = javax.xml.transform.TransformerFactory.newInstance()
+        .newTransformer(xsl)
+    def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
+    xmlTree.getFiles().each {
+      def htmlFileName =
+          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+      def htmlFile = new File(it.getParentFile(), htmlFileName)
+      def html = new javax.xml.transform.stream.StreamResult(
+          new FileOutputStream(htmlFile))
+      def xml = new javax.xml.transform.stream.StreamSource(
+          new StringReader(it.getText()))
+      println "See the html report at: ${htmlFile}"
+      transformer.transform(xml, html)
     }
-    // Generate HTML output.
-    // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
-    // the HTML. Variants of this include:
-    // plain.xsl - does not use Javascript or DOM, and may work better with
-    //             older web browsers, or for printing.
-    // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
-    //             presentation
-    // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
-    //                  an extensive use of DOM and Javascript for dynamically
-    //                  filtering the lists of bugs.
-    // All needed stylesheet files could be downloaded from:
-    // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
-    // and placed into ${projectDir}/config/spotbugs/xsl directory.
-    doLast {
-        def configDir = new File("${projectDir}/config/spotbugs/xsl")
-        def xslFile = new File(configDir, 'fancy.xsl')
-        def xsl = new javax.xml.transform.stream.StreamSource(
-            new StringReader(xslFile.getText()))
-        def transformer = javax.xml.transform.TransformerFactory.newInstance()
-            .newTransformer(xsl)
-        def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
-        xmlTree.getFiles().each {
-            def htmlFileName =
-                it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-            def htmlFile = new File(it.getParentFile(), htmlFileName)
-            def html = new javax.xml.transform.stream.StreamResult(
-                new FileOutputStream(htmlFile))
-            def xml = new javax.xml.transform.stream.StreamSource(
-                new StringReader(it.getText()))
-            println "See the html report at: ${htmlFile}"
-            transformer.transform(xml, html)
-        }   
-    }
+  }
 }
 
 jacoco {
-    // Version of Jacoco JARs to use.
-    toolVersion = '0.8.4'
+  // Version of Jacoco JARs to use.
+  toolVersion = '0.8.5'
 
-    // The directory where reports will be generated.
-    // reportsDir = file("${project.reporting.baseDir}/jacoco")
+  // The directory where reports will be generated.
+  // reportsDir = file("${project.reporting.baseDir}/jacoco")
 }
 
 jacocoTestReport {
-    reports {
-        xml.enabled true
-        xml.destination file("${project.reporting.baseDir}/jacoco/report.xml")
-        csv.enabled false
-        html.destination file("${project.reporting.baseDir}/jacoco/html")
-    }
+  reports {
+    xml.enabled true
+    xml.destination file("${project.reporting.baseDir}/jacoco/report.xml")
+    csv.enabled false
+    html.destination file("${project.reporting.baseDir}/jacoco/html")
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 jlink {
-    // The path to the JDK providing the tools needed
-    // by the plugin (javac, jar, jlink etc.).
-    // defaultValue: the first non-empty value from:
-    //  - the badass.jlink.java.home system property
-    //  - the BADASS_JLINK_JAVA_HOME environment variable
-    //  - the java.home system property (only if it points to a JRE containing
-    //    the javac, jar, and jlink tools)
-    //  - the JAVA_HOME environment variable
-    // javaHome = '/usr/lib/jvm/open-jdk'
+  // The path to the JDK providing the tools needed
+  // by the plugin (javac, jar, jlink etc.).
+  // defaultValue: the first non-empty value from:
+  //  - the badass.jlink.java.home system property
+  //  - the BADASS_JLINK_JAVA_HOME environment variable
+  //  - the java.home system property (only if it points to a JRE containing
+  //    the javac, jar, and jlink tools)
+  //  - the JAVA_HOME environment variable
+  // javaHome = '/usr/lib/jvm/open-jdk'
 
-    // The name of the Gradle dependency configuration used to
-    // execute your application.
-    // defaultValue: 'runtimeClasspath'
-    // configuration = 'myAppRuntime'
+  // The name of the Gradle dependency configuration used to
+  // execute your application.
+  // defaultValue: 'runtimeClasspath'
+  // configuration = 'myAppRuntime'
 
-    // The directory into which the custom runtime image should be generated.
-    // If you use the targetPlatform method to generate images for
-    // other platforms, the corresponding images will be created in
-    // subdirectories of imageDir.
-    imageDir = file("${buildDir}/jlink/image")
+  // The directory into which the custom runtime image should be generated.
+  // If you use the targetPlatform method to generate images for
+  // other platforms, the corresponding images will be created in
+  // subdirectories of imageDir.
+  imageDir = file("${buildDir}/jlink/image")
 
-    // The file into which a zip archive of the custom runtime image
-    // should be created.
-    imageZip = file(
-        "${buildDir}/jlink/${applicationName}-${applicationVersion}.zip"
-    )
+  // The file into which a zip archive of the custom runtime image
+  // should be created.
+  imageZip = file(
+      "${buildDir}/jlink/${applicationName}-${applicationVersion}.zip")
 
-    // Convenience property for setting the values
-    // of both imageDir and imageZip as follows:
-    // imageDir <- buildDir/imageName
-    // imageZip <- buildDir/imageName.zip
-    // imageName = applicationName
+  // Convenience property for setting the values
+  // of both imageDir and imageZip as follows:
+  // imageDir <- buildDir/imageName
+  // imageZip <- buildDir/imageName.zip
+  // imageName = applicationName
 
-    // The path to the base directory that will be used by the plugin
-    // to store intermediate outputs.
-    // defaultValue: "${buildDir}/jlinkbase"
-    jlinkBasePath = "${buildDir}/jlink/base"
+  // The path to the base directory that will be used by the plugin
+  // to store intermediate outputs.
+  // defaultValue: "${buildDir}/jlinkbase"
+  jlinkBasePath = "${buildDir}/jlink/base"
 
-    // The main class to be provided as part of the --launcher option of jlink.
-    // defaultValue: project.mainClassName from the Application plugin
-    mainClass = applicationClassName
+  // The main class to be provided as part of the --launcher option of jlink.
+  // defaultValue: project.mainClassName from the Application plugin
+  mainClass = applicationClassName
 
-    // The module name of this application.
-    // defaultValue: the module name specified in the module-info.java
+  // The module name of this application.
+  // defaultValue: the module name specified in the module-info.java
+  moduleName = applicationModuleName
+
+  // The name of the merged module.
+  // defaultValue: moduleName.merged.module
+  // mergedModuleName = "${moduleName}.merged.module"
+
+  // The base name of the jar containing the merged module.
+  // defaultValue: archiveBaseName.merged.module
+  // mergedModuleJarName = "${archiveBaseName}.merged.module"
+
+  // The version of the jar containing the merged module.
+  // defaultValue: project.version
+  // mergedModuleJarVersion = version
+
+  // Options for creating the runtime image
+  options = [
+    // Specifies the byte order of the generated image: "little" or "big".
+    // The default value is the format of your system's architecture.
+    // '--endian', 'little',
+
+    // Suppresses a fatal error when signed modular JARs are linked in
+    // the runtime image. The signature-related files of the signed modular
+    // JARs aren’t copied to the runtime image.
+    // '--ignore-signing-information',
+
+    // Strips debug information
+    '--strip-debug',
+
+    // Excludes include header files
+    '--no-header-files',
+
+    // Excludes man pages
+    '--no-man-pages',
+
+    // Enable compression of resources: "0" - no compression,
+    // "1" - constant string sharing, "2" - zip
+    '--compress', '2',
+  ]
+
+  // addOptions(String... options)
+  // Adds options to be passed to jlink. It is an alternative way of
+  // setting the options property. You can call this method multiple times.
+  // addOptions '--no-header-files', '--no-man-pages'
+
+  // Include all dependencies matching the given prefixes into
+  // the merged module. This method is useful when it should handle one or
+  // more modular jars as non-modular. You can call this method multiple
+  // times.
+  forceMerge 'log4j-api'
+
+  // addExtraDependencies(String... jarPrefixes)
+  // Instructs the plugin to treat all jars matching the given prefixes
+  // as dependencies of the merged module.
+  // A typical situation where this method is needed involves libraries
+  // using JavaFX. Some libraries do not specify their JavaFX dependencies,
+  // because JavaFX was part of the JDK before being removed in Java 11.
+  // Including addExtraDependencies("javafx") into the jlink block solves
+  // this problem.
+  // addExtraDependencies 'javafx'
+
+  // addExtraModulePath(String modulePath)
+  // Instructs the plugin to include the specified modulePath in the list of
+  // paths passed to the --module-path option of jlink.
+  // You can call this method multiple times.
+  // addExtraModulePath '/usr/lib/jmods'
+
+  // targetPlatform(String name, String jdkHome, List<String> options = [])
+  // targetPlatform('linux-x64', '/usr/lib/jvm/jdk_x64_linux_hotspot_11_28')
+  // targetPlatform(
+  //   'linux-s390x',
+  //   '/usr/lib/jvm/jdk_s390x_linux_hotspot_11_28',
+  //   [
+  //       '--endian', 'big'
+  //   ]
+  // )
+
+  // targetPlatform(String name, Action<TargetPlatform> action)
+  // targetPlatform("linux-s390x") {
+  //   jdkHome = "/usr/lib/jvm/linux-s390x/jdk-11.0.2+9"
+  //   addOptions("--endian", "big")
+  //   addExtraModulePath("/usr/lib/openjfx/linux-s390x/jmods")
+  // }
+  // targetPlatform("mac") {
+  //   jdkHome = "/usr/lib/jvm/mac/jdk-11.0.2+9"
+  //   addExtraModulePath("/usr/lib/openjfx/mac/jmods")
+  // }
+  // targetPlatform("win") {
+  //   jdkHome = "/usr/lib/jvm/win/jdk-11.0.2+9"
+  //   addExtraModulePath("/usr/lib/openjfx/win/jmods")
+  // }
+
+  launcher {
+    name = applicationName.capitalize()
     moduleName = applicationModuleName
+    mainClassName = applicationClassName
+    jvmArgs = applicationJvmArgs
+    args = applicationArgs
+    unixScriptTemplate = file("${projectDir}/package/nix-script.template")
+    windowsScriptTemplate = file(
+        "${projectDir}/package/win-script.template")
+  }
 
-    // The name of the merged module.
-    // defaultValue: moduleName.merged.module
-    // mergedModuleName = "${moduleName}.merged.module"
+  // The plugin can generate script files for additional applications besides
+  // the main one. For each additional application you configure a
+  // secondaryLauncher block. This block supports all properties
+  // of the launcher block and also the following ones:
+  //     mainClass - the main class of this additional application.
+  //     moduleName - the module containing the main class of this additional
+  //                  application. defaultValue: the value of the moduleName
+  //                  property in the enclosing jlink extension
+  // secondaryLauncher {
+  //   name = 'my-additional-app'
+  //   mainClass = 'org.example.MyAdditionalApp'
+  //   args = ['--user', 'emma']
+  // }
 
-    // The base name of the jar containing the merged module.
-    // defaultValue: archiveBaseName.merged.module
-    // mergedModuleJarName = "${archiveBaseName}.merged.module"
+  // mergedModule {
+  //   additive = true
+  //   requires 'java.desktop'
+  //   requires transitive 'java.sql'
+  //   uses 'java.sql.Driver'
+  //   provides 'java.sql.Driver' with 'org.hsqldb.jdbc.JDBCDriver'
+  //   excludeRequires 'java.compiler', 'java.rmi'
+  //   excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage'
+  //   excludeProvides servicePattern: 'org.apache.logging.*'
+  // }
 
-    // The version of the jar containing the merged module.
-    // defaultValue: project.version
-    // mergedModuleJarVersion = version
+  // By default, all application modules are included in the custom runtime
+  // image. This block allows you to create a custom runtime image containing
+  // only some of the application modules.
+  // If the customImage block is empty, the plugin will create a JRE
+  // containing only the JDK modules required by your application.
+  // The plugin figures out by itself which JDK modules are needed,
+  // but you can use the below property to request a different set of modules.
+  // customImage {
+  //   jdkModules = ['java.desktop', 'java.xml', 'jdk.unsupported']
+  //   appModules = ['my.merged.module']
+  // }
 
-    // Options for creating the runtime image
-    options = [
-        // Specifies the byte order of the generated image: "little" or "big".
-        // The default value is the format of your system's architecture.
-        // '--endian', 'little',
+  // Create a platform-specific application image and installer
+  // https://openjdk.java.net/jeps/343
+  jpackage {
 
-        // Suppresses a fatal error when signed modular JARs are linked in
-        // the runtime image. The signature-related files of the signed modular
-        // JARs aren’t copied to the runtime image.
-        // '--ignore-signing-information',
+    // The path to the JDK providing the jpackage tool.
+    // defaultValue: the first non-empty value from:
+    //  - the badass.jlink.jpackage.home system property
+    //  - the BADASS_JLINK_JPACKAGE_HOME environment variable
+    //  - the java.home system property (only if it points to a JRE
+    //    containing the jpackage tool)
+    //  - the JAVA_HOME environment variable
+    // jpackageHome = "/usr/lib/jvm/jdk14"
 
-        // Strips debug information
-        '--strip-debug',
+    // Convenience property for setting both imageOutputDir and
+    // installerOutputDir with the value "${buildDir}/${outputDir}".
+    // defaultValue: "jpackage"
+    outputDir = 'jpackage'
 
-        // Excludes include header files
-        '--no-header-files',
+    // The directory passed as argument to the --output option of jpackage
+    // when executing the jpackageImage task.
+    // defaultValue: buildDir/outputDir
+    imageOutputDir = file("${buildDir}/${outputDir}")
 
-        // Excludes man pages
-        '--no-man-pages',
+    // The argument passed to the --name option when executing the
+    // jpackageImage task.
+    // defaultValue: the name value configured in the launcher block
+    // or project.name
+    imageName = applicationName.capitalize()
 
-        // Enable compression of resources: "0" - no compression,
-        // "1" - constant string sharing, "2" - zip
-        '--compress', '2',
+    // The directory passed as argument to the --resource-dir option
+    // when running jpackage to create an application installer.
+    // It is also applicable when creating an application image
+    // when you want your own application image
+    // instead of the default java image.
+    // resourceDir = file("${buildDir}/my-packaging-resources")
+
+    // This property is required only when using the targetPlatform method.
+    // It specifies which of the images produced by jlink should be used as
+    // runtime image by jpackage. Its value must match the name provided
+    // in one of the calls to the targetPlatform method.
+    // defaultValue: null
+    // targetPlatform = "linux"
+
+    // Boolean value that lets you generate only the platform-specific
+    // application image and skip the generation of the platform-specific
+    // application installer.
+    // defaultValue: false
+    skipInstaller = false
+
+    // The directory passed as argument to the --output option when running
+    // jpackage when executing the jpackage task.
+    // defaultValue: ${buildDir}/${outputDir}
+    installerOutputDir = file("${buildDir}/${outputDir}")
+
+    // The argument passed to the --name option when running jpackage
+    // when executing the jpackage task.
+    // defaultValue: the name value configured in the launcher block or
+    // project.name
+    // installerName = !BUG! <- if set then jpackage fail
+
+    // The argument passed to the --app-version option when running
+    // jpackage when executing the jpackage and jpackageImage tasks.
+    // defaultValue: the project version
+    // appVersion = applicationVersion
+
+    // List of JVM arguments to be passed to the virtual machine.
+    // defaultValue: the jvmArgs value configured in the launcher block or
+    // an empty list
+    jvmArgs = applicationJvmArgs
+
+    // List of additional options to be passed to the jpackage executable
+    // when executing the jpackageImage task.
+    // defaultValue: empty list
+    imageOptions = [
+      // Description of the application
+      '--description', applicationDescription,
+      // Vendor of the application
+      '--vendor', applicationVendor,
+      // Copyright for the application
+      '--copyright', applicationCopyright,
     ]
 
-    // addOptions(String... options)
-    // Adds options to be passed to jlink. It is an alternative way of
-    // setting the options property. You can call this method multiple times.
-    // addOptions '--no-header-files', '--no-man-pages'
+    // The type of the installer to create. Valid values are: "exe",
+    // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+    // specified (in create-installer mode) all supported types of
+    // installable packages for the current platform will be created.
+    // installerType = 'pkg'
 
-    // Include all dependencies matching the given prefixes into
-    // the merged module. This method is useful when it should handle one or
-    // more modular jars as non-modular. You can call this method multiple
-    // times.
-    forceMerge 'log4j-api'
+    // List of additional options to be passed to the jpackage executable
+    // when executing the jpackage task.
+    // defaultValue: empty list
+    installerOptions = [
+      // Description of the application
+      '--description', applicationDescription,
+      // Vendor of the application
+      '--vendor', applicationVendor,
+      // Copyright for the application
+      '--copyright', applicationCopyright,
+      // Path to the license file (absolute path or relative to the
+      // current directory)
+      '--license-file', applicationLicenseFile,
+    ]
 
-    // addExtraDependencies(String... jarPrefixes)
-    // Instructs the plugin to treat all jars matching the given prefixes
-    // as dependencies of the merged module.
-    // A typical situation where this method is needed involves libraries
-    // using JavaFX. Some libraries do not specify their JavaFX dependencies,
-    // because JavaFX was part of the JDK before being removed in Java 11.
-    // Including addExtraDependencies("javafx") into the jlink block solves
-    // this problem.
-    // addExtraDependencies 'javafx'
+    switch (platform) {
+      case 'mac':
+        imageOptions += [
+          // Path of the icon of the application bundle (absolute path
+          // or relative to the current directory)
+          '--icon', "${projectDir}/package/mac/launcher.icns",
 
-    // addExtraModulePath(String modulePath)
-    // Instructs the plugin to include the specified modulePath in the list of
-    // paths passed to the --module-path option of jlink.
-    // You can call this method multiple times.
-    // addExtraModulePath '/usr/lib/jmods'
+          // Name of the application as it appears in the menu bar
+          // (defaults to the application name; must be less than 16
+          // characters long and be suitable for displaying in the
+          // menu bar and the application Info window)
+          '--mac-package-name', applicationName.capitalize(),
 
-    // targetPlatform(String name, String jdkHome, List<String> options = [])
-    // targetPlatform('linux-x64', '/usr/lib/jvm/jdk_x64_linux_hotspot_11_28')
-    // targetPlatform(
-    //     'linux-s390x',
-    //     '/usr/lib/jvm/jdk_s390x_linux_hotspot_11_28',
-    //     [
-    //         '--endian', 'big'
-    //     ]
-    // )
+          // An identifier that uniquely identifies the application
+          // for macOS (defaults to the main class name; limited to
+          // alphanumeric, hyphen, and period characters)
+          '--mac-package-identifier', "${applicationClassName}",
 
-    // targetPlatform(String name, Action<TargetPlatform> action)
-    // targetPlatform("linux-s390x") {
-    //     jdkHome = "/usr/lib/jvm/linux-s390x/jdk-11.0.2+9"
-    //     addOptions("--endian", "big")
-    //     addExtraModulePath("/usr/lib/openjfx/linux-s390x/jmods")
-    // }
-    // targetPlatform("mac") {
-    //     jdkHome = "/usr/lib/jvm/mac/jdk-11.0.2+9"
-    //     addExtraModulePath("/usr/lib/openjfx/mac/jmods")
-    // }
-    // targetPlatform("win") {
-    //     jdkHome = "/usr/lib/jvm/win/jdk-11.0.2+9"
-    //     addExtraModulePath("/usr/lib/openjfx/win/jmods")
-    // }
+          // Request that the bundle be signed
+          // '--mac-sign',
 
-    launcher {
-        name = applicationName.capitalize()
-        moduleName = applicationModuleName
-        mainClassName = applicationClassName
-        jvmArgs = applicationJvmArgs
-        args = applicationArgs
-        unixScriptTemplate = file("${projectDir}/package/nix-script.template")
-        windowsScriptTemplate = file(
-            "${projectDir}/package/win-script.template"
-        )
-    }
+          // Path of the keychain to search for the signing identity
+          // (defaults to the standard keychains)
+          // '--mac-signing-keychain <file path>',
 
-    // The plugin can generate script files for additional applications besides
-    // the main one. For each additional application you configure a
-    // secondaryLauncher block. This block supports all properties
-    // of the launcher block and also the following ones:
-    //     mainClass - the main class of this additional application.
-    //     moduleName - the module containing the main class of this additional
-    //                  application. defaultValue: the value of the moduleName
-    //                  property in the enclosing jlink extension
-    // secondaryLauncher {
-    //     name = 'my-additional-app'
-    //     mainClass = 'org.example.MyAdditionalApp'
-    //     args = ['--user', 'emma']
-    // }
+          // Team name portion of the Apple signing identity
+          // (for example, "Developer ID Application: ")
+          // '--mac-signing-key-user-name <team name>',
 
-    // mergedModule {
-    //     additive = true
-    //     requires 'java.desktop'
-    //     requires transitive 'java.sql'
-    //     uses 'java.sql.Driver'
-    //     provides 'java.sql.Driver' with 'org.hsqldb.jdbc.JDBCDriver'
-    //     excludeRequires 'java.compiler', 'java.rmi'
-    //     excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage'
-    //     excludeProvides servicePattern: 'org.apache.logging.*'
-    // }
-
-    // By default, all application modules are included in the custom runtime
-    // image. This block allows you to create a custom runtime image containing
-    // only some of the application modules.
-    // If the customImage block is empty, the plugin will create a JRE
-    // containing only the JDK modules required by your application.
-    // The plugin figures out by itself which JDK modules are needed,
-    // but you can use the below property to request a different set of modules.
-    // customImage {
-    //     jdkModules = ['java.desktop', 'java.xml', 'jdk.unsupported']
-    //     appModules = ['my.merged.module']
-    // }
-
-    // Create a platform-specific application image and installer
-    // https://openjdk.java.net/jeps/343
-    jpackage {
-
-        // The path to the JDK providing the jpackage tool.
-        // defaultValue: the first non-empty value from:
-        //  - the badass.jlink.jpackage.home system property
-        //  - the BADASS_JLINK_JPACKAGE_HOME environment variable
-        //  - the java.home system property (only if it points to a JRE
-        //    containing the jpackage tool)
-        //  - the JAVA_HOME environment variable
-        // jpackageHome = "/usr/lib/jvm/jdk14"
-
-        // Convenience property for setting both imageOutputDir and
-        // installerOutputDir with the value "${buildDir}/${outputDir}".
-        // defaultValue: "jpackage"
-        outputDir = 'jpackage'
-
-        // The directory passed as argument to the --output option of jpackage
-        // when executing the jpackageImage task.
-        // defaultValue: buildDir/outputDir
-        imageOutputDir = file("${buildDir}/${outputDir}")
-
-        // The argument passed to the --name option when executing the
-        // jpackageImage task.
-        // defaultValue: the name value configured in the launcher block
-        // or project.name
-        imageName = applicationName.capitalize()
-
-        // The directory passed as argument to the --resource-dir option
-        // when running jpackage to create an application installer.
-        // It is also applicable when creating an application image
-        // when you want your own application image
-        // instead of the default java image.
-        // resourceDir = file("${buildDir}/my-packaging-resources")
-
-        // This property is required only when using the targetPlatform method.
-        // It specifies which of the images produced by jlink should be used as
-        // runtime image by jpackage. Its value must match the name provided
-        // in one of the calls to the targetPlatform method.
-        // defaultValue: null
-        // targetPlatform = "linux"
-
-        // Boolean value that lets you generate only the platform-specific
-        // application image and skip the generation of the platform-specific
-        // application installer.
-        // defaultValue: false
-        skipInstaller = false
-
-        // The directory passed as argument to the --output option when running
-        // jpackage when executing the jpackage task.
-        // defaultValue: ${buildDir}/${outputDir}
-        installerOutputDir = file("${buildDir}/${outputDir}")
-
-        // The argument passed to the --name option when running jpackage
-        // when executing the jpackage task.
-        // defaultValue: the name value configured in the launcher block or
-        // project.name
-        // installerName = !BUG! <- if set then jpackage fail
-
-        // The argument passed to the --app-version option when running
-        // jpackage when executing the jpackage and jpackageImage tasks.
-        // defaultValue: the project version
-        // appVersion = applicationVersion
-
-        // List of JVM arguments to be passed to the virtual machine.
-        // defaultValue: the jvmArgs value configured in the launcher block or
-        // an empty list
-        jvmArgs = applicationJvmArgs
-
-        // List of additional options to be passed to the jpackage executable
-        // when executing the jpackageImage task.
-        // defaultValue: empty list
-        imageOptions = [
-            // Description of the application
-            '--description', applicationDescription,
-            // Vendor of the application
-            '--vendor', applicationVendor,
-            // Copyright for the application
-            '--copyright', applicationCopyright,
+          // When signing the application bundle, the value prepended
+          // to all components that need to be signed but don't have
+          // an existing bundle identifier
+          // '--mac-bundle-signing-prefix <prefix string>',
         ]
+        installerOptions += [
+          // Path to a Properties file that contains list of
+          // key, value pairs (absolute path or relative to the
+          // current directory). The keys: "extension", "mime-type",
+          // "icon", and "description" can be used to describe the
+          // association. This option can be used multiple times.
+          '--file-associations',
+          "${projectDir}/package/mac/associations.properties",
 
+          // Absolute path of the installation directory of the
+          // application on OS X or Linux. Relative sub-path of the
+          // installation location of the application such as
+          // "Program Files" or "AppData" on Windows.
+          // '--install-dir <file path>',
+        ]
+        break
+      case 'win':
+        imageOptions += [
+          // Path of the icon of the application bundle (absolute path
+          // or relative to the current directory)
+          '--icon', "${projectDir}/package/windows/launcher.ico",
+
+          // Creates a console launcher for the application (should
+          // be specified for applications which require console
+          // interactions)
+          // '--win-console',
+        ]
+        installerOptions += [
+          // Path to a Properties file that contains list of
+          // key, value pairs (absolute path or relative to the
+          // current directory). The keys: "extension", "mime-type",
+          // "icon", and "description" can be used to describe the
+          // association. This option can be used multiple times.
+          '--file-associations',
+          "${projectDir}/package/windows/associations.properties",
+
+          // Absolute path of the installation directory of the
+          // application on OS X or Linux. Relative sub-path of the
+          // installation location of the application such as
+          // "Program Files" or "AppData" on Windows.
+          '--install-dir', applicationName.capitalize(),
+
+          // Adds a dialog to enable the user to choose a directory
+          // in which to install the application
+          '--win-dir-chooser',
+
+          // Adds the application to the system menu
+          '--win-menu',
+
+          // Start Menu group in which to place this application
+          '--win-menu-group', applicationName.capitalize(),
+
+          // Install the application on a per-user basis
+          '--win-per-user-install',
+
+          // Create a desktop shortcut for the application
+          '--win-shortcut',
+
+          // UUID associated with upgrades for this package
+          '--win-upgrade-uuid',
+          '8C5094E6-C97E-47D8-8465-1DF16124700F',
+        ]
         // The type of the installer to create. Valid values are: "exe",
         // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
         // specified (in create-installer mode) all supported types of
-        // installable packages for the current platform will be created.
-        // installerType = 'pkg'
-
-        // List of additional options to be passed to the jpackage executable
-        // when executing the jpackage task.
-        // defaultValue: empty list
-        installerOptions = [
-            // Description of the application
-            '--description', applicationDescription,
-            // Vendor of the application
-            '--vendor', applicationVendor,
-            // Copyright for the application
-            '--copyright', applicationCopyright,
-            // Path to the license file (absolute path or relative to the
-            // current directory)
-            '--license-file', applicationLicenseFile,
+        // installable packages for the current platform will be
+        // created.
+        installerType = 'msi'
+        break
+      case 'linux':
+        imageOptions += [
+          // Path of the icon of the application bundle (absolute path
+          // or relative to the current directory)
+          '--icon', "${projectDir}/package/linux/launcher.png",
         ]
+        installerOptions += [
+          // Path to a Properties file that contains list of
+          // key, value pairs (absolute path or relative to the
+          // current directory). The keys: "extension", "mime-type",
+          // "icon", and "description" can be used to describe the
+          // association. This option can be used multiple times.
+          '--file-associations',
+          "${projectDir}/package/linux/associations.properties",
 
-        switch (platform) {
-            case 'mac':
-                imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
-                    '--icon', "${projectDir}/package/mac/launcher.icns",
+          // Absolute path of the installation directory of the
+          // application on OS X or Linux. Relative sub-path of the
+          // installation location of the application such as
+          // "Program Files" or "AppData" on Windows.
+          // '--install-dir <file path>',
 
-                    // Name of the application as it appears in the menu bar
-                    // (defaults to the application name; must be less than 16
-                    // characters long and be suitable for displaying in the
-                    // menu bar and the application Info window)
-                    '--mac-package-name', applicationName.capitalize(),
+          // Name for the Linux package, defaults to the
+          // application name
+          // '--linux-package-name', applicationName,
 
-                    // An identifier that uniquely identifies the application
-                    // for macOS (defaults to the main class name; limited to
-                    // alphanumeric, hyphen, and period characters)
-                    '--mac-package-identifier', "${applicationClassName}",
+          // Maintainer for .deb bundle
+          '--linux-deb-maintainer', applicationAuthor,
 
-                    // Request that the bundle be signed
-                    // '--mac-sign',
+          // Menu group this application is placed in
+          '--linux-menu-group', applicationVendor,
 
-                    // Path of the keychain to search for the signing identity
-                    // (defaults to the standard keychains)
-                    // '--mac-signing-keychain <file path>',
+          // Required packages or capabilities for the application
+          // '--linux-package-deps',
 
-                    // Team name portion of the Apple signing identity
-                    // (for example, "Developer ID Application: ")
-                    // '--mac-signing-key-user-name <team name>',
+          // Release value of the RPM spec file, or the Debian
+          // revision value of the DEB control file
+          // '--linux-app-release', '',
 
-                    // When signing the application bundle, the value prepended
-                    // to all components that need to be signed but don't have
-                    // an existing bundle identifier
-                    // '--mac-bundle-signing-prefix <prefix string>',
-                ]
-                installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
-                    '--file-associations',
-                    "${projectDir}/package/mac/associations.properties",
+          // Creates a shortcut for the application
+          '--linux-shortcut',
 
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
-                    // '--install-dir <file path>',
-                ]
-                break
-            case 'win':
-                imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
-                    '--icon', "${projectDir}/package/windows/launcher.ico",
+          // Group value of the RPM spec file, or the Section
+          // value of the DEB control file
+          '--linux-app-category', 'utils',
 
-                    // Creates a console launcher for the application (should
-                    // be specified for applications which require console
-                    // interactions)
-                    // '--win-console',
-                ]
-                installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
-                    '--file-associations',
-                    "${projectDir}/package/windows/associations.properties",
-
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
-                    '--install-dir', applicationName.capitalize(),
-
-                    // Adds a dialog to enable the user to choose a directory
-                    // in which to install the application
-                    '--win-dir-chooser',
-
-                    // Adds the application to the system menu
-                    '--win-menu',
-
-                    // Start Menu group in which to place this application
-                    '--win-menu-group', applicationName.capitalize(),
-
-                    // Install the application on a per-user basis
-                    '--win-per-user-install',
-
-                    // Create a desktop shortcut for the application
-                    '--win-shortcut',
-
-                    // UUID associated with upgrades for this package
-                    '--win-upgrade-uuid',
-                    '8C5094E6-C97E-47D8-8465-1DF16124700F',
-                ]
-                // The type of the installer to create. Valid values are: "exe",
-                // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
-                // specified (in create-installer mode) all supported types of
-                // installable packages for the current platform will be
-                // created.
-                installerType = 'msi'
-                break
-            case 'linux':
-                imageOptions += [
-                    // Path of the icon of the application bundle (absolute path
-                    // or relative to the current directory)
-                    '--icon', "${projectDir}/package/linux/launcher.png",
-                ]
-                installerOptions += [
-                    // Path to a Properties file that contains list of
-                    // key, value pairs (absolute path or relative to the
-                    // current directory). The keys: "extension", "mime-type",
-                    // "icon", and "description" can be used to describe the
-                    // association. This option can be used multiple times.
-                    '--file-associations',
-                    "${projectDir}/package/linux/associations.properties",
-
-                    // Absolute path of the installation directory of the
-                    // application on OS X or Linux. Relative sub-path of the
-                    // installation location of the application such as
-                    // "Program Files" or "AppData" on Windows.
-                    // '--install-dir <file path>',
-
-                    // Name for the Linux package, defaults to the
-                    // application name
-                    // '--linux-package-name', applicationName,
-
-                    // Maintainer for .deb bundle
-                    '--linux-deb-maintainer', applicationAuthor,
-
-                    // Menu group this application is placed in
-                    '--linux-menu-group', applicationVendor,
-
-                    // Required packages or capabilities for the application
-                    // '--linux-package-deps',
-
-                    // Release value of the RPM spec file, or the Debian
-                    // revision value of the DEB control file
-                    // '--linux-app-release', '',
-
-                    // Creates a shortcut for the application
-                    '--linux-shortcut',
-
-                    // Group value of the RPM spec file, or the Section
-                    // value of the DEB control file
-                    '--linux-app-category', 'utils',
-
-                    // Type of the license ("License: " of the RPM .spec)
-                    '--linux-rpm-license-type', applicationLicenseType,
-                ]
-                break
-        }
+          // Type of the license ("License: " of the RPM .spec)
+          '--linux-rpm-license-type', applicationLicenseType,
+        ]
+        break
     }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

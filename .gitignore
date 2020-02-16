@@ -13,6 +13,7 @@
 # general things to ignore
 .gradle
 build
+bin
 
 # ignore logs
 log

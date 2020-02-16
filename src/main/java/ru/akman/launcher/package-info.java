@@ -26,20 +26,7 @@
   DEALINGS IN THE SOFTWARE.
 */
 
-package ru.akman.gui;
-
-import javafx.fxml.FXML;
-
 /**
- * Secondary controller.
+ * This package provided launcher for application.
  */
-public class SecondaryController {
-
-  // PMD: Each class should declare at least one constructor
-
-  @FXML
-  private void switchToPrimary() {
-    LauncherHelper.setRoot("primary");
-  }
-
-}
+package ru.akman.launcher;
