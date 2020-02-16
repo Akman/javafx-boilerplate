@@ -57,6 +57,8 @@ plugins {
 
   // https://docs.gradle.org/current/userguide/jacoco_plugin.html
   id 'jacoco'
+  
+  id 'ru.akman.vscode'
 }
 
 repositories {
@@ -138,82 +140,6 @@ eclipse {
               it.entryAttributes['module'] = 'true'
             }
       }
-    }
-  }
-}
-
-task vscodeTasks {
-  description 'Generates VS Code tasks file with all available gradle tasks'
-  def vscSettingsDir = new File(projectDir, '.vscode')
-  def vscTasksFile = new File(vscSettingsDir, 'tasks.json')
-  def jsonSlurper = new groovy.json.JsonSlurper()
-  def jsonOutput = new groovy.json.JsonOutput()
-  def vscTasksMap = [:]
-  vscSettingsDir.mkdirs()
-  if (vscTasksFile.exists()) {
-    try {
-      def json = vscTasksFile.getText()
-      if (json.length() != 0) {
-        vscTasksMap = jsonSlurper.parseText(json)
-      }
-    } catch (Exception ex) {
-      println "Could not load file: '${vscTasksFile.path}'\n${ex}"
-      throw ex
-    }
-    if (!(vscTasksMap instanceof Map)) {
-      println "Could not load file: '${vscTasksFile.path}'"
-      throw new Exception('Text must be a valid JSON map object')
-    }
-  }
-  if (!vscTasksMap.containsKey('version')) {
-    vscTasksMap['version'] = '2.0.0'
-  }
-  if (!vscTasksMap.containsKey('tasks')) {
-    vscTasksMap['tasks'] = []
-  }
-  doLast {
-    getTasks().each { task ->
-      def label = task.name
-      def description = task.description ?: ''
-      def group = 'none'
-      switch (task.group) {
-        case 'build':
-          group = 'build'
-          break
-        case 'verification':
-          group = 'test'
-          break
-      }
-      if (!vscTasksMap.tasks.any { it.group == group && it.label == label &&
-          it.detail == description}) {
-        println "Task added: ${label} [${group}] - ${description}"
-        vscTasksMap.tasks << [
-          'group': group,
-          'label': label,
-          'detail': description,
-          'args': [ task.name ],
-          'promptOnClose': true,
-          'presentation': [
-            'group': 'gradle',
-            'echo': true,
-            'reveal': 'always',
-            'focus': false,
-            'panel': 'shared',
-            'showReuseMessage': true,
-            'clear': false
-          ],
-          'type': 'shell',
-          'command': './gradlew',
-          'problemMatcher': [],
-        ]
-      }
-    }
-    try {
-      vscTasksFile.setText(
-          jsonOutput.prettyPrint(jsonOutput.toJson(vscTasksMap)))
-    } catch (Exception ex) {
-      println "Could not save file: '${vscTasksFile.path}'\n${ex}"
-      throw ex
     }
   }
 }

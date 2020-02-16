@@ -37,6 +37,34 @@ plugins {
 
   // https://github.com/ben-manes/gradle-versions-plugin
   id 'com.github.ben-manes.versions' version '0.27.0'
+  
+  id 'java-gradle-plugin'
+  
+  // https://plugins.gradle.org/docs/publish-plugin
+  // https://plugins.gradle.org/docs/submit
+  id 'com.gradle.plugin-publish' version '0.10.1'
+}
+
+gradlePlugin {
+  plugins {
+    vscodePlugin {
+      id = 'ru.akman.vscode'
+      implementationClass = 'ru.akman.plugins.VSCodePlugin'
+    }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
+  vcsUrl = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
+  plugins {
+    vscodePlugin {
+      displayName = 'Gradle VSCode plugin'
+      description = 'Generates all VS Code files'
+      tags = ['vscode']
+      version = '0.1'
+    }
+  }
 }
 
 repositories {
