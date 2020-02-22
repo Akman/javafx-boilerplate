@@ -7,5 +7,7 @@
 *.gif  binary
 *.png  binary
 
+*.bat  text   eol=crlf
+
 config/* linguist-vendored
 docs/* linguist-documentation

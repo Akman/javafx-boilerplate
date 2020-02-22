@@ -28,37 +28,29 @@
 
 plugins {
   id 'application'
-
+  id 'groovy'
   id 'eclipse'
-
+  // https://github.com/Akman/vscode-tasks
+  id 'ru.akman.vscode-tasks' version '0.2.0'
   // https://github.com/researchgate/gradle-release
   id 'net.researchgate.release' version '2.8.1'
-
   // https://badass-jlink-plugin.beryx.org
-  id 'org.beryx.jlink' version '2.17.0'
-
+  id 'org.beryx.jlink' version '2.17.2'
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.15.0'
-
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.21.0'
-
+  id 'com.github.ben-manes.versions' version '0.27.0'
   // https://spotbugs.github.io
-  id 'com.github.spotbugs' version '2.0.0'
-
+  id 'com.github.spotbugs' version '3.0.0'
   // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
   id 'checkstyle'
-
   // https://docs.gradle.org/current/userguide/pmd_plugin.html
   id 'pmd'
-
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.1'
-
   // https://docs.gradle.org/current/userguide/jacoco_plugin.html
   id 'jacoco'
-  
-  id 'ru.akman.vscode'
+  id 'codenarc'
 }
 
 repositories {
@@ -111,10 +103,15 @@ dependencies {
     'org.apache.logging.log4j:log4j-core:2.13.0',
   )
   testImplementation(
-    'org.junit.jupiter:junit-jupiter-api:5.4.2',
-    'org.junit.jupiter:junit-jupiter-params:5.4.2',
-    'org.junit.jupiter:junit-jupiter-engine:5.4.2',
+    'org.junit.jupiter:junit-jupiter-api:5.6.0',
+    'org.junit.jupiter:junit-jupiter-params:5.6.0',
     'org.mockito:mockito-junit-jupiter:3.2.4',
+    'org.junit.vintage:junit-vintage-engine:5.6.0',
+    //'org.junit.jupiter:junit-jupiter-engine:5.6.0',
+    'org.codehaus.groovy:groovy-all:2.5.8',
+    'org.spockframework:spock-core:1.3-groovy-2.5',
+    //'org.assertj:assertj-core:3.14.0',
+    //'org.hamcrest:hamcrest:2.2',
   )
 }
 
@@ -162,6 +159,8 @@ clean {
     '-Werror',
   ]
 }
+
+[compileGroovy, compileTestGroovy]*.options*.encoding = defaultEncoding
 
 compileJava {
   doFirst {
@@ -225,20 +224,27 @@ processTestResources {
 test {
   useJUnitPlatform()
   jvmArgs = []
+}
+
+tasks.withType(Test) {
   testLogging {
-    showStandardStreams = true
+    showExceptions = true
+    showCauses = true
     showStackTraces = true
     displayGranularity = 2
-    exceptionFormat 'short'
+    exceptionFormat = 'short'
+    // showStandardStreams = true
     events(
       //'started',
       'passed',
       'skipped',
       'failed',
+      org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+      //org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
     )
     debug {
       displayGranularity = 0
-      exceptionFormat 'full'
+      exceptionFormat = 'full'
       events(
         'started',
         'passed',
@@ -507,7 +513,11 @@ license {
       padLines = false
     }
   }
+  includes([
+    '**/*.groovy',
+  ])
   mapping([
+    'groovy': 'JAVADOC_STYLE',
     'fxml': 'XML_STYLE',
   ])
   excludes([
@@ -597,7 +607,7 @@ pmd {
 cpd {
   // The version of the code quality tool to be used.
   toolVersion = '6.15.0'
-  language = 'java'
+  encoding = defaultEncoding
   ignoreFailures = true
   ignoreAnnotations = false
   ignoreIdentifiers = false
@@ -608,6 +618,7 @@ cpd {
 }
 
 cpdCheck {
+  exclude '**/*.groovy'
   reports {
     text.enabled = true
     xml.enabled = true
@@ -641,6 +652,45 @@ cpdCheck {
     }
   }
 }
+
+task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
+  language = 'groovy'
+  source = sourceSets.main.allGroovy
+  reports {
+    text.enabled = true
+    xml.enabled = true
+  }
+  // Generate HTML output.
+  // Stylesheet file could be downloaded from:
+  // https://github.com/pmd/pmd/blob/master/pmd-core/etc/xslt/cpdhtml.xslt
+  // Remove "illegal" attribute 'xpath-default-namespace' from this file:
+  // xpath-default-namespace="http://pmd.sourceforge.net/report/2.0.0"
+  // change "//duplication[@lines>30]" to "//duplication[@lines>10]"
+  // and placed into ${projectDir}/config/cpd/xsl directory.
+  doLast {
+    def configDir = new File("${projectDir}/config/cpd/xsl")
+    def reportDir = new File("${project.reporting.baseDir}/cpd")
+    def xslFile = new File(configDir, 'cpdhtml.xslt')
+    def xsl = new javax.xml.transform.stream.StreamSource(
+        new StringReader(xslFile.getText()))
+    def transformer = javax.xml.transform.TransformerFactory.newInstance()
+        .newTransformer(xsl)
+    def xmlTree = fileTree(dir: reportDir, include: '*.xml')
+    xmlTree.getFiles().each {
+      def htmlFileName =
+          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
+      def htmlFile = new File(it.getParentFile(), htmlFileName)
+      def html = new javax.xml.transform.stream.StreamResult(
+          new FileOutputStream(htmlFile))
+      def xml = new javax.xml.transform.stream.StreamSource(
+          new StringReader(it.getText()))
+      println "See the html report at: ${htmlFile}"
+      transformer.transform(xml, html)
+    }
+  }
+}
+
+check.dependsOn groovyCpdCheck
 
 spotbugs {
   // The version of the code quality tool to be used.
@@ -744,6 +794,19 @@ jacocoTestReport {
     csv.enabled false
     html.destination file("${project.reporting.baseDir}/jacoco/html")
   }
+}
+
+build.dependsOn jacocoTestReport
+
+codenarc {
+  toolVersion = '1.5'
+  configFile = file("${projectDir}/config/codenarc/rules.groovy")
+  ignoreFailures = true
+  maxPriority1Violations = 0
+  maxPriority2Violations = 0
+  maxPriority3Violations = 0
+  reportsDir = file("${project.reporting.baseDir}/codenarc")
+  reportFormat = 'html'
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1192,4 +1255,4 @@ jlink {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-defaultTasks 'clean', 'check', 'jacocoTestReport'
+defaultTasks 'build'

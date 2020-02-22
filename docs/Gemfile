@@ -23,7 +23,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 2.5.5'
+ruby '~> 2.6.5'
 
 # https://rubygems.org/gems/jekyll
 gem 'jekyll', '>= 3.8.5'

@@ -29,8 +29,12 @@
 package ru.akman.gui;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -44,6 +48,16 @@ import org.apache.logging.log4j.Logger;
 public final class LauncherHelper extends Application {
 
   /**
+   * Default stage width.
+   */
+  private static final int WIDTH = 640;
+
+  /**
+   * Default stage height.
+   */
+  private static final int HEIGHT = 480;
+
+  /**
    * Default logger.
    */
   private static final Logger LOG = LogManager.getLogger(LauncherHelper.class);
@@ -53,29 +67,21 @@ public final class LauncherHelper extends Application {
    */
   private static Scene scene;
 
-  // PMD: Each class should declare at least one constructor
+  @Override
+  public void start(final Stage stage) {
+    setupStage(stage);
+    stage.show();
+  }
 
   /**
    * Run the application.
    * @param args CLI arguments
    */
   public static void run(final String... args) {
-    LOG.info("Launching application ...");
-    Application.launch(LauncherHelper.class, args);
-  }
-
-  @Override
-  public void start(final Stage stage) {
-    try {
-      stage.getIcons().add(
-          new Image(LauncherHelper.class.getResourceAsStream("/icon.png")));
-      // SPOTBUGS: Write to static field from instance method
-      scene = new Scene(loadFxml("primary"));
-      stage.setScene(scene);
-    } catch (IOException ex) {
-      LOG.error(ex);
+    if (LOG.isInfoEnabled()) {
+      LOG.info("Launching application ...");
     }
-    stage.show();
+    Application.launch(LauncherHelper.class, args);
   }
 
   /**
@@ -86,13 +92,39 @@ public final class LauncherHelper extends Application {
     try {
       scene.setRoot(loadFxml(fxml));
     } catch (IOException ex) {
-      LOG.error(ex);
+      if (LOG.isErrorEnabled()) {
+        LOG.error(ex);
+      }
     }
+  }
+
+  private static void setupStage(final Stage stage) {
+    final ResourceBundle messages =
+        ResourceBundle.getBundle("messages", Locale.getDefault());
+    stage.setTitle(messages.getString("app.greeting"));
+    final InputStream iconAsStream =
+        LauncherHelper.class.getResourceAsStream("/icon.png");
+    if (iconAsStream == null) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("Can't load application icon: '/icon.png'");
+      }
+    } else {
+      stage.getIcons().add(new Image(iconAsStream));
+    }
+    try {
+      scene = new Scene(loadFxml("/primary.fxml"), WIDTH, HEIGHT);
+    } catch (IOException ex) {
+      scene = new Scene(new Group(), WIDTH, HEIGHT);
+      if (LOG.isErrorEnabled()) {
+        LOG.error(ex);
+      }
+    }
+    stage.setScene(scene);
   }
 
   private static Parent loadFxml(final String fxml) throws IOException {
     final FXMLLoader fxmlLoader = new FXMLLoader(
-        LauncherHelper.class.getResource("/" + fxml + ".fxml"));
+        LauncherHelper.class.getResource(fxml));
     return fxmlLoader.load();
   }
 

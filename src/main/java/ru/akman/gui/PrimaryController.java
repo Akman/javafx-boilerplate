@@ -35,11 +35,9 @@ import javafx.fxml.FXML;
  */
 public class PrimaryController {
 
-  // PMD: Each class should declare at least one constructor
-
   @FXML
   private void switchToSecondary() {
-    LauncherHelper.setRoot("secondary");
+    LauncherHelper.setRoot("/secondary.fxml");
   }
 
 }

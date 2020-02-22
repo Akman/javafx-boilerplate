@@ -54,8 +54,6 @@ public final class CommonUtils {
    *         or null if IO error occurs
    */
   public static String getDefaultEncoding() {
-    // PMD: Ensure that resources like this InputStreamReader object
-    // PMD: are closed after use
     final InputStreamReader reader = new InputStreamReader(
         new ByteArrayInputStream(new byte[] { 'A' }),
         Charset.defaultCharset());

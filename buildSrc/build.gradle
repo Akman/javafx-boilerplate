@@ -32,39 +32,17 @@ plugins {
   // https://github.com/CodeNarc/CodeNarc
   id 'codenarc'
 
+  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  id 'jacoco'
+
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.15.0'
 
   // https://github.com/ben-manes/gradle-versions-plugin
   id 'com.github.ben-manes.versions' version '0.27.0'
   
-  id 'java-gradle-plugin'
-  
-  // https://plugins.gradle.org/docs/publish-plugin
-  // https://plugins.gradle.org/docs/submit
-  id 'com.gradle.plugin-publish' version '0.10.1'
-}
-
-gradlePlugin {
-  plugins {
-    vscodePlugin {
-      id = 'ru.akman.vscode'
-      implementationClass = 'ru.akman.plugins.VSCodePlugin'
-    }
-  }
-}
-
-pluginBundle {
-  website = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
-  vcsUrl = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
-  plugins {
-    vscodePlugin {
-      displayName = 'Gradle VSCode plugin'
-      description = 'Generates all VS Code files'
-      tags = ['vscode']
-      version = '0.1'
-    }
-  }
+  // https://github.com/Akman/vscode-tasks
+  id 'ru.akman.vscode-tasks' version '0.2.0'
 }
 
 repositories {
@@ -84,20 +62,7 @@ dependencies {
 
   implementation(
     localGroovy(),
-    gradleApi()
   )
-
-  // The Gradle TestKit is a library that aids in testing Gradle plugins and
-  // build logic generally. At this time, it is focused on functional testing.
-  // That is, testing build logic by exercising it as part of
-  // a programmatically executed build.
-  // Over time, the TestKit will likely expand to facilitate other kinds of
-  // tests.
-  // https://docs.gradle.org/current/userguide/test_kit.html
-
-  // testImplementation(
-  //   gradleTestKit(),
-  // )
 
   // Spock
 
@@ -179,7 +144,7 @@ license {
     '**/*.png',
   ])
   ext {
-    projectName = 'Gradle Build Boilerplate Project'
+    projectName = 'Gradle Build Boilerplate Project (buildSrc)'
     projectUrl = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
     inceptionYear = 2019
     currentYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -198,7 +163,7 @@ codenarc {
 
   // The CodeNarc configuration file to use.
   // https://github.com/CodeNarc/CodeNarc/tree/master/src/main/resources/rulesets
-  configFile = file("${projectDir}/config/codenarc/codenarc.xml")
+  configFile = file("${projectDir}/config/codenarc/rules.groovy")
 
   // Whether to allow the build to continue if there are warnings.
   ignoreFailures = true
@@ -219,17 +184,21 @@ codenarc {
   reportFormat = 'html'
 }
 
-test {
+tasks.withType(Test) {
   testLogging {
-    showStandardStreams = true
+    showExceptions = true
+    showCauses = true
     showStackTraces = true
-    displayGranularity = -1
+    displayGranularity = 2
     exceptionFormat = 'short'
+    // showStandardStreams = true
     events(
       //'started',
       'passed',
       'skipped',
       'failed',
+      org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+      //org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
     )
     debug {
       displayGranularity = 0
@@ -244,4 +213,20 @@ test {
   }
 }
 
-defaultTasks 'clean', 'build'
+jacoco {
+  toolVersion = '0.8.5'
+  reportsDir = file("${project.reporting.baseDir}/jacoco")
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    xml.destination file("${project.reporting.baseDir}/jacoco/report.xml")
+    csv.enabled false
+    html.destination file("${project.reporting.baseDir}/jacoco/html")
+  }
+}
+
+build.dependsOn jacocoTestReport
+
+defaultTasks 'build'

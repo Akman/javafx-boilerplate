@@ -1,17 +1,10 @@
-<ruleset xmlns="http://codenarc.org/ruleset/1.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
-    xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
-  <description>
-    A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by
-    category. You can use this as a template for your own custom RuleSet.
-    Just exclude the rules that you don't want to include.
-  </description>
-  <ruleset-ref path='rulesets/basic.xml'>
-    <!--
-    <exclude name='xxxxxxx'/>
-    -->
-    <!--
+ruleset {
+
+    description 'All Groovy CodeNarc rules, grouped by category'
+
+    ruleset('rulesets/basic.xml')
+
+    /*
     AssertWithinFinallyBlock
     AssignmentInConditional
     BigDecimalInstantiation
@@ -55,18 +48,20 @@
     RemoveAllOnSelf
     ReturnFromFinallyBlock
     ThrowExceptionFromFinallyBlock
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/braces.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/braces.xml')
+
+    /*
     ElseBlockBraces
     ForStatementBraces
     IfStatementBraces
     WhileStatementBraces
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/comments.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/comments.xml')
+
+    /*
     ClassJavadoc
     JavadocConsecutiveEmptyLines
     JavadocEmptyAuthorTag
@@ -82,10 +77,11 @@
     JavadocMissingExceptionDescription
     JavadocMissingParamDescription
     JavadocMissingThrowsDescription
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/concurrency.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/concurrency.xml')
+
+    /*
     BusyWait
     DoubleCheckedLocking
     InconsistentPropertyLocking
@@ -112,13 +108,19 @@
     VolatileArrayField
     VolatileLongOrDoubleField
     WaitOutsideOfWhileLoop
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/convention.xml'>
-    <exclude name='MethodReturnTypeRequired'/>
-    <exclude name='CompileStatic'/>
-    <exclude name='FieldTypeRequired'/>
-    <!--
+    */
+
+    ruleset('rulesets/convention.xml') {
+
+        MethodReturnTypeRequired {
+            doNotApplyToClassNames = '*Test'
+        }
+        NoDef {
+            doNotApplyToClassNames = '*Test'
+        }
+    }
+
+    /*
     CompileStatic
     ConfusingTernary
     CouldBeElvis
@@ -126,12 +128,15 @@
     FieldTypeRequired
     HashtableIsObsolete
     IfStatementCouldBeTernary
+    ImplicitClosureParameter
     InvertedCondition
     InvertedIfElse
     LongLiteralWithLowerCaseL
     MethodParameterTypeRequired
     MethodReturnTypeRequired
     NoDef
+    NoDouble
+    NoFloat
     NoJavaUtilDate
     NoTabCharacter
     ParameterReassignment
@@ -142,10 +147,11 @@
     TrailingComma
     VariableTypeRequired
     VectorIsObsolete
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/design.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/design.xml')
+
+    /*
     AbstractClassWithPublicConstructor
     AbstractClassWithoutAbstractMethod
     AssignmentToStaticFieldFromInstanceMethod
@@ -168,18 +174,29 @@
     SimpleDateFormatMissingLocale
     StatelessSingleton
     ToStringReturnsNull
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/dry.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/dry.xml')
+
+    /*
     DuplicateListLiteral
     DuplicateMapLiteral
     DuplicateNumberLiteral
     DuplicateStringLiteral
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/exceptions.xml'>
-    <!--
+    */
+
+    // ruleset('rulesets/enhanced.xml')
+
+    /*
+    CloneWithoutCloneable
+    JUnitAssertEqualsConstantActualValue
+    MissingOverrideAnnotation
+    UnsafeImplementationAsMap
+    */
+
+    ruleset('rulesets/exceptions.xml')
+
+    /*
     CatchArrayIndexOutOfBoundsException
     CatchError
     CatchException
@@ -200,10 +217,21 @@
     ThrowNullPointerException
     ThrowRuntimeException
     ThrowThrowable
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/formatting.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/formatting.xml') {
+        Indentation {
+            spacesPerIndentLevel = 2
+        }
+        LineLength {
+            length = 80
+        }
+        SpaceAroundMapEntryColon {
+            characterAfterColonRegex = '\\s'
+        }
+    }
+
+    /*
     BlankLineBeforePackage
     BlockEndsWithBlankLine
     BlockStartsWithBlankLine
@@ -217,14 +245,8 @@
     ClosureStatementOnOpeningLineOfMultipleLineClosure
     ConsecutiveBlankLines
     FileEndsWithoutNewline
-    -->
-    <rule-config name='Indentation'>
-      <property name='spacesPerIndentLevel' value='2'/>
-    </rule-config>
-    <rule-config name='LineLength'>
-      <property name='length' value='80'/>
-    </rule-config>
-    <!--
+    Indentation
+    LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
     SpaceAfterCatch
@@ -242,10 +264,11 @@
     SpaceBeforeClosingBrace
     SpaceBeforeOpeningBrace
     TrailingWhitespace
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/generic.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/generic.xml')
+
+    /*
     IllegalClassMember
     IllegalClassReference
     IllegalPackageReference
@@ -255,10 +278,27 @@
     RequiredRegex
     RequiredString
     StatelessClass
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/groovyism.xml'>
-    <!--
+    */
+
+    // ruleset('rulesets/grails.xml')
+
+    /*
+    GrailsDomainHasEquals
+    GrailsDomainHasToString
+    GrailsDomainReservedSqlKeywordName
+    GrailsDomainStringPropertyMaxSize
+    GrailsDomainWithServiceReference
+    GrailsDuplicateConstraint
+    GrailsDuplicateMapping
+    GrailsMassAssignment
+    GrailsPublicControllerMethod
+    GrailsServletContextReference
+    GrailsStatelessService
+    */
+
+    ruleset('rulesets/groovyism.xml')
+
+    /*
     AssignCollectionSort
     AssignCollectionUnique
     ClosureAsLastMethodParameter
@@ -292,10 +332,11 @@
     GroovyLangImmutable
     UseCollectMany
     UseCollectNested
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/imports.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/imports.xml')
+
+    /*
     DuplicateImport
     ImportFromSamePackage
     ImportFromSunPackages
@@ -303,18 +344,49 @@
     NoWildcardImports
     UnnecessaryGroovyImport
     UnusedImport
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/jdbc.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/jdbc.xml')
+
+    /*
     DirectConnectionManagement
     JdbcConnectionReference
     JdbcResultSetReference
     JdbcStatementReference
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/logging.xml'>
-    <!--
+    */
+
+    // ruleset('rulesets/junit.xml')
+
+    /*
+    ChainedTest
+    CoupledTestCase
+    JUnitAssertAlwaysFails
+    JUnitAssertAlwaysSucceeds
+    JUnitFailWithoutMessage
+    JUnitLostTest
+    JUnitPublicField
+    JUnitPublicNonTestMethod
+    JUnitPublicProperty
+    JUnitSetUpCallsSuper
+    JUnitStyleAssertions
+    JUnitTearDownCallsSuper
+    JUnitTestMethodWithoutAssert
+    JUnitUnnecessarySetUp
+    JUnitUnnecessaryTearDown
+    JUnitUnnecessaryThrowsException
+    SpockIgnoreRestUsed
+    UnnecessaryFail
+    UseAssertEqualsInsteadOfAssertTrue
+    UseAssertFalseInsteadOfNegation
+    UseAssertNullInsteadOfAssertEquals
+    UseAssertSameInsteadOfAssertTrue
+    UseAssertTrueInsteadOfAssertEquals
+    UseAssertTrueInsteadOfNegation
+    */
+
+    ruleset('rulesets/logging.xml')
+
+    /*
     LoggerForDifferentClass
     LoggerWithWrongModifiers
     LoggingSwallowsStacktrace
@@ -323,11 +395,15 @@
     Println
     SystemErrPrint
     SystemOutPrint
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/naming.xml'>
-    <exclude name='MethodName'/>
-    <!--
+    */
+
+    ruleset('rulesets/naming.xml') {
+        MethodName {
+            doNotApplyToClassNames = '*Test'
+        }
+    }
+
+    /*
     AbstractClassName
     ClassName
     ClassNameSameAsFilename
@@ -344,11 +420,13 @@
     ParameterName
     PropertyName
     VariableName
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/security.xml'>
-    <exclude name='JavaIoPackageAccess'/>
-    <!--
+    */
+
+    ruleset('rulesets/security.xml') {
+        exclude 'JavaIoPackageAccess'
+    }
+
+    /*
     FileCreateTempFile
     InsecureRandom
     JavaIoPackageAccess
@@ -358,18 +436,33 @@
     PublicFinalizeMethod
     SystemExit
     UnsafeArrayDeclaration
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/serialization.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/serialization.xml')
+
+    /*
     EnumCustomSerializationIgnored
     SerialPersistentFields
     SerialVersionUID
     SerializableClassMustDefineSerialVersionUID
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/unnecessary.xml'>
-    <!--
+    */
+
+    // ruleset('rulesets/size.xml')
+
+    /*
+    AbcMetric   // Requires the GMetrics jar
+    ClassSize
+    CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file
+    CyclomaticComplexity   // Requires the GMetrics jar
+    MethodCount
+    MethodSize
+    NestedBlockDepth
+    ParameterCount
+    */
+
+    ruleset('rulesets/unnecessary.xml')
+
+    /*
     AddEmptyString
     ConsecutiveLiteralAppends
     ConsecutiveStringConcatenation
@@ -417,10 +510,11 @@
     UnnecessaryTernaryExpression
     UnnecessaryToString
     UnnecessaryTransientModifier
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/unused.xml'>
-    <!--
+    */
+
+    ruleset('rulesets/unused.xml')
+
+    /*
     UnusedArray
     UnusedMethodParameter
     UnusedObject
@@ -428,71 +522,6 @@
     UnusedPrivateMethod
     UnusedPrivateMethodParameter
     UnusedVariable
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/junit.xml'>
-    <exclude name='JUnitPublicNonTestMethod'/>
-    <exclude name='JUnitPublicProperty'/>
-    <!--
-    ChainedTest
-    CoupledTestCase
-    JUnitAssertAlwaysFails
-    JUnitAssertAlwaysSucceeds
-    JUnitFailWithoutMessage
-    JUnitLostTest
-    JUnitPublicField
-    JUnitPublicNonTestMethod
-    JUnitPublicProperty
-    JUnitSetUpCallsSuper
-    JUnitStyleAssertions
-    JUnitTearDownCallsSuper
-    JUnitTestMethodWithoutAssert
-    JUnitUnnecessarySetUp
-    JUnitUnnecessaryTearDown
-    JUnitUnnecessaryThrowsException
-    SpockIgnoreRestUsed
-    UnnecessaryFail
-    UseAssertEqualsInsteadOfAssertTrue
-    UseAssertFalseInsteadOfNegation
-    UseAssertNullInsteadOfAssertEquals
-    UseAssertSameInsteadOfAssertTrue
-    UseAssertTrueInsteadOfAssertEquals
-    UseAssertTrueInsteadOfNegation
-    -->
-  </ruleset-ref>
-  <ruleset-ref path='rulesets/grails.xml'>
-    <!--
-    GrailsDomainHasEquals
-    GrailsDomainHasToString
-    GrailsDomainReservedSqlKeywordName
-    GrailsDomainStringPropertyMaxSize
-    GrailsDomainWithServiceReference
-    GrailsDuplicateConstraint
-    GrailsDuplicateMapping
-    GrailsMassAssignment
-    GrailsPublicControllerMethod
-    GrailsServletContextReference
-    GrailsStatelessService
-    -->
-  </ruleset-ref>
-  <!--
-  <ruleset-ref path='rulesets/enhanced.xml'>
-    CloneWithoutCloneable
-    JUnitAssertEqualsConstantActualValue
-    MissingOverrideAnnotation
-    UnsafeImplementationAsMap
-  </ruleset-ref>
-  -->
-  <!--
-  <ruleset-ref path='rulesets/size.xml'>
-    AbcMetric
-    CrapMetric
-    CyclomaticComplexity
-    ClassSize
-    MethodCount
-    MethodSize
-    NestedBlockDepth
-    ParameterCount
-  </ruleset-ref>
-  -->
-</ruleset>
+    */
+
+}

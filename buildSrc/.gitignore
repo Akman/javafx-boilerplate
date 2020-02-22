@@ -14,7 +14,3 @@
 .gradle
 bin
 build
-
-# ignore logs
-log
-*.log

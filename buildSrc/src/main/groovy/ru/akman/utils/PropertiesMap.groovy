@@ -1,5 +1,5 @@
 /*
-  Gradle Build Boilerplate Project
+  Gradle Build Boilerplate Project (buildSrc)
 
   https://github.com/akman/java-boilerplate-gradle/buildSrc
 
@@ -42,7 +42,6 @@ class PropertiesMap {
   }
 
   PropertiesMap(String fileName, String encoding = 'UTF-8') {
-    // CODENARC: JavaIoPackageAccess
     // The use of java.io.File violates the Enterprise Java Bean specification
     this(new File(fileName), encoding)
   }

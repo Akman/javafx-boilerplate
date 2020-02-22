@@ -1,5 +1,5 @@
 /*
-  Gradle Build Boilerplate Project
+  Gradle Build Boilerplate Project (buildSrc)
 
   https://github.com/akman/java-boilerplate-gradle/buildSrc
 
