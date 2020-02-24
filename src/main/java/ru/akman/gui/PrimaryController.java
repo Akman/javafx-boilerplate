@@ -35,9 +35,14 @@ import javafx.fxml.FXML;
  */
 public class PrimaryController {
 
+  /**
+   * Secodary FXML.
+   */
+  private static final String SECONDARY_FXML = "secondary.fxml";
+
   @FXML
   private void switchToSecondary() {
-    LauncherHelper.setRoot("/secondary.fxml");
+    LauncherHelper.setRoot(SECONDARY_FXML);
   }
 
 }

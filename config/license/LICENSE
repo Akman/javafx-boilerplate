@@ -1,10 +1,10 @@
-${projectName}
+${name}
 
-${projectUrl}
+${url}
 
-The MIT License (MIT)
+${licenseName} (${licenseType})
 
-Copyright (C) ${copyrightYear} ${copyrightName} <${copyrightEmail}>
+${copyright}
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the "Software"),

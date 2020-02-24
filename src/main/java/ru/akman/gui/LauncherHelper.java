@@ -30,8 +30,7 @@ package ru.akman.gui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -41,6 +40,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.akman.launcher.Launcher;
 
 /**
  * Main GUI class.
@@ -56,6 +56,16 @@ public final class LauncherHelper extends Application {
    * Default stage height.
    */
   private static final int HEIGHT = 480;
+
+  /**
+   * Default stage icon.
+   */
+  private static final String ICON = "/icon.png";
+
+  /**
+   * Primary FXML.
+   */
+  private static final String PRIMARY_FXML = "primary.fxml";
 
   /**
    * Default logger.
@@ -79,7 +89,7 @@ public final class LauncherHelper extends Application {
    */
   public static void run(final String... args) {
     if (LOG.isInfoEnabled()) {
-      LOG.info("Launching application ...");
+      LOG.info(Launcher.getString("app.starting"));
     }
     Application.launch(LauncherHelper.class, args);
   }
@@ -99,20 +109,24 @@ public final class LauncherHelper extends Application {
   }
 
   private static void setupStage(final Stage stage) {
-    final ResourceBundle messages =
-        ResourceBundle.getBundle("messages", Locale.getDefault());
-    stage.setTitle(messages.getString("app.greeting"));
-    final InputStream iconAsStream =
-        LauncherHelper.class.getResourceAsStream("/icon.png");
-    if (iconAsStream == null) {
-      if (LOG.isErrorEnabled()) {
-        LOG.error("Can't load application icon: '/icon.png'");
+    final Properties properties = Launcher.getProperties();
+    stage.setTitle(properties.getProperty("application.fullname"));
+    try (InputStream iconAsStream =
+        LauncherHelper.class.getResourceAsStream(ICON)) {
+      if (iconAsStream == null) {
+        if (LOG.isErrorEnabled()) {
+          LOG.error("Can't load application icon: '" + ICON + "'");
+        }
+      } else {
+        stage.getIcons().add(new Image(iconAsStream));
       }
-    } else {
-      stage.getIcons().add(new Image(iconAsStream));
+    } catch (IOException ex) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error(ex);
+      }
     }
     try {
-      scene = new Scene(loadFxml("/primary.fxml"), WIDTH, HEIGHT);
+      scene = new Scene(loadFxml(PRIMARY_FXML), WIDTH, HEIGHT);
     } catch (IOException ex) {
       scene = new Scene(new Group(), WIDTH, HEIGHT);
       if (LOG.isErrorEnabled()) {

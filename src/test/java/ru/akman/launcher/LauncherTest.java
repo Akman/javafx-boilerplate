@@ -35,12 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 // import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.util.Locale;
 // import java.util.LinkedList;
 import java.util.Properties;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,12 +67,18 @@ class LauncherTest {
   private static final Logger LOG = LogManager.getLogger(LauncherTest.class);
 
   /**
-   * Default charset.
+   * Application properties from properties file.
    */
-  private static final Charset CHARSET = Charset.defaultCharset();
+  private static final Properties PROPERTIES = CommonUtils.loadResource(
+      "/test.properties", Charset.defaultCharset());
 
-  //private static final String GREETING = "嗨! МыШка суШек насуШила!";
-  //private static final String PARTING =  "再见! НасуШила суШек МыШка!";
+  static {
+    CommonUtils.setupSystemStreams();
+    // configuration: /log4j2-test.xml
+    // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+    Configurator.setRootLevel(Level.ERROR);
+    Configurator.setLevel(LauncherTest.class.getName(), Level.INFO);
+  }
 
   // PMD: Each class should declare at least one constructor
 
@@ -96,35 +104,23 @@ class LauncherTest {
 
   @BeforeAll
   /* default */ static void initAll() {
-
-    CommonUtils.dumpEncoding(LOG);
-
-    System.setOut(new PrintStream(System.out, true, CHARSET));
-    System.setErr(new PrintStream(System.err, true, CHARSET));
-
     if (LOG.isInfoEnabled()) {
-      LOG.info("BEGIN\n============================\n" + Launcher.getGreeting());
+      LOG.info(Launcher.getString("app.greeting"));
+      LOG.info("locale = " + Locale.getDefault());
+      LOG.info("charset = " + Charset.defaultCharset());
+      LOG.info("file.encoding = " + System.getProperty("file.encoding"));
     }
-
-    try {
-      final Properties properties = CommonUtils.loadResource(
-          "/test.properties", CHARSET);
-      properties.stringPropertyNames().forEach(name -> {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug(name + " = " + properties.getProperty(name));
-        }
-      });
-    } catch (IOException ex) {
-      if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
+    PROPERTIES.stringPropertyNames().forEach(name -> {
+      if (LOG.isInfoEnabled()) {
+        LOG.info(name + " = " + PROPERTIES.getProperty(name));
       }
-    }
+    });
   }
 
   @AfterAll
   /* default */ static void tearDownAll() {
     if (LOG.isInfoEnabled()) {
-      LOG.info(Launcher.getParting() + "\n============================\nEND");
+      LOG.info(Launcher.getString("app.parting"));
     }
   }
 

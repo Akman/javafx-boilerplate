@@ -28,55 +28,47 @@
 
 package ru.akman.commons;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.Properties;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 /**
  * Utils.
  */
 public final class CommonUtils {
 
+  static {
+    // configuration: /log4j2.xml
+    // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+    Configurator.setRootLevel(Level.ERROR);
+    Configurator.setLevel(CommonUtils.class.getName(), Level.DEBUG);
+  }
+
+  /**
+   * Default logger.
+   */
+  private static final Logger LOG = LogManager.getLogger(CommonUtils.class);
+
   private CommonUtils() {
     // not called
+    LOG.error("Call private constructor");
     throw new UnsupportedOperationException();
   }
 
   /**
-   * Get historical name for system default encoding by reading
-   * byte array as input stream.
-   * @return historical name for system default encoding,
-   *         or null if IO error occurs
+   * Setup system output and error streams.
    */
-  public static String getDefaultEncoding() {
-    final InputStreamReader reader = new InputStreamReader(
-        new ByteArrayInputStream(new byte[] { 'A' }),
-        Charset.defaultCharset());
-    return reader.getEncoding();
-  }
-
-  /**
-   * Dump default encoding, locale and charset.
-   * @param log logger used to dump values
-   */
-  public static void dumpEncoding(final Logger log) {
-    if (log.isDebugEnabled()) {
-      log.debug("file.encoding: "
-          + System.getProperty("file.encoding"));
-      log.debug("sun.jnu.encoding: "
-          + System.getProperty("sun.jnu.encoding"));
-      log.debug("Default encoding: "
-          + getDefaultEncoding());
-      log.debug("Default locale: "
-          + Locale.getDefault());
-      log.debug("Default charset: "
-          + Charset.defaultCharset().name());
-    }
+  public static void setupSystemStreams() {
+    System.setOut(new PrintStream(System.out, true, Charset.defaultCharset()));
+    System.setErr(new PrintStream(System.err, true, Charset.defaultCharset()));
   }
 
   /**
@@ -84,18 +76,22 @@ public final class CommonUtils {
    * @param resourceName resource name (path)
    * @param resourceCharset resource charset
    * @return properties object
-   * @throws IOException if can't load resource
    */
   public static Properties loadResource(final String resourceName,
-      final Charset resourceCharset) throws IOException {
+      final Charset resourceCharset) {
     final URL resourceUrl = CommonUtils.class.getResource(resourceName);
     if (resourceUrl == null) {
-      throw new IOException("Resource not found: '" + resourceName + "'");
+      throw new MissingResourceException(
+          "Resource not found", CommonUtils.class.getName(), resourceName);
     }
     final Properties properties = new Properties();
     try (InputStreamReader isr = new InputStreamReader(
         resourceUrl.openStream(), resourceCharset)) {
       properties.load(isr);
+    } catch (IOException ex) {
+      throw (MissingResourceException)new MissingResourceException(
+          "Can't load resource", CommonUtils.class.getName(), resourceName)
+          .initCause(ex);
     }
     return properties;
   }

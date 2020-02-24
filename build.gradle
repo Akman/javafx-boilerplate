@@ -31,7 +31,7 @@ plugins {
   id 'groovy'
   id 'eclipse'
   // https://github.com/Akman/vscode-tasks
-  id 'ru.akman.vscode-tasks' version '0.2.0'
+  id 'ru.akman.vscode-tasks' version '0.4.0'
   // https://github.com/researchgate/gradle-release
   id 'net.researchgate.release' version '2.8.1'
   // https://badass-jlink-plugin.beryx.org
@@ -59,13 +59,27 @@ repositories {
 
 ext {
   applicationName = 'launcher'
-  applicationDescription = 'Launcher Application'
-  applicationVendor = 'Akman'
-  applicationAuthor = 'Alexander Kapitman <akman.ru@gmail.com>'
-  applicationCopyright = 'Copyright (C) 2019, 2020 A.Kapitman'
-  applicationLicenseFile = 'LICENSE'
-  applicationLicenseType = 'MIT'
   applicationVersion = version.replaceAll('-SNAPSHOT', '')
+
+  applicationFullName = 'Java Boilerplate Project'
+  applicationDescription =
+    'Java boilerplate project using Gradle as a build tool'
+  applicationVendor = 'Akman'
+  applicationUrl = 'https://github.com/akman/java-boilerplate-gradle'
+  applicationAuthorName = 'Alexander Kapitman'
+  applicationAuthorEmail = 'akman.ru@gmail.com'
+  applicationInceptionYear = 2019
+  applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
+  applicationCopyright = "Copyright (C) ${applicationInceptionYear}"
+  if (applicationInceptionYear != applicationCurrentYear) {
+    applicationCopyright += " - ${applicationCurrentYear}"
+  }
+  applicationCopyright +=
+    " ${applicationAuthorName} <${applicationAuthorEmail}>"
+  applicationLicenseFile = 'LICENSE'
+  applicationLicenseName = 'The MIT License'
+  applicationLicenseType = 'MIT'
+
   applicationModuleName = 'ru.akman.launcher'
   applicationClassName = 'ru.akman.launcher.Launcher'
   applicationJvmArgs = [
@@ -75,13 +89,16 @@ ext {
   applicationArgs = [
     // '--no-gui',
   ]
+
   javaVersion = JavaVersion.current()
   javaFXVersion = '13.0.1'
   os = org.gradle.internal.os.OperatingSystem.current()
   platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
   platformNativePrefix = os.getNativePrefix()
   jvm = org.gradle.internal.jvm.Jvm.current()
+
   defaultEncoding = 'UTF-8'
+
   logDir = file("${projectDir}/log")
 }
 
@@ -526,16 +543,11 @@ license {
     '**/*.png',
   ])
   ext {
-    projectName = 'Java Boilerplate Project'
-    projectUrl = 'https://github.com/akman/java-boilerplate-gradle'
-    inceptionYear = 2019
-    currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    copyrightYear = "${inceptionYear}"
-    if (inceptionYear != currentYear) {
-      copyrightYear += " - ${currentYear}"
-    }
-    copyrightName = 'Alexander Kapitman'
-    copyrightEmail = 'akman.ru@gmail.com'
+    name = applicationFullName
+    url = applicationUrl
+    copyright = applicationCopyright
+    licenseName = applicationLicenseName
+    licenseType = applicationLicenseType
   }
 }
 

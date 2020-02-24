@@ -35,6 +35,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.akman.launcher.Launcher;
 
 /**
  * CLI interface.
@@ -46,11 +47,6 @@ public final class LauncherHelper {
    */
   private static final Logger LOG = LogManager.getLogger(LauncherHelper.class);
 
-  /**
-   * Default charset.
-   */
-  private static final Charset CHARSET = Charset.defaultCharset();
-
   private LauncherHelper() {
     // not called
     throw new UnsupportedOperationException();
@@ -61,9 +57,9 @@ public final class LauncherHelper {
    * @param args CLI arguments
    */
   public static void run(final String... args) {
-    LOG.info("Launching application ...");
-    try (BufferedReader reader =
-        new BufferedReader(new InputStreamReader(System.in, CHARSET))) {
+    LOG.info(Launcher.getString("app.starting"));
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+        System.in, Charset.defaultCharset()))) {
       while (true) {
         final String line = reader.readLine();
         if (line == null) {
@@ -73,15 +69,12 @@ public final class LauncherHelper {
         if (length == 0) {
           break;
         }
-        final String bytes = Arrays.toString(line.getBytes(CHARSET));
         if (LOG.isDebugEnabled()) {
           LOG.debug("length: " + length);
           LOG.debug("string: '" + line + "'");
-          LOG.debug("bytes: " + bytes);
+          LOG.debug("bytes: " + Arrays.toString(
+              line.getBytes(Charset.defaultCharset())));
         }
-        System.out.printf("length: %d%n", length);
-        System.out.printf("string: '%s'%n", line);
-        System.out.printf("bytes: %s%n", bytes);
       }
     } catch (IOException ex) {
       LOG.error(ex);
