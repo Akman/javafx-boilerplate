@@ -6,7 +6,7 @@ set -ev
 
 JPACKAGE_JDK_BASE_URL=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14%2B36
 JPACKAGE_JDK_ARCHIVE_NAME=OpenJDK14U-jdk_x64_windows_hotspot_14_36.zip
-JPACKAGE_JDK_HOME=jdk-14
+JPACKAGE_JDK_HOME=jdk-14+36
 wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 7z x -bd $JPACKAGE_JDK_ARCHIVE_NAME
 echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
