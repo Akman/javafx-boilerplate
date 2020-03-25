@@ -1125,7 +1125,7 @@ jlink {
           // An identifier that uniquely identifies the application
           // for macOS (defaults to the main class name; limited to
           // alphanumeric, hyphen, and period characters)
-          // '--mac-package-identifier', "${applicationClassName}",
+          '--mac-package-identifier', applicationModuleName,
 
           // Request that the bundle be signed
           // '--mac-sign',
