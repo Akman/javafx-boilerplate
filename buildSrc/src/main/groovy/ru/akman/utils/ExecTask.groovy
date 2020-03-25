@@ -28,35 +28,37 @@
 package ru.akman.utils
 
 import groovy.transform.CompileStatic
+import org.gradle.api.tasks.Exec
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.options.Option
+import org.gradle.api.tasks.TaskAction
 
 /**
- * Properties map that supports user encoding for properties files.
+ * Exec task that adds command line arguments to the args parameter.
  */
 @CompileStatic
-class PropertiesMap {
+class ExecTask extends Exec {
 
-  private final File file
-  private final String encoding
-  private final Map map = [:]
+  private String cliArgs
 
-  PropertiesMap(File file, String encoding = 'UTF-8') {
-    this.file = file
-    this.encoding = encoding
+  ExecTask() {
+    cliArgs = ''
   }
 
-  PropertiesMap(String fileName, String encoding = 'UTF-8') {
-    // The use of java.io.File violates the Enterprise Java Bean specification
-    this(new File(fileName), encoding)
+  @Option(option = 'args', description = 'Configures the CLI arguments.')
+  void setCliArgs(String cliArgs) {
+    this.cliArgs = cliArgs
   }
 
-  Map getProperties() {
-    if (!map) {
-      Properties properties = new Properties()
-      properties.load(new InputStreamReader(
-          new FileInputStream(this.file), this.encoding))
-      properties.each { key, value -> map[key] = value }
-    }
-    map
+  @Input
+  String getCliArgs() {
+    cliArgs
+  }
+
+  @TaskAction
+  void exec() {
+    args += cliArgs.split().toList()
+    super.exec()
   }
 
 }

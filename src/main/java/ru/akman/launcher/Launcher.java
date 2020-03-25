@@ -56,8 +56,12 @@ public final class Launcher {
   /**
    * Application properties name.
    */
-  private static final String PROPERTIES_NAME =
-      "/application.properties";
+  private static final String PROPERTIES_NAME = "/application.properties";
+
+  /**
+   * Application properties charset.
+   */
+  private static final String PROPERTIES_CHARSET = "UTF-8";
 
   /**
    * Default logger.
@@ -74,7 +78,7 @@ public final class Launcher {
    * Application properties from properties file.
    */
   private static final Properties PROPERTIES = CommonUtils.loadResource(
-      PROPERTIES_NAME, Charset.defaultCharset());
+      PROPERTIES_NAME, Charset.forName(PROPERTIES_CHARSET));
 
   /**
    * Get string from the application resources.

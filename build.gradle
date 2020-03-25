@@ -87,11 +87,11 @@ ext {
     // '-Xmx512m',
   ]
   applicationArgs = [
-    // '--no-gui',
+    // '--debug',
   ]
 
   javaVersion = JavaVersion.current()
-  javaFXVersion = '13.0.1'
+  javaFXVersion = '13'
   os = org.gradle.internal.os.OperatingSystem.current()
   platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
   platformNativePrefix = os.getNativePrefix()
@@ -374,7 +374,7 @@ run {
   }
 }
 
-task exec(type: Exec) {
+task exec(type: ru.akman.utils.ExecTask) {
   description 'Executes this project as a JVM application'
   group 'application'
   dependsOn classes
@@ -1125,7 +1125,7 @@ jlink {
           // An identifier that uniquely identifies the application
           // for macOS (defaults to the main class name; limited to
           // alphanumeric, hyphen, and period characters)
-          '--mac-package-identifier', "${applicationClassName}",
+          '--mac-package-identifier', "${applicationModuleName}",
 
           // Request that the bundle be signed
           // '--mac-sign',
@@ -1238,7 +1238,7 @@ jlink {
           // '--linux-package-name', applicationName,
 
           // Maintainer for .deb bundle
-          '--linux-deb-maintainer', applicationAuthor,
+          '--linux-deb-maintainer', applicationAuthorName + ' <' + applicationAuthorEmail + '>',
 
           // Menu group this application is placed in
           '--linux-menu-group', applicationVendor,

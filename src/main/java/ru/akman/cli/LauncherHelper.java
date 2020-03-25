@@ -57,7 +57,9 @@ public final class LauncherHelper {
    * @param args CLI arguments
    */
   public static void run(final String... args) {
-    LOG.info(Launcher.getString("app.starting"));
+    if (LOG.isInfoEnabled()) {
+      LOG.info(Launcher.getString("app.starting"));
+    }
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(
         System.in, Charset.defaultCharset()))) {
       while (true) {
@@ -77,7 +79,9 @@ public final class LauncherHelper {
         }
       }
     } catch (IOException ex) {
-      LOG.error(ex);
+      if (LOG.isErrorEnabled()) {
+        LOG.error(ex);
+      }
     }
   }
 
