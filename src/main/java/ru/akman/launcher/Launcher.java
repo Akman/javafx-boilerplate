@@ -29,6 +29,7 @@
 package ru.akman.launcher;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -49,6 +50,11 @@ public final class Launcher {
   private static final String CLI_NO_GUI = "--no-gui";
 
   /**
+   * CLI option to run the application in debug mode.
+   */
+  private static final String CLI_DEBUG = "--debug";
+
+  /**
    * Messages resource bundle name.
    */
   private static final String MESSAGES_NAME = "messages";
@@ -56,12 +62,12 @@ public final class Launcher {
   /**
    * Application properties name.
    */
-  private static final String PROPERTIES_NAME = "/application.properties";
+  private static final String PROPS_NAME = "/application.properties";
 
   /**
    * Application properties charset.
    */
-  private static final String PROPERTIES_CHARSET = "UTF-8";
+  private static final String PROPS_CHARSET = "UTF-8";
 
   /**
    * Default logger.
@@ -78,7 +84,7 @@ public final class Launcher {
    * Application properties from properties file.
    */
   private static final Properties PROPERTIES = CommonUtils.loadResource(
-      PROPERTIES_NAME, Charset.forName(PROPERTIES_CHARSET));
+      PROPS_NAME, Charset.forName(PROPS_CHARSET));
 
   /**
    * Get string from the application resources.
@@ -110,8 +116,7 @@ public final class Launcher {
     CommonUtils.setupSystemStreams();
     // configuration: /log4j2.xml
     // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
-    Configurator.setRootLevel(Level.ERROR);
-    Configurator.setLevel(Launcher.class.getName(), Level.DEBUG);
+    // Configurator.setRootLevel(Level.ERROR);
   }
 
   private Launcher() {
@@ -125,20 +130,16 @@ public final class Launcher {
    */
   public static void main(final String... args) {
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(getString("app.greeting"));
-      LOG.debug("locale = " + Locale.getDefault());
-      LOG.debug("charset = " + Charset.defaultCharset());
-      LOG.debug("file.encoding = " + System.getProperty("file.encoding"));
+    if (Arrays.asList(args).contains(CLI_DEBUG)) {
+      Configurator.setRootLevel(Level.DEBUG);
     }
 
-    PROPERTIES.stringPropertyNames().forEach(name -> {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(name + " = " + PROPERTIES.getProperty(name));
-      }
-    });
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(getString("app.greeting"));
+    }
+    CommonUtils.dumpProperties(PROPERTIES);
 
-    if (args.length > 0 && CLI_NO_GUI.equals(args[0])) {
+    if (Arrays.asList(args).contains(CLI_NO_GUI)) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(getString("app.mode.cli"));
       }

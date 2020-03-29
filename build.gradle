@@ -30,56 +30,50 @@ plugins {
   id 'application'
   id 'groovy'
   id 'eclipse'
-  // https://github.com/Akman/vscode-tasks
-  id 'ru.akman.vscode-tasks' version '0.4.0'
-  // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '2.8.1'
-  // https://badass-jlink-plugin.beryx.org
-  id 'org.beryx.jlink' version '2.17.2'
-  // https://github.com/hierynomus/license-gradle-plugin
-  id 'com.github.hierynomus.license' version '0.15.0'
-  // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.27.0'
-  // https://spotbugs.github.io
-  id 'com.github.spotbugs' version '3.0.0'
+
   // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
   id 'checkstyle'
+
   // https://docs.gradle.org/current/userguide/pmd_plugin.html
   id 'pmd'
-  // https://github.com/aaschmid/gradle-cpd-plugin
-  id 'de.aaschmid.cpd' version '3.1'
+
   // https://docs.gradle.org/current/userguide/jacoco_plugin.html
   id 'jacoco'
+
+  // https://github.com/CodeNarc/CodeNarc
   id 'codenarc'
+
+  // https://github.com/Akman/vscode-tasks
+  id 'ru.akman.vscode-tasks' version '0.4.0'
+
+  // https://github.com/researchgate/gradle-release
+  id 'net.researchgate.release' version '2.8.1'
+
+  // https://badass-jlink-plugin.beryx.org
+  id 'org.beryx.jlink' version '2.17.2'
+
+  // https://github.com/hierynomus/license-gradle-plugin
+  id 'com.github.hierynomus.license' version '0.15.0'
+
+  // https://github.com/ben-manes/gradle-versions-plugin
+  id 'com.github.ben-manes.versions' version '0.27.0'
+
+  // https://spotbugs.github.io
+  // https://github.com/spotbugs/spotbugs-gradle-plugin
+  id 'com.github.spotbugs' version '4.0.4'
+  
+  // https://github.com/aaschmid/gradle-cpd-plugin
+  id 'de.aaschmid.cpd' version '3.1'
 }
 
 repositories {
   jcenter()
 }
 
+apply from: 'common.gradle'
+
 ext {
-  applicationName = 'launcher'
-  applicationVersion = version.replaceAll('-SNAPSHOT', '')
-
-  applicationFullName = 'Java Boilerplate Project'
-  applicationDescription =
-    'Java boilerplate project using Gradle as a build tool'
-  applicationVendor = 'Akman'
-  applicationUrl = 'https://github.com/akman/java-boilerplate-gradle'
-  applicationAuthorName = 'Alexander Kapitman'
-  applicationAuthorEmail = 'akman.ru@gmail.com'
-  applicationInceptionYear = 2019
-  applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
-  applicationCopyright = "Copyright (C) ${applicationInceptionYear}"
-  if (applicationInceptionYear != applicationCurrentYear) {
-    applicationCopyright += " - ${applicationCurrentYear}"
-  }
-  applicationCopyright +=
-    " ${applicationAuthorName} <${applicationAuthorEmail}>"
-  applicationLicenseFile = 'LICENSE'
-  applicationLicenseName = 'The MIT License'
-  applicationLicenseType = 'MIT'
-
+  javaFXVersion = javaVersion
   applicationModuleName = 'ru.akman.launcher'
   applicationClassName = 'ru.akman.launcher.Launcher'
   applicationJvmArgs = [
@@ -89,22 +83,7 @@ ext {
   applicationArgs = [
     // '--debug',
   ]
-
-  javaVersion = JavaVersion.current()
-  javaFXVersion = '13'
-  os = org.gradle.internal.os.OperatingSystem.current()
-  platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
-  platformNativePrefix = os.getNativePrefix()
-  jvm = org.gradle.internal.jvm.Jvm.current()
-
-  defaultEncoding = 'UTF-8'
-
   logDir = file("${projectDir}/log")
-}
-
-java {
-  sourceCompatibility = JavaVersion.VERSION_13
-  targetCompatibility = JavaVersion.VERSION_13
 }
 
 dependencies {
@@ -162,6 +141,8 @@ clean {
   delete "${logDir}"
 }
 
+[compileGroovy, compileTestGroovy]*.options*.encoding = defaultEncoding
+
 [compileJava, compileTestJava].each {
   it.options.encoding = defaultEncoding
   it.options.compilerArgs += [
@@ -176,8 +157,6 @@ clean {
     '-Werror',
   ]
 }
-
-[compileGroovy, compileTestGroovy]*.options*.encoding = defaultEncoding
 
 compileJava {
   doFirst {
@@ -241,6 +220,9 @@ processTestResources {
 test {
   useJUnitPlatform()
   jvmArgs = []
+  reports {
+    html.enabled = true
+  }
 }
 
 tasks.withType(Test) {
@@ -250,14 +232,14 @@ tasks.withType(Test) {
     showStackTraces = true
     displayGranularity = 2
     exceptionFormat = 'short'
-    // showStandardStreams = true
+    showStandardStreams = true
     events(
-      //'started',
+      // 'started',
       'passed',
       'skipped',
       'failed',
-      org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
-      //org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+      // org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+      // org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
     )
     debug {
       displayGranularity = 0
@@ -533,14 +515,14 @@ license {
   includes([
     '**/*.groovy',
   ])
-  mapping([
-    'groovy': 'JAVADOC_STYLE',
-    'fxml': 'XML_STYLE',
-  ])
   excludes([
     '**/log4j*.xml',
     '**/*.properties',
     '**/*.png',
+  ])
+  mapping([
+    'groovy': 'JAVADOC_STYLE',
+    'fxml': 'XML_STYLE',
   ])
   ext {
     name = applicationFullName
@@ -618,7 +600,7 @@ pmd {
 
 cpd {
   // The version of the code quality tool to be used.
-  toolVersion = '6.15.0'
+  toolVersion = pmd.toolVersion
   encoding = defaultEncoding
   ignoreFailures = true
   ignoreAnnotations = false
@@ -652,15 +634,19 @@ cpdCheck {
         .newTransformer(xsl)
     def xmlTree = fileTree(dir: reportDir, include: '*.xml')
     xmlTree.getFiles().each {
-      def htmlFileName =
-          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-      def htmlFile = new File(it.getParentFile(), htmlFileName)
-      def html = new javax.xml.transform.stream.StreamResult(
-          new FileOutputStream(htmlFile))
-      def xml = new javax.xml.transform.stream.StreamSource(
-          new StringReader(it.getText()))
-      println "See the html report at: ${htmlFile}"
-      transformer.transform(xml, html)
+      def baseFileName = it.name.take(it.name.lastIndexOf('.xml'))
+      def textFileName = baseFileName + '.text'
+      def textFile = new File(it.getParentFile(), textFileName)
+      if (textFile.size()) {
+        def htmlFileName = baseFileName + '.html'
+        def htmlFile = new File(it.getParentFile(), htmlFileName)
+        def html = new javax.xml.transform.stream.StreamResult(
+            new FileOutputStream(htmlFile))
+        def xml = new javax.xml.transform.stream.StreamSource(
+            new StringReader(it.getText()))
+        println "See the html report at: ${htmlFile}"
+        transformer.transform(xml, html)
+      }
     }
   }
 }
@@ -689,15 +675,19 @@ task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
         .newTransformer(xsl)
     def xmlTree = fileTree(dir: reportDir, include: '*.xml')
     xmlTree.getFiles().each {
-      def htmlFileName =
-          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-      def htmlFile = new File(it.getParentFile(), htmlFileName)
-      def html = new javax.xml.transform.stream.StreamResult(
-          new FileOutputStream(htmlFile))
-      def xml = new javax.xml.transform.stream.StreamSource(
-          new StringReader(it.getText()))
-      println "See the html report at: ${htmlFile}"
-      transformer.transform(xml, html)
+      def baseFileName = it.name.take(it.name.lastIndexOf('.xml'))
+      def textFileName = baseFileName + '.text'
+      def textFile = new File(it.getParentFile(), textFileName)
+      if (textFile.size()) {
+        def htmlFileName = baseFileName + '.html'
+        def htmlFile = new File(it.getParentFile(), htmlFileName)
+        def html = new javax.xml.transform.stream.StreamResult(
+            new FileOutputStream(htmlFile))
+        def xml = new javax.xml.transform.stream.StreamSource(
+            new StringReader(it.getText()))
+        println "See the html report at: ${htmlFile}"
+        transformer.transform(xml, html)
+      }
     }
   }
 }
@@ -706,7 +696,7 @@ check.dependsOn groovyCpdCheck
 
 spotbugs {
   // The version of the code quality tool to be used.
-  toolVersion = '4.0.0-RC3'
+  toolVersion = '4.0.1'
 
   // The source sets to be analyzed as part of the check and build tasks.
   // sourceSets = [
@@ -716,8 +706,11 @@ spotbugs {
   // Whether or not to allow the build to continue if there are warnings.
   ignoreFailures = true
 
+  // Whether or not to show progress.
+  showProgress = false
+
   // The directory where reports will be generated.
-  reportsDir = file("${project.reporting.baseDir}/spotbugs")
+  // reportsDir = file("${project.reporting.baseDir}/spotbugs")
 
   // The analysis effort level. The value specified should be one of
   // min, default, or max. Higher levels increase precision and find more
@@ -727,7 +720,7 @@ spotbugs {
   // The priority threshold for reporting bugs. If set to low, all bugs
   // are reported. If set to medium (the default), medium and high priority
   // bugs are reported. If set to high, only high priority bugs are reported.
-  reportLevel = 'medium'
+  reportLevel = 'low'
 
   // The bug detectors which should be run. The bug detectors are specified
   // by their class names, without any package qualification. By default, all
@@ -748,45 +741,28 @@ spotbugs {
 
   // The filename of a filter specifying bugs to exclude from being reported.
   // excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
+  
+  // onlyAnalyze = [
+  //   'com.foobar.MyClass',
+  //   'com.foobar.mypkg.*'
+  // ]
+  
+  // maxHeapSize = '1g'
+  
+  // extraArgs = [
+  //   '-nested:false'
+  // ]
+  
+  // jvmArgs = [
+  //   '-Duser.language=ja'
+  // ]  
 }
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
   reports {
-    xml.enabled true
-    xml.withMessages true
-    html.enabled false
-  }
-  // Generate HTML output.
-  // By default, SpotBugs uses the default.xsl XSLT stylesheet to generate
-  // the HTML. Variants of this include:
-  // plain.xsl - does not use Javascript or DOM, and may work better with
-  //             older web browsers, or for printing.
-  // fancy.xsl - uses DOM and Javascript for navigation and CSS for visual
-  //             presentation
-  // fancy-hist.xsl - an evolution of fancy.xsl stylesheet. It makes
-  //                  an extensive use of DOM and Javascript for dynamically
-  //                  filtering the lists of bugs.
-  // All needed stylesheet files could be downloaded from:
-  // https://github.com/spotbugs/spotbugs/tree/master/spotbugs/src/xsl
-  // and placed into ${projectDir}/config/spotbugs/xsl directory.
-  doLast {
-    def configDir = new File("${projectDir}/config/spotbugs/xsl")
-    def xslFile = new File(configDir, 'fancy.xsl')
-    def xsl = new javax.xml.transform.stream.StreamSource(
-        new StringReader(xslFile.getText()))
-    def transformer = javax.xml.transform.TransformerFactory.newInstance()
-        .newTransformer(xsl)
-    def xmlTree = fileTree(dir: spotbugs.reportsDir, include: '*.xml')
-    xmlTree.getFiles().each {
-      def htmlFileName =
-          it.name.take(it.name.lastIndexOf('.xml')) + '.html'
-      def htmlFile = new File(it.getParentFile(), htmlFileName)
-      def html = new javax.xml.transform.stream.StreamResult(
-          new FileOutputStream(htmlFile))
-      def xml = new javax.xml.transform.stream.StreamSource(
-          new StringReader(it.getText()))
-      println "See the html report at: ${htmlFile}"
-      transformer.transform(xml, html)
+    html {
+      enabled = true
+      stylesheet = 'fancy-hist.xsl'
     }
   }
 }

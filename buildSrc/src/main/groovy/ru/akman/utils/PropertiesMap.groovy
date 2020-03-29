@@ -1,7 +1,7 @@
 /*
-  Gradle Build Boilerplate Project (buildSrc)
+  Java Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle/buildSrc
+  https://github.com/akman/java-boilerplate-gradle
 
   The MIT License (MIT)
 

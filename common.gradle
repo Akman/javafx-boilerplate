@@ -1,0 +1,34 @@
+ext {
+  javaVersion = JavaVersion.current()
+  defaultEncoding = 'UTF-8'
+
+  applicationVersion = version.replaceAll('-SNAPSHOT', '')
+  applicationName = 'launcher'
+  applicationFullName = 'Java Boilerplate Project'
+  applicationDescription = 'Java boilerplate project using Gradle as a build tool'
+  applicationVendor = 'Akman'
+  applicationUrl = 'https://github.com/akman/java-boilerplate-gradle'
+  applicationAuthorName = 'Alexander Kapitman'
+  applicationAuthorEmail = 'akman.ru@gmail.com'
+  applicationLicenseFile = 'LICENSE'
+  applicationLicenseName = 'The MIT License'
+  applicationLicenseType = 'MIT'
+  applicationInceptionYear = 2019
+  applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
+  applicationCopyright = "Copyright (C) ${applicationInceptionYear}"
+  if (applicationInceptionYear != applicationCurrentYear) {
+    applicationCopyright += " - ${applicationCurrentYear}"
+  }
+  applicationCopyright +=
+    " ${applicationAuthorName} <${applicationAuthorEmail}>"
+
+  os = org.gradle.internal.os.OperatingSystem.current()
+  platform = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
+  platformNativePrefix = os.getNativePrefix()
+  jvm = org.gradle.internal.jvm.Jvm.current()
+}
+
+java {
+  sourceCompatibility = javaVersion
+  targetCompatibility = javaVersion
+}

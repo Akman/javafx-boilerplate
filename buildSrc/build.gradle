@@ -49,14 +49,7 @@ repositories {
   jcenter()
 }
 
-ext {
-  defaultEncoding = 'UTF-8'
-}
-
-java {
-  sourceCompatibility = JavaVersion.VERSION_13
-  targetCompatibility = JavaVersion.VERSION_13
-}
+apply from: '../common.gradle'
 
 dependencies {
 
@@ -99,7 +92,7 @@ dependencies {
 license {
   // Specify location of header to use in comparisons,
   // default to project.file('LICENSE')
-  header file("${projectDir}/config/license/LICENSE")
+  header file("${projectDir}/../config/license/LICENSE")
   // Skip over files that have some header already, which might not be
   // the one specified in the header parameter, defaults to false
   skipExistingHeaders false
@@ -133,9 +126,6 @@ license {
       padLines = false
     }
   }
-  mapping([
-    'groovy': 'JAVADOC_STYLE',
-  ])
   includes([
     '**/*.groovy',
   ])
@@ -144,17 +134,15 @@ license {
     '**/*.properties',
     '**/*.png',
   ])
+  mapping([
+    'groovy': 'JAVADOC_STYLE',
+  ])
   ext {
-    projectName = 'Gradle Build Boilerplate Project (buildSrc)'
-    projectUrl = 'https://github.com/akman/java-boilerplate-gradle/buildSrc'
-    inceptionYear = 2019
-    currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    copyrightYear = "${inceptionYear}"
-    if (inceptionYear != currentYear) {
-      copyrightYear += " - ${currentYear}"
-    }
-    copyrightName = 'Alexander Kapitman'
-    copyrightEmail = 'akman.ru@gmail.com'
+    name = applicationFullName
+    url = applicationUrl
+    copyright = applicationCopyright
+    licenseName = applicationLicenseName
+    licenseType = applicationLicenseType
   }
 }
 
@@ -164,7 +152,7 @@ codenarc {
 
   // The CodeNarc configuration file to use.
   // https://github.com/CodeNarc/CodeNarc/tree/master/src/main/resources/rulesets
-  configFile = file("${projectDir}/config/codenarc/rules.groovy")
+  configFile = file("${projectDir}/../config/codenarc/rules.groovy")
 
   // Whether to allow the build to continue if there are warnings.
   ignoreFailures = true

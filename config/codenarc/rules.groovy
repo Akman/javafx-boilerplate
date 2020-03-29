@@ -111,7 +111,6 @@ ruleset {
     */
 
     ruleset('rulesets/convention.xml') {
-
         MethodReturnTypeRequired {
             doNotApplyToClassNames = '*Test'
         }

@@ -51,10 +51,13 @@
   <Loggers>
     <Root level="error" additivity="false">
       <AppenderRef ref="rollingFile" />
+      <AppenderRef ref="console" />
     </Root>
+    <!--
     <Logger level="debug" additivity="true"
         name="ru.akman.launcher.Launcher">
       <AppenderRef ref="console" />
     </Logger>
+    -->
   </Loggers>
 </Configuration>

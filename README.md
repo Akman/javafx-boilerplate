@@ -219,6 +219,7 @@ Create a modular runtime image.
 
 ```bash
 ./gradlew exec
+./gradlew exec --args="--no-gui --debug"
 ```
 
 Run created modular runtime image.

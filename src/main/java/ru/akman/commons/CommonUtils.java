@@ -33,24 +33,16 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 
 /**
  * Utils.
  */
 public final class CommonUtils {
-
-  static {
-    // configuration: /log4j2.xml
-    // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
-    Configurator.setRootLevel(Level.ERROR);
-    Configurator.setLevel(CommonUtils.class.getName(), Level.DEBUG);
-  }
 
   /**
    * Default logger.
@@ -59,7 +51,9 @@ public final class CommonUtils {
 
   private CommonUtils() {
     // not called
-    LOG.error("Call private constructor");
+    if (LOG.isErrorEnabled()) {
+      LOG.error("Call private constructor");
+    }
     throw new UnsupportedOperationException();
   }
 
@@ -94,6 +88,21 @@ public final class CommonUtils {
           .initCause(ex);
     }
     return properties;
+  }
+
+  /**
+   * Dump properties.
+   * @param properties properties object
+   */
+  public static void dumpProperties(final Properties properties) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("locale = " + Locale.getDefault());
+      LOG.debug("charset = " + Charset.defaultCharset());
+      LOG.debug("file.encoding = " + System.getProperty("file.encoding"));
+      properties.stringPropertyNames().forEach(name -> {
+        LOG.debug(name + " = " + properties.getProperty(name));
+      });
+    }
   }
 
 }

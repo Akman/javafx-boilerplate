@@ -1,7 +1,7 @@
 /*
-  Gradle Build Boilerplate Project (buildSrc)
+  Java Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle/buildSrc
+  https://github.com/akman/java-boilerplate-gradle
 
   The MIT License (MIT)
 
@@ -27,7 +27,7 @@
 */
 package ru.akman.utils
 
-// http://spockframework.org/spock/docs
+import groovy.transform.CompileDynamic
 import spock.lang.Specification
 import spock.lang.Shared
 
@@ -40,7 +40,8 @@ import spock.lang.Shared
  *     normal testing logic
  * One test iteration per input combination
  */
-class PropertiesMapSpec extends Specification {
+@CompileDynamic
+class PropertiesMapTest extends Specification {
 
   // FIELDS
 
@@ -53,7 +54,7 @@ class PropertiesMapSpec extends Specification {
   // instance fields UNLESS they are annotated with @Shared.
 
   @Shared
-  def propertiesFile = new File(
+  File propertiesFile = new File(
       getClass().getResource('/test.properties').toURI())
 
   // Instance fields are a good place to store objects belonging to
@@ -66,7 +67,7 @@ class PropertiesMapSpec extends Specification {
   // This helps to isolate feature methods from each other, which is often
   // a desirable goal.
 
-  def propertiesMap = new PropertiesMap(propertiesFile)
+  PropertiesMap propertiesMap = new PropertiesMap(propertiesFile)
 
   // Static fields should only be used for constants.
   // Otherwise shared fields are preferable, because their semantics with
@@ -94,18 +95,21 @@ class PropertiesMapSpec extends Specification {
 
   def "propertiesMap exists and size = 2"() {
     expect:
-      propertiesMap != null
-      propertiesMap.properties.size() == 2
+
+    propertiesMap != null
+    propertiesMap.properties.size() == 2
   }
 
   def "propertiesMap has property messages.greeting"() {
     expect:
-      propertiesMap.properties['messages.greeting'] == '再 - Hello!'
+
+    propertiesMap.properties['messages.greeting'] == '再 - Hello!'
   }
 
   def "propertiesMap has property messages.parting"() {
     expect:
-      propertiesMap.properties['messages.parting'] == '见 - Good Bye!'
+
+    propertiesMap.properties['messages.parting'] == '见 - Good Bye!'
   }
 
 }

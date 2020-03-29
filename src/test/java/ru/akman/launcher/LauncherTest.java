@@ -36,13 +36,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Locale;
 // import java.util.LinkedList;
 import java.util.Properties;
-import org.apache.logging.log4j.Level;
+//import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
+//import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -76,8 +75,7 @@ class LauncherTest {
     CommonUtils.setupSystemStreams();
     // configuration: /log4j2-test.xml
     // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
-    Configurator.setRootLevel(Level.ERROR);
-    Configurator.setLevel(LauncherTest.class.getName(), Level.INFO);
+    // Configurator.setRootLevel(Level.DEBUG);
   }
 
   // PMD: Each class should declare at least one constructor
@@ -104,34 +102,31 @@ class LauncherTest {
 
   @BeforeAll
   /* default */ static void initAll() {
-    if (LOG.isInfoEnabled()) {
-      LOG.info(Launcher.getString("app.greeting"));
-      LOG.info("locale = " + Locale.getDefault());
-      LOG.info("charset = " + Charset.defaultCharset());
-      LOG.info("file.encoding = " + System.getProperty("file.encoding"));
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(Launcher.getString("app.greeting"));
     }
-    PROPERTIES.stringPropertyNames().forEach(name -> {
-      if (LOG.isInfoEnabled()) {
-        LOG.info(name + " = " + PROPERTIES.getProperty(name));
-      }
-    });
+    CommonUtils.dumpProperties(PROPERTIES);
   }
 
   @AfterAll
   /* default */ static void tearDownAll() {
-    if (LOG.isInfoEnabled()) {
-      LOG.info(Launcher.getString("app.parting"));
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(Launcher.getString("app.parting"));
     }
   }
 
   @BeforeEach
   /* default */ void init() {
-    //
+    if (LOG.isInfoEnabled()) {
+      LOG.debug("Runs before EACH method.");
+    }
   }
 
   @AfterEach
   /* default */ void tearDown() {
-    //
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Runs after EACH method.");
+    }
   }
 
   @Test

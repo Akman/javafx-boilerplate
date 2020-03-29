@@ -32,8 +32,8 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 //import org.apache.logging.log4j.Level
 //import org.apache.logging.log4j.core.config.Configurator
-import spock.lang.Specification
 import spock.lang.Shared
+import spock.lang.Specification
 
 /**
  * One specification class per class testing.
@@ -82,20 +82,22 @@ class LauncherHelperTest extends Specification {
    * Runs once -  before the FIRST feature method.
    */
   def setupSpec() {
+    // configuration: /log4j2-test.xml
     // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
     // Configurator.setRootLevel(Level.DEBUG);
-    // Configurator.setLevel(LauncherTest.class.getName(), Level.DEBUG)
-    logger.info('Runs once -  before the FIRST feature method.')
+    logger.debugEnabled &&
+      logger.debug('Runs once -  before the FIRST feature method.')
   }
 
   /**
    * Runs before EVERY feature method.
    */
   def setup() {
-    logger.info('Runs before EVERY feature method.')
+    logger.debugEnabled &&
+      logger.debug('Runs before EVERY feature method.')
   }
 
-  def 'По русски: LauncherHelper expects true'() {
+  def 'По русски: LauncherHelperTest expects true'() {
     expect:
 
     true
@@ -105,14 +107,16 @@ class LauncherHelperTest extends Specification {
    * Runs after EVERY feature method.
    */
   def cleanup() {
-    logger.info('Runs after EVERY feature method.')
+    logger.debugEnabled &&
+      logger.debug('Runs after EVERY feature method.')
   }
 
   /**
    * Runs once -  after the LAST feature method.
    */
   def cleanupSpec() {
-    logger.info('Runs once -  after the LAST feature method.')
+    logger.debugEnabled &&
+      logger.debug('Runs once -  after the LAST feature method.')
   }
 
 }

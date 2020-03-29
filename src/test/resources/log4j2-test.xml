@@ -32,17 +32,19 @@
     <Property name="LOG_PATTERN">%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
   </Properties>
   <Appenders>
-    <Console name="console" target="SYSTEM_ERR">
+    <Console name="console" target="SYSTEM_OUT" follow="true">
       <PatternLayout pattern="${LOG_PATTERN}" />
     </Console>
   </Appenders>
   <Loggers>
-    <Root level="error" additivity="false">
+    <Root level="debug" additivity="false">
       <AppenderRef ref="console" />
     </Root>
+    <!--
     <Logger level="info" additivity="false"
         name="ru.akman.launcher.LauncherTest">
       <AppenderRef ref="console" />
     </Logger>
+    -->
   </Loggers>
 </Configuration>
