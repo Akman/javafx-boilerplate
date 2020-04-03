@@ -34,9 +34,11 @@ module ru.akman.launcher {
   requires javafx.controls;
   requires transitive javafx.graphics;
   requires javafx.fxml;
+  requires javafx.swing;
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
   requires java.scripting;
+  requires java.desktop;
   opens ru.akman.launcher;
   opens ru.akman.cli;
   opens ru.akman.gui;

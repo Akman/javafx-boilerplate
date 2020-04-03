@@ -28,10 +28,14 @@
 
 package ru.akman.gui;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -63,6 +67,16 @@ public final class LauncherHelper extends Application {
   private static final String ICON = "/icon.png";
 
   /**
+   * Default stage icon width.
+   */
+  private static final int ICON_WIDTH = 16;
+
+  /**
+   * Default stage icon height.
+   */
+  private static final int ICON_HEIGHT = 16;
+
+  /**
    * Primary FXML.
    */
   private static final String PRIMARY_FXML = "primary.fxml";
@@ -77,10 +91,26 @@ public final class LauncherHelper extends Application {
    */
   private static Scene scene;
 
+  /**
+   * Default stage.
+   */
+  private static Stage stage;
+
+  /**
+   * Default tray.
+   */
+  private static java.awt.SystemTray tray;
+
+  /**
+   * Default tray icon.
+   */
+  private static java.awt.TrayIcon trayIcon;
+
   @Override
-  public void start(final Stage stage) {
-    setupStage(stage);
-    stage.show();
+  public void start(final Stage defaultStage) {
+    setupStage(defaultStage);
+    setupTray();
+    showStage();
   }
 
   /**
@@ -108,7 +138,8 @@ public final class LauncherHelper extends Application {
     }
   }
 
-  private static void setupStage(final Stage stage) {
+  private static void setupStage(final Stage defaultStage) {
+    stage = defaultStage;
     final Properties properties = Launcher.getProperties();
     stage.setTitle(properties.getProperty("application.fullname"));
     try (InputStream iconAsStream =
@@ -118,7 +149,13 @@ public final class LauncherHelper extends Application {
           LOG.error("Can't load application icon: '" + ICON + "'");
         }
       } else {
-        stage.getIcons().add(new Image(iconAsStream));
+        stage.getIcons().add(new Image(
+            iconAsStream,
+            ICON_WIDTH,
+            ICON_HEIGHT,
+            true, // preserveRatio
+            true // smooth
+        ));
       }
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
@@ -140,6 +177,83 @@ public final class LauncherHelper extends Application {
     final FXMLLoader fxmlLoader = new FXMLLoader(
         LauncherHelper.class.getResource(fxml));
     return fxmlLoader.load();
+  }
+
+  private static void showStage() {
+    if (stage != null) {
+      stage.show();
+      stage.toFront();
+    }
+  }
+
+  private static void setupTray() {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+      initTray();
+      if (trayIcon != null) {
+        trayIcon.displayMessage(
+            "Launcher",
+            "Java version: " + Runtime.version(),
+            java.awt.TrayIcon.MessageType.INFO
+        );
+      }
+    });
+  }
+
+  private static void initTray() {
+    try {
+      java.awt.Toolkit.getDefaultToolkit();
+      if (!java.awt.SystemTray.isSupported()) {
+        throw new java.awt.AWTException("System tray not supported");
+      }
+      tray = java.awt.SystemTray.getSystemTray();
+
+      final ObservableList<Image> icons = stage.getIcons();
+      java.awt.Image image;
+      if (icons.isEmpty()) {
+        image = new BufferedImage(
+            ICON_WIDTH,
+            ICON_HEIGHT,
+            BufferedImage.TYPE_INT_RGB
+        );
+      } else {
+        image = SwingFXUtils.fromFXImage(icons.get(0), null);
+      }
+
+      trayIcon = new java.awt.TrayIcon(image);
+      trayIcon.addActionListener(event -> {
+        Platform.runLater(LauncherHelper::showStage);
+      });
+
+      final java.awt.Font defaultFont = java.awt.Font.decode(null);
+      final java.awt.Font boldFont = defaultFont.deriveFont(java.awt.Font.BOLD);
+
+      final java.awt.MenuItem openItem = new java.awt.MenuItem("Open");
+      openItem.setFont(boldFont);
+      openItem.addActionListener(event -> {
+        Platform.runLater(LauncherHelper::showStage);
+      });
+
+      final java.awt.MenuItem exitItem = new java.awt.MenuItem("Exit");
+      exitItem.addActionListener(event -> {
+        tray.remove(trayIcon);
+        Platform.exit();
+      });
+
+      final java.awt.PopupMenu popup = new java.awt.PopupMenu();
+      popup.add(openItem);
+      popup.addSeparator();
+      popup.add(exitItem);
+
+      trayIcon.setPopupMenu(popup);
+      tray.add(trayIcon);
+
+      Platform.setImplicitExit(false);
+    } catch (java.awt.AWTException ex) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("Unable to init system tray: " + ex);
+      }
+      Platform.setImplicitExit(true);
+    }
   }
 
 }
