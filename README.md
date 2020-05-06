@@ -14,7 +14,8 @@ as a whole. It provides tool recommendations for linting, testing and packaging.
 
 [The documentation for this project is available here][docs]
 
-Most of the configuration for project is done in the `build.gradle` file.
+Most of the configuration for project is done in the `build.gradle` or
+`pom.xml` file.
 You should edit this file accordingly to adapt this boilerplate project
 to your needs.
 
@@ -32,7 +33,13 @@ good idea, although a simple "What's New" section for the most recent version
 may be appropriate.
 
 All tasks are performed from the project directory itself where placed
-***gradlew*** and ***gradlew.bat***.
+***gradlew***, ***gradlew.bat*** or ***mvnw***, ***mvnw.cmd***.
+
+## Install maven wrapper
+
+```bash
+mvn -N io.takari:maven:0.7.7:wrapper
+```
 
 ## Update gradle wrapper
 
