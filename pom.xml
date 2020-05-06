@@ -33,6 +33,7 @@
     <applicationLicenseType>MIT</applicationLicenseType>
     <applicationLicenseUrl>https://www.opensource.org/licenses/mit-license.php</applicationLicenseUrl>
     <applicationInceptionYear>2019</applicationInceptionYear>
+    <applicationCurrentYear>2020</applicationCurrentYear>
     <applicationCopyright>Copyright (C) ${applicationInceptionYear} - ${applicationCurrentYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
     <!-- Windows 10 -->
     <platformName>${os.name}</platformName>
@@ -48,6 +49,7 @@
     <jvmVersion>${java.version}</jvmVersion>
     <!-- 13.0.2+8 -->
     <jvmRuntime>${java.runtime.version}</jvmRuntime>
+    <mavenVersion>3.6.3</mavenVersion>
     <javaVersion>13</javaVersion>
     <javaFxVersion>13</javaFxVersion>
     <defaultEncoding>UTF-8</defaultEncoding>
@@ -239,9 +241,9 @@
             </goals>
             <phase>validate</phase>
             <configuration>
+              <locale>en</locale>
               <name>applicationCurrentYear</name>
               <pattern>yyyy</pattern>
-              <locale>en</locale>
             </configuration>
           </execution>
           <execution>
@@ -352,7 +354,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>3.6.3</version>
+                  <version>${mavenVersion}</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -595,7 +597,7 @@
           </execution>
         </executions>
       </plugin>
-      <!-- http://mycila.mathieu.photography/license-maven-plugin/reports/3.0/check-mojo.html -->
+      <!-- http://mycila.mathieu.photography/license-maven-plugin/#supported-comment-types -->
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
@@ -614,15 +616,19 @@
             <licenseType>${applicationLicenseType}</licenseType>
             <copyright>${applicationCopyright}</copyright>
           </properties>
+          <headerDefinitions>
+            <headerDefinition>config/license/xml_style.xml</headerDefinition>
+            <headerDefinition>config/license/javadoc_style.xml</headerDefinition>
+          </headerDefinitions>
           <mapping>
             <fxml>XML_STYLE</fxml>
+            <groovy>JAVADOC_STYLE</groovy>
           </mapping>
           <includes>
             <include>src/**/*</include>
           </includes>
           <excludes>
             <exclude>**/resources/**/*.properties</exclude>
-            <exclude>**/resources/**/log4j*.xml</exclude>
             <exclude>**/resources/**/*.png</exclude>
           </excludes>
         </configuration>

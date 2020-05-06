@@ -26,7 +26,6 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 -->
-
 <Configuration status="info">
   <Properties>
     <Property name="LOG_PATTERN">%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>

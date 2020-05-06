@@ -516,7 +516,6 @@ license {
     '**/*.groovy',
   ])
   excludes([
-    '**/log4j*.xml',
     '**/*.properties',
     '**/*.png',
   ])
