@@ -28,13 +28,12 @@
 
 package ru.akman.gui;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -62,19 +61,14 @@ public final class LauncherHelper extends Application {
   private static final int HEIGHT = 480;
 
   /**
+   * Double click count.
+   */
+  private static final int DBLCLICK_COUNT = 2;
+
+  /**
    * Default stage icon.
    */
   private static final String ICON = "/icon.png";
-
-  /**
-   * Default stage icon width.
-   */
-  private static final int ICON_WIDTH = 16;
-
-  /**
-   * Default stage icon height.
-   */
-  private static final int ICON_HEIGHT = 16;
 
   /**
    * Primary FXML.
@@ -106,13 +100,6 @@ public final class LauncherHelper extends Application {
    */
   private static java.awt.TrayIcon trayIcon;
 
-  @Override
-  public void start(final Stage defaultStage) {
-    setupStage(defaultStage);
-    setupTray();
-    showStage();
-  }
-
   /**
    * Run the application.
    * @param args CLI arguments
@@ -138,10 +125,57 @@ public final class LauncherHelper extends Application {
     }
   }
 
-  private static void setupStage(final Stage defaultStage) {
+  @Override
+  public void start(final Stage defaultStage) {
+    // TODO: Write to static field 'stage' from instance method 'start()'.
+    // [SpotBugs] Dodgy code. Misuse of static fields.
+    // This instance method writes to a static field. This is tricky to get
+    // correct if multiple instances are being manipulated, and generally
+    // bad practice.
     stage = defaultStage;
+    setupScene();
+    setupStage();
+    setupTray();
+    showStage();
+  }
+
+  @Override
+  public void stop() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Application stop.");
+    }
+  }
+
+  private static Parent loadFxml(final String fxml) throws IOException {
+    final FXMLLoader fxmlLoader = new FXMLLoader(
+        LauncherHelper.class.getResource(fxml));
+
+    // MyController controller = (MyController)fxmlLoader.getController();
+    // controller.setStage(this.stage);
+
+    return fxmlLoader.load();
+  }
+
+  private static void setupScene() {
+    try {
+      scene = new Scene(loadFxml(PRIMARY_FXML), WIDTH, HEIGHT);
+    } catch (IOException ex) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error(ex);
+      }
+      scene = new Scene(new Group(), WIDTH, HEIGHT);
+    }
+  }
+
+  private static void setupStage() {
     final Properties properties = Launcher.getProperties();
-    stage.setTitle(properties.getProperty("application.fullname"));
+    final String appName = properties.getProperty("application.name");
+    final String appVersion = properties.getProperty("application.version");
+    final String applicationTitle =
+        appName.substring(0, 1).toUpperCase(Locale.getDefault())
+        + appName.substring(1)
+        + " " + appVersion;
+    stage.setTitle(applicationTitle);
     try (InputStream iconAsStream =
         LauncherHelper.class.getResourceAsStream(ICON)) {
       if (iconAsStream == null) {
@@ -149,38 +183,64 @@ public final class LauncherHelper extends Application {
           LOG.error("Can't load application icon: '" + ICON + "'");
         }
       } else {
-        stage.getIcons().add(new Image(
-            iconAsStream,
-            ICON_WIDTH,
-            ICON_HEIGHT,
-            true, // preserveRatio
-            true // smooth
-        ));
+        stage.getIcons().add(new Image(iconAsStream));
       }
     } catch (IOException ex) {
-      if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
-      }
-    }
-    try {
-      scene = new Scene(loadFxml(PRIMARY_FXML), WIDTH, HEIGHT);
-    } catch (IOException ex) {
-      scene = new Scene(new Group(), WIDTH, HEIGHT);
       if (LOG.isErrorEnabled()) {
         LOG.error(ex);
       }
     }
     stage.setScene(scene);
+    // stage.sizeToScene();
+    stage.setOpacity(0.85);
+    stage.centerOnScreen();
+    // stage.setFullScreen(true);
+
+    // stage.iconifiedProperty().addListener(new ChangeListener<Boolean>() {
+    //   @Override
+    //   public void changed(ObservableValue ov,
+    //       Boolean oldProp, Boolean newProp) {
+    //     if (newProp.booleanValue()) {
+    //       stage.close();
+    //     }
+    //   }
+    // });
+    stage.iconifiedProperty().addListener((ov, oldVal, newVal) -> {
+      if (newVal) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Stage iconified.");
+        }
+        hideStage();
+      }
+    });
+    stage.setOnCloseRequest(we -> {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Close request.");
+      }
+      we.consume();
+      hideStage();
+    });
   }
 
-  private static Parent loadFxml(final String fxml) throws IOException {
-    final FXMLLoader fxmlLoader = new FXMLLoader(
-        LauncherHelper.class.getResource(fxml));
-    return fxmlLoader.load();
+  private static void hideStage() {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+      if (trayIcon != null) {
+        trayIcon.displayMessage(
+            stage.getTitle(),
+            "Java version: " + Runtime.version(),
+            // ERROR, WARNING, INFO, NONE
+            java.awt.TrayIcon.MessageType.INFO
+        );
+      }
+    });
+    stage.close();
   }
 
   private static void showStage() {
     if (stage != null) {
+      if (stage.isIconified()) {
+        stage.setIconified(false);
+      }
       stage.show();
       stage.toFront();
     }
@@ -188,72 +248,63 @@ public final class LauncherHelper extends Application {
 
   private static void setupTray() {
     javax.swing.SwingUtilities.invokeLater(() -> {
-      initTray();
-      if (trayIcon != null) {
-        trayIcon.displayMessage(
-            "Launcher",
-            "Java version: " + Runtime.version(),
-            java.awt.TrayIcon.MessageType.INFO
-        );
+      try {
+        java.awt.Toolkit.getDefaultToolkit();
+        if (!java.awt.SystemTray.isSupported()) {
+          throw new java.awt.AWTException("System tray not supported");
+        }
+        tray = java.awt.SystemTray.getSystemTray();
+
+        trayIcon = new java.awt.TrayIcon(SwingFXUtils.fromFXImage(
+            stage.getIcons().get(0), null));
+        trayIcon.setImageAutoSize(true);
+
+        // trayIcon.addActionListener(event -> {
+        //   Platform.runLater(LauncherHelper::showStage);
+        // });
+        trayIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+          @Override
+          public void mousePressed(final java.awt.event.MouseEvent event) {
+            if (event.getClickCount() >= DBLCLICK_COUNT) {
+              Platform.runLater(LauncherHelper::showStage);
+            }
+          }
+        });
+
+        final java.awt.Font plainFont = java.awt.Font.decode(null);
+        final java.awt.Font boldFont = plainFont.deriveFont(java.awt.Font.BOLD);
+
+        final java.awt.MenuItem openItem = new java.awt.MenuItem("Open");
+        openItem.setFont(boldFont);
+        openItem.addActionListener(event -> {
+          Platform.runLater(LauncherHelper::showStage);
+        });
+
+        final java.awt.MenuItem exitItem = new java.awt.MenuItem("Exit");
+        exitItem.setFont(plainFont);
+        exitItem.addActionListener(event -> {
+          tray.remove(trayIcon);
+          Platform.exit();
+        });
+
+        final java.awt.PopupMenu popup = new java.awt.PopupMenu();
+        popup.add(openItem);
+        popup.addSeparator();
+        popup.add(exitItem);
+
+        trayIcon.setPopupMenu(popup);
+        trayIcon.setToolTip(stage.getTitle());
+
+        tray.add(trayIcon);
+
+        Platform.setImplicitExit(false);
+      } catch (java.awt.AWTException ex) {
+        if (LOG.isErrorEnabled()) {
+          LOG.error("Unable to init system tray: " + ex);
+        }
+        Platform.setImplicitExit(true);
       }
     });
-  }
-
-  private static void initTray() {
-    try {
-      java.awt.Toolkit.getDefaultToolkit();
-      if (!java.awt.SystemTray.isSupported()) {
-        throw new java.awt.AWTException("System tray not supported");
-      }
-      tray = java.awt.SystemTray.getSystemTray();
-
-      final ObservableList<Image> icons = stage.getIcons();
-      java.awt.Image image;
-      if (icons.isEmpty()) {
-        image = new BufferedImage(
-            ICON_WIDTH,
-            ICON_HEIGHT,
-            BufferedImage.TYPE_INT_RGB
-        );
-      } else {
-        image = SwingFXUtils.fromFXImage(icons.get(0), null);
-      }
-
-      trayIcon = new java.awt.TrayIcon(image);
-      trayIcon.addActionListener(event -> {
-        Platform.runLater(LauncherHelper::showStage);
-      });
-
-      final java.awt.Font defaultFont = java.awt.Font.decode(null);
-      final java.awt.Font boldFont = defaultFont.deriveFont(java.awt.Font.BOLD);
-
-      final java.awt.MenuItem openItem = new java.awt.MenuItem("Open");
-      openItem.setFont(boldFont);
-      openItem.addActionListener(event -> {
-        Platform.runLater(LauncherHelper::showStage);
-      });
-
-      final java.awt.MenuItem exitItem = new java.awt.MenuItem("Exit");
-      exitItem.addActionListener(event -> {
-        tray.remove(trayIcon);
-        Platform.exit();
-      });
-
-      final java.awt.PopupMenu popup = new java.awt.PopupMenu();
-      popup.add(openItem);
-      popup.addSeparator();
-      popup.add(exitItem);
-
-      trayIcon.setPopupMenu(popup);
-      tray.add(trayIcon);
-
-      Platform.setImplicitExit(false);
-    } catch (java.awt.AWTException ex) {
-      if (LOG.isErrorEnabled()) {
-        LOG.error("Unable to init system tray: " + ex);
-      }
-      Platform.setImplicitExit(true);
-    }
   }
 
 }

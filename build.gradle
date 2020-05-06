@@ -60,8 +60,8 @@ plugins {
 
   // https://spotbugs.github.io
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.0.4'
-  
+  // id 'com.github.spotbugs' version '4.0.8'
+
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.1'
 }
@@ -613,6 +613,7 @@ cpd {
 
 cpdCheck {
   exclude '**/*.groovy'
+  exclude '**/*.css'
   reports {
     text.enabled = true
     xml.enabled = true
@@ -694,78 +695,81 @@ task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
 
 check.dependsOn groovyCpdCheck
 
-spotbugs {
-  // The version of the code quality tool to be used.
-  toolVersion = '4.0.1'
-
-  // The source sets to be analyzed as part of the check and build tasks.
-  // sourceSets = [
-  //   sourceSets.main,
-  // ]
-
-  // Whether or not to allow the build to continue if there are warnings.
-  ignoreFailures = true
-
-  // Whether or not to show progress.
-  showProgress = false
-
-  // The directory where reports will be generated.
-  // reportsDir = file("${project.reporting.baseDir}/spotbugs")
-
-  // The analysis effort level. The value specified should be one of
-  // min, default, or max. Higher levels increase precision and find more
-  // bugs at the expense of running time and memory consumption.
-  effort = 'max'
-
-  // The priority threshold for reporting bugs. If set to low, all bugs
-  // are reported. If set to medium (the default), medium and high priority
-  // bugs are reported. If set to high, only high priority bugs are reported.
-  reportLevel = 'low'
-
-  // The bug detectors which should be run. The bug detectors are specified
-  // by their class names, without any package qualification. By default, all
-  // detectors which are not disabled by default are run.
-  // visitors = [
-  //   'FindSqlInjection',
-  //   'SwitchFallthrough',
-  // ]
-
-  // Similar to visitors except that it specifies bug detectors which should
-  // not be run. By default, no visitors are omitted.
-  // omitVisitors = [
-  //   'FindNonShortCircuit',
-  // ]
-
-  // The filename of a filter specifying which bugs are reported.
-  // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
-
-  // The filename of a filter specifying bugs to exclude from being reported.
-  // excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
-  
-  // onlyAnalyze = [
-  //   'com.foobar.MyClass',
-  //   'com.foobar.mypkg.*'
-  // ]
-  
-  // maxHeapSize = '1g'
-  
-  // extraArgs = [
-  //   '-nested:false'
-  // ]
-  
-  // jvmArgs = [
-  //   '-Duser.language=ja'
-  // ]  
-}
-
-tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
-  reports {
-    html {
-      enabled = true
-      stylesheet = 'fancy-hist.xsl'
-    }
-  }
-}
+// spotbugs {
+//   // The version of the code quality tool to be used.
+//   toolVersion = '4.0.2'
+// 
+//   // The source sets to be analyzed as part of the check and build tasks.
+//   // sourceSets = [
+//   //   sourceSets.main,
+//   // ]
+// 
+//   // Whether or not to allow the build to continue if there are warnings.
+//   ignoreFailures = true
+// 
+//   // Whether or not to show progress.
+//   showProgress = false
+// 
+//   // The directory where reports will be generated.
+//   // reportsDir = file("${project.reporting.baseDir}/spotbugs")
+// 
+//   // The analysis effort level. The value specified should be one of
+//   // min, default, or max. Higher levels increase precision and find more
+//   // bugs at the expense of running time and memory consumption.
+//   effort = 'max'
+// 
+//   // The priority threshold for reporting bugs. If set to low, all bugs
+//   // are reported. If set to medium (the default), medium and high priority
+//   // bugs are reported. If set to high, only high priority bugs are reported.
+//   reportLevel = 'low'
+// 
+//   // The bug detectors which should be run. The bug detectors are specified
+//   // by their class names, without any package qualification. By default, all
+//   // detectors which are not disabled by default are run.
+//   // visitors = [
+//   //   'FindSqlInjection',
+//   //   'SwitchFallthrough',
+//   // ]
+// 
+//   // Similar to visitors except that it specifies bug detectors which should
+//   // not be run. By default, no visitors are omitted.
+//   // omitVisitors = [
+//   //   'FindNonShortCircuit',
+//   // ]
+// 
+//   // The filename of a filter specifying which bugs are reported.
+//   // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
+// 
+//   // The filename of a filter specifying bugs to exclude from being reported.
+//   excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
+// 
+//   // onlyAnalyze = [
+//   //   'com.foobar.MyClass',
+//   //   'com.foobar.mypkg.*'
+//   // ]
+// 
+//   // maxHeapSize = '1g'
+// 
+//   extraArgs = [
+//     '-nested:false'
+//   ]
+// 
+//   jvmArgs = [
+//     '-Duser.language=ru'
+//   ]
+// }
+// 
+// tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+//   reports {
+//     xml {
+//       enabled = false
+//     }
+//     html {
+//       enabled = true
+//       stylesheet = 'fancy-hist.xsl'
+//     }
+//   }
+// }
 
 jacoco {
   // Version of Jacoco JARs to use.

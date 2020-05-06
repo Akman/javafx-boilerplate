@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
   Java Boilerplate Project
 
   https://github.com/akman/java-boilerplate-gradle
@@ -24,30 +25,12 @@
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
-*/
+-->
 
-package ru.akman.gui;
-
-import javafx.fxml.FXML;
-
-/**
- * Primary controller.
- */
-public class PrimaryController {
-
-  /**
-   * Secodary FXML.
-   */
-  private static final String SECONDARY_FXML = "secondary.fxml";
-
-  @FXML
-  private void switchToSecondary() {
-    // TODO: Private method 'switchToSecondary()' is never called.
-    // [SpotBugs] Perfomance.
-    // This private method is never called. Although it is possible that
-    // the method will be invoked through reflection, it is more likely that
-    // the method is never used, and should be removed.
-    LauncherHelper.setRoot(SECONDARY_FXML);
-  }
-
-}
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/4.0.1/spotbugs/etc/findbugsfilter.xsd">
+  <Match>
+    <Source name="~.*Test\.groovy" />
+  </Match>
+</FindBugsFilter>

@@ -42,6 +42,11 @@ public class SecondaryController {
 
   @FXML
   private void switchToPrimary() {
+    // TODO: Private method 'switchToPrimary()' is never called.
+    // [SpotBugs] Perfomance.
+    // This private method is never called. Although it is possible that
+    // the method will be invoked through reflection, it is more likely that
+    // the method is never used, and should be removed.
     LauncherHelper.setRoot(PRIMARY_FXML);
   }
 
