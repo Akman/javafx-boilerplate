@@ -3,7 +3,7 @@
 
   https://github.com/akman/java-boilerplate-gradle
 
-  The MIT License (MIT)
+  MIT License (MIT)
 
   Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
 
@@ -83,7 +83,7 @@ public final class CommonUtils {
         resourceUrl.openStream(), resourceCharset)) {
       properties.load(isr);
     } catch (IOException ex) {
-      throw (MissingResourceException)new MissingResourceException(
+      throw (MissingResourceException) new MissingResourceException(
           "Can't load resource", CommonUtils.class.getName(), resourceName)
           .initCause(ex);
     }

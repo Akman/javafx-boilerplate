@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Java Boilerplate Project
 
+  https://github.com/akman/java-boilerplate-gradle
+
+  MIT License (MIT)
+
+  Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom
+  the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included
+  in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -14,9 +40,9 @@
   <packaging>jar</packaging>
 
   <scm>
-    <developerConnection>
-      scm:git:git://github.com/akman/java-boilerplate-gradle
-    </developerConnection>
+    <connection>scm:git:git://github.com/akman/java-boilerplate-gradle</connection>
+    <developerConnection>scm:git:git://github.com/akman/java-boilerplate-gradle</developerConnection>
+    <url>https://github.com/akman/java-boilerplate-gradle</url>
   </scm>
 
   <properties>
@@ -31,16 +57,19 @@
     <applicationAuthorName>Alexander Kapitman</applicationAuthorName>
     <applicationAuthorEmail>akman.ru@gmail.com</applicationAuthorEmail>
     <applicationAuthorUrl>https://akman.github.io/</applicationAuthorUrl>
+    <applicationAuthorTimezone>Europe/Kaliningrad</applicationAuthorTimezone>
     <applicationLicenseFile>LICENSE</applicationLicenseFile>
-    <applicationLicenseName>The MIT License</applicationLicenseName>
+    <applicationLicenseName>MIT License</applicationLicenseName>
     <applicationLicenseType>MIT</applicationLicenseType>
+    <applicationLicenseDistribution>repo</applicationLicenseDistribution>
     <applicationLicenseComment>This is a lax, permissive non-copyleft free software license, compatible with the GNU GPL.</applicationLicenseComment>
-    <applicationLicenseUrl>https://www.opensource.org/licenses/mit-license.php</applicationLicenseUrl>
+    <applicationLicenseUrl>https://spdx.org/licenses/MIT.html</applicationLicenseUrl>
     <applicationInceptionYear>2019</applicationInceptionYear>
-    <!-- applicationYear>2020</applicationYear -->
-    <applicationCopyright>Copyright &#169; ${applicationInceptionYear}&#x2013;${applicationYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;. All rights reserved.</applicationCopyright>
+    <applicationCurrentYear>2020</applicationCurrentYear>
+    <applicationCopyright>Copyright (C) ${applicationInceptionYear} - ${applicationCurrentYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
     
     <platformName>${os.name}</platformName>
+    <platformFamily>${os.family}</platformFamily>
     <platformVersion>${os.version}</platformVersion>
     <platformArch>${os.arch}</platformArch>
     <platformCpus>${cpu.count}</platformCpus>
@@ -56,6 +85,9 @@
     <defaultEncoding>UTF-8</defaultEncoding>
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
+
+    <applicationModuleName>ru.akman.launcher</applicationModuleName>
+    <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
   </properties>
 
   <name>${applicationFullName}</name>
@@ -67,7 +99,7 @@
       <name>${applicationLicenseName} (${applicationLicenseType})</name>
       <url>${applicationLicenseUrl}</url>
       <comments>${applicationLicenseComment}</comments>
-      <distribution>repo</distribution>
+      <distribution>${applicationLicenseDistribution}</distribution>
     </license>
   </licenses>
   <organization>
@@ -80,6 +112,9 @@
       <name>${applicationAuthorName}</name>
       <url>${applicationAuthorUrl}</url>
       <email>${applicationAuthorEmail}</email>
+      <timezone>${applicationAuthorTimezone}</timezone>
+      <organization>${applicationVendor}</organization>
+      <organizationUrl>${applicationVendorUrl}</organizationUrl>      
       <roles>
         <role>developer</role>
       </roles>
@@ -128,38 +163,38 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.13.0</version>
+      <version>2.13.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.13.0</version>
+      <version>2.13.2</version>
     </dependency>
     <!-- testImplementation -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.6.2</version>
+      <version>5.7.0-M1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.6.2</version>
+      <version>5.7.0-M1</version>
       <scope>test</scope>
     </dependency>
     <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.6.2</version>
+      <version>5.7.0-M1</version>
       <scope>test</scope>
     </dependency>
     <!-- JUnit 4 for Spock only -->
     <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
-      <version>5.6.2</version>
+      <version>5.7.0-M1</version>
       <scope>test</scope>
     </dependency>
     <!-- Spock -->
@@ -222,7 +257,7 @@
     [B] maven-install-plugin
     [B] maven-jar-plugin
     - [B] maven-jlink-plugin
-    - [B+R] maven-javadoc-plugin
+    * [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,)
     [B+R] maven-pmd-plugin
     [B] maven-release-plugin
     [B] maven-resources-plugin
@@ -236,7 +271,7 @@
     [B+R] jacoco-maven-plugin
     [B] license-maven-plugin
     [B] javafx-maven-plugin
-    [B+R] codenarc-maven-plugin
+    - [B+R] codenarc-maven-plugin
     [B] gmaven-plus
   -->
   <build>
@@ -248,30 +283,18 @@
         <version>3.1.0</version>
         <executions>
           <execution>
-            <id>timestamp-property</id>
-            <goals>
-              <goal>timestamp-property</goal>
-            </goals>
             <phase>validate</phase>
-            <configuration>
-              <locale>en</locale>
-              <name>applicationYear</name>
-              <pattern>yyyy</pattern>
-            </configuration>
-          </execution>
-          <execution>
-            <id>parse-version</id>
-            <goals>
-              <goal>parse-version</goal>
-            </goals>
-            <phase>validate</phase>
-          </execution>
-          <execution>
-            <id>cpu-count</id>
             <goals>
               <goal>cpu-count</goal>
+              <goal>parse-version</goal>
+              <goal>timestamp-property</goal>
             </goals>
-            <phase>validate</phase>
+            <configuration>
+              <locale>en</locale>
+              <name>applicationCurrentYear</name>
+              <pattern>yyyy</pattern>
+              <unit>year</unit>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -286,15 +309,19 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <!-- https://maven.apache.org/shared/maven-archiver/index.html -->
           <archive>
             <manifest>
-              <mainClass>ru.akman.launcher.Launcher</mainClass>
+              <addDefaultEntries>false</addDefaultEntries>
+              <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
             </manifest>
+            <manifestEntries>
+              <Implementation-Title>${applicationName}</Implementation-Title>
+            </manifestEntries>
           </archive>
         </configuration>
         <executions>
           <execution>
-            <id>default-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -305,6 +332,13 @@
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.1.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>8.32</version>
+          </dependency>
+        </dependencies>        
         <configuration>
           <configLocation>config/checkstyle/google_checks.xml</configLocation>
           <headerLocation>LICENSE</headerLocation>
@@ -317,7 +351,6 @@
         </configuration>
         <executions>
           <execution>
-            <id>default-checkstyle</id>
             <phase>process-test-classes</phase>
             <goals>
               <goal>check</goal>
@@ -360,7 +393,6 @@
         <version>3.0.0-M3</version>
         <executions>
           <execution>
-            <id>enforce-maven</id>
             <goals>
               <goal>enforce</goal>
             </goals>
@@ -386,7 +418,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
       </plugin>
-      <!--
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
@@ -394,9 +425,9 @@
           <sourceFileExcludes>
             <sourceFileExclude>**/module-info.java</sourceFileExclude>
           </sourceFileExcludes>
+          <additionalOptions>-html5</additionalOptions>
         </configuration>
       </plugin>
-      -->
       <!--
       <plugin>
         <artifactId>maven-jlink-plugin</artifactId>
@@ -408,16 +439,17 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
+          <linkXref>true</linkXref>
           <analysisCache>true</analysisCache>
           <failOnViolation>false</failOnViolation>
           <printFailingErrors>true</printFailingErrors>
-          <minimumTokens>100</minimumTokens>
+          <minimumTokens>50</minimumTokens>
           <maxAllowedViolations>0</maxAllowedViolations>
+          <ignoreAnnotations>false</ignoreAnnotations>
+          <ignoreIdentifiers>false</ignoreIdentifiers>
+          <ignoreLiterals>false</ignoreLiterals>
           <includeTests>true</includeTests>
-          <rulesets>
-            <ruleset>/category/java/errorprone.xml</ruleset>
-            <ruleset>/category/java/bestpractices.xml</ruleset>
-          </rulesets>
+          <rulesets>config/pmd/ruleset.xml</rulesets>
         </configuration>
         <executions>
           <execution>
@@ -425,6 +457,7 @@
             <phase>process-test-classes</phase>
             <goals>
               <goal>check</goal>
+              <goal>cpd-check</goal>
             </goals>
           </execution>
         </executions>
@@ -504,7 +537,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -518,11 +551,9 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M4</version>
-        <!--
         <configuration>
           <argLine>-Dfile.encoding=${defaultEncoding} @{argLine}</argLine>
         </configuration>
-        -->
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -587,7 +618,12 @@
         </dependencies>
         <configuration>
           <failOnError>false</failOnError>
+          <!--
           <effort>max</effort>
+          <threshold>low</threshold>
+          <nested>false</nested>
+          -->
+          <excludeFilterFile>config/spotbugs/excludeFilter.xml</excludeFilterFile>
         </configuration>
         <executions>
           <execution>
@@ -649,6 +685,7 @@
             <groovy>JAVADOC_STYLE</groovy>
           </mapping>
           <includes>
+            <include>pom.xml</include>
             <include>src/**/*</include>
           </includes>
           <excludes>
@@ -658,7 +695,6 @@
         </configuration>
         <executions>
           <execution>
-            <id>default-license</id>
             <phase>initialize</phase>
             <goals>
               <goal>check</goal>
@@ -687,21 +723,29 @@
           <execution>
             <id>utf8</id>
             <configuration>
-              <!--
               <options>
                 <option>-Dfile.encoding=${defaultEncoding}</option>
               </options>
-              -->
               <commandlineArgs>--no-gui</commandlineArgs>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>codenarc-maven-plugin</artifactId>
         <version>0.22-1</version>
+        <configuration>
+          <codeNarcVersion>1.5</codeNarcVersion>
+          <failOnError>false</failOnError>
+          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
+          <maxPriority1Violations>0</maxPriority1Violations>
+          <maxPriority2Violations>0</maxPriority2Violations>
+          <maxPriority3Violations>0</maxPriority3Violations>
+        </configuration>        
       </plugin>
+      -->
       <!-- https://github.com/groovy/GMavenPlus/wiki -->
       <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
@@ -725,11 +769,12 @@
     - [B+R] maven-javadoc-plugin
     [R] maven-jxr-plugin
     [B+R] maven-pmd-plugin
-    [R] maven-project-info-reports-plugin
+    * [R] maven-project-info-reports-plugin (report: plugins)
     [B+R] versions-maven-plugin
     [B+R] spotbugs-maven-plugin
+    [R] maven-surefire-report-plugin
     [B+R] jacoco-maven-plugin
-    [B+R] codenarc-maven-plugin
+    - [B+R] codenarc-maven-plugin
   -->
   <reporting>
     <plugins>
@@ -759,11 +804,6 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
-        <configuration>
-          <sourceFileExcludes>
-            <sourceFileExclude>**/module-info.java</sourceFileExclude>
-          </sourceFileExcludes>
-        </configuration>
       </plugin>
       -->
       <plugin>
@@ -781,23 +821,25 @@
             </reports>
           </reportSet>
         </reportSets>
-        <configuration>
-          <linkXRef>true</linkXRef>
-          <analysisCache>true</analysisCache>
-          <failOnViolation>false</failOnViolation>
-          <printFailingErrors>true</printFailingErrors>
-          <minimumTokens>100</minimumTokens>
-          <maxAllowedViolations>0</maxAllowedViolations>
-          <includeTests>true</includeTests>
-          <rulesets>
-            <ruleset>/category/java/errorprone.xml</ruleset>
-            <ruleset>/category/java/bestpractices.xml</ruleset>
-          </rulesets>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>3.0.0</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependencies</report>
+              <report>dependency-info</report>
+              <report>index</report>
+              <report>licenses</report>
+              <report>plugin-management</report>
+              <!--report>plugins</report-->
+              <report>scm</report>
+              <report>summary</report>
+              <report>team</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -817,10 +859,11 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>4.0.0</version>
-        <configuration>
-          <failOnError>false</failOnError>
-          <effort>max</effort>
-        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>3.0.0-M4</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -834,11 +877,13 @@
           </reportSet>
         </reportSets>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>codenarc-maven-plugin</artifactId>
         <version>0.22-1</version>
       </plugin>
+      -->
     </plugins>
   </reporting>
 

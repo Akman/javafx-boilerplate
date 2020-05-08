@@ -3,7 +3,7 @@
 
   https://github.com/akman/java-boilerplate-gradle
 
-  The MIT License (MIT)
+  MIT License (MIT)
 
   Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
 
@@ -59,6 +59,11 @@ public final class LauncherHelper extends Application {
    * Default stage height.
    */
   private static final int HEIGHT = 480;
+
+  /**
+   * Default stage opacity.
+   */
+  private static final double OPACITY = 0.85;
 
   /**
    * Double click count.
@@ -192,7 +197,7 @@ public final class LauncherHelper extends Application {
     }
     stage.setScene(scene);
     // stage.sizeToScene();
-    stage.setOpacity(0.85);
+    stage.setOpacity(OPACITY);
     stage.centerOnScreen();
     // stage.setFullScreen(true);
 
