@@ -34,7 +34,9 @@
 
   <description>PMD Rules</description>
 
-  <rule ref="category/java/bestpractices.xml" />
+  <rule ref="category/java/bestpractices.xml">
+    <exclude name="SystemPrintln" />
+  </rule>
   <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
     <properties>
       <property name="ignoredAnnotations" value="java.lang.Deprecated|javafx.fxml.FXML" />

@@ -53,6 +53,14 @@ ships with the binaries.
 ./gradlew wrapper --gradle-version 6.0.1 --distribution-type all
 ```
 
+## Setup maven properties
+
+You can set settings by export environment variable MAVEN_OPTS:
+
+```bash
+export MAVEN_OPTS="-Xmx1024m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+```
+
 ## Setup gradle properties
 
 Edit default gradle properties in file: ***$HOME/.gradle/gradle.properties***

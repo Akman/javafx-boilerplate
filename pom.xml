@@ -67,7 +67,7 @@
     <applicationInceptionYear>2019</applicationInceptionYear>
     <applicationCurrentYear>2020</applicationCurrentYear>
     <applicationCopyright>Copyright (C) ${applicationInceptionYear} - ${applicationCurrentYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
-    
+
     <platformName>${os.name}</platformName>
     <platformFamily>${os.family}</platformFamily>
     <platformVersion>${os.version}</platformVersion>
@@ -76,12 +76,12 @@
     <jvmVendor>${java.vendor}</jvmVendor>
     <jvmVersion>${java.version}</jvmVersion>
     <jvmRuntime>${java.runtime.version}</jvmRuntime>
-    
+
     <mavenVersion>${maven.version}</mavenVersion>
 
     <javaVersion>13</javaVersion>
     <javaFxVersion>13</javaFxVersion>
-    
+
     <defaultEncoding>UTF-8</defaultEncoding>
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
@@ -114,7 +114,7 @@
       <email>${applicationAuthorEmail}</email>
       <timezone>${applicationAuthorTimezone}</timezone>
       <organization>${applicationVendor}</organization>
-      <organizationUrl>${applicationVendorUrl}</organizationUrl>      
+      <organizationUrl>${applicationVendorUrl}</organizationUrl>
       <roles>
         <role>developer</role>
       </roles>
@@ -216,7 +216,7 @@
       <artifactId>mockito-core</artifactId>
       <version>3.3.3</version>
       <scope>test</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
@@ -338,7 +338,7 @@
             <artifactId>checkstyle</artifactId>
             <version>8.32</version>
           </dependency>
-        </dependencies>        
+        </dependencies>
         <configuration>
           <configLocation>config/checkstyle/google_checks.xml</configLocation>
           <headerLocation>LICENSE</headerLocation>
@@ -378,7 +378,7 @@
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
           <release>${javaVersion}</release>
-        </configuration>        
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -433,7 +433,7 @@
         <artifactId>maven-jlink-plugin</artifactId>
         <version>3.0.0-alpha-1</version>
         <extensions>true</extensions>
-      </plugin>      
+      </plugin>
       -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -560,9 +560,16 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <configuration>
-          <mainClass>ru.akman.launcher.Launcher</mainClass>
-          <commandlineArgs>--no-gui</commandlineArgs>
+          <mainClass>${applicationClassName}</mainClass>
         </configuration>
+        <executions>
+          <execution>
+            <id>no-gui</id>
+            <configuration>
+              <commandlineArgs>--debug --no-gui</commandlineArgs>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -703,7 +710,6 @@
         </executions>
       </plugin>
       <!-- https://github.com/openjfx/javafx-maven-plugin -->
-      <!-- mvn help:describe -DgroupId=org.openjfx -DartifactId=javafx-maven-plugin -Ddetail=true -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
@@ -712,24 +718,13 @@
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
           <release>${javaVersion}</release>
-          <mainClass>ru.akman.launcher/ru.akman.launcher.Launcher</mainClass>
+          <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
           <stripDebug>true</stripDebug>
           <compress>2</compress>
           <noHeaderFiles>true</noHeaderFiles>
           <noManPages>true</noManPages>
           <launcher>launcher</launcher>
         </configuration>
-        <executions>
-          <execution>
-            <id>utf8</id>
-            <configuration>
-              <options>
-                <option>-Dfile.encoding=${defaultEncoding}</option>
-              </options>
-              <commandlineArgs>--no-gui</commandlineArgs>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <!--
       <plugin>
@@ -743,7 +738,7 @@
           <maxPriority1Violations>0</maxPriority1Violations>
           <maxPriority2Violations>0</maxPriority2Violations>
           <maxPriority3Violations>0</maxPriority3Violations>
-        </configuration>        
+        </configuration>
       </plugin>
       -->
       <!-- https://github.com/groovy/GMavenPlus/wiki -->
@@ -759,7 +754,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>    
+      </plugin>
     </plugins>
   </build>
 

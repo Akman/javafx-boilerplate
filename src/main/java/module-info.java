@@ -32,7 +32,7 @@
 module ru.akman.launcher {
   requires javafx.base;
   requires javafx.controls;
-  requires javafx.graphics;
+  requires transitive javafx.graphics;
   requires javafx.fxml;
   requires javafx.swing;
   requires org.apache.logging.log4j;

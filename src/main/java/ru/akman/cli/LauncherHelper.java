@@ -77,6 +77,7 @@ public final class LauncherHelper {
           LOG.debug("bytes: " + Arrays.toString(
               line.getBytes(Charset.defaultCharset())));
         }
+        System.out.println(line);
       }
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
