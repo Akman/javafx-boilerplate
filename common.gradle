@@ -39,7 +39,7 @@ ext {
   applicationAuthorName = 'Alexander Kapitman'
   applicationAuthorEmail = 'akman.ru@gmail.com'
   applicationLicenseFile = 'LICENSE'
-  applicationLicenseName = 'The MIT License'
+  applicationLicenseName = 'MIT License'
   applicationLicenseType = 'MIT'
   applicationInceptionYear = 2019
   applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
