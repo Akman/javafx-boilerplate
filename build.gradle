@@ -26,10 +26,16 @@
   DEALINGS IN THE SOFTWARE.
 */
 
+/*
+  SpotBugs reported failures: org.gradle.api.GradleException:
+  Verification failed: SpotBugs violation found: 3
+    at com.github.spotbugs.snom.internal.SpotBugsRunnerForWorker$
+      SpotBugsExecutor.execute(SpotBugsRunnerForWorker.java:97) ...
+*/
+
 plugins {
   id 'application'
   id 'groovy'
-  id 'eclipse'
 
   // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
   id 'checkstyle'
@@ -37,33 +43,35 @@ plugins {
   // https://docs.gradle.org/current/userguide/pmd_plugin.html
   id 'pmd'
 
-  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
-  id 'jacoco'
+  // https://github.com/aaschmid/gradle-cpd-plugin
+  id 'de.aaschmid.cpd' version '3.1'
+
+  // https://spotbugs.github.io
+  // https://github.com/spotbugs/spotbugs-gradle-plugin
+  id 'com.github.spotbugs' version '4.0.8'
 
   // https://github.com/CodeNarc/CodeNarc
   id 'codenarc'
 
-  // https://github.com/Akman/vscode-tasks
-  id 'ru.akman.vscode-tasks' version '0.4.0'
-
-  // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '2.8.1'
+  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  id 'jacoco'
 
   // https://badass-jlink-plugin.beryx.org
-  id 'org.beryx.jlink' version '2.17.2'
+  id 'org.beryx.jlink' version '2.18.0'
 
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.15.0'
 
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.27.0'
+  id 'com.github.ben-manes.versions' version '0.28.0'
 
-  // https://spotbugs.github.io
-  // https://github.com/spotbugs/spotbugs-gradle-plugin
-  // id 'com.github.spotbugs' version '4.0.8'
+  // https://github.com/researchgate/gradle-release
+  id 'net.researchgate.release' version '2.8.1'
 
-  // https://github.com/aaschmid/gradle-cpd-plugin
-  id 'de.aaschmid.cpd' version '3.1'
+  id 'eclipse'
+
+  // https://github.com/Akman/vscode-tasks
+  id 'ru.akman.vscode-tasks' version '0.4.0'
 }
 
 repositories {
@@ -549,7 +557,7 @@ checkstyle {
   // The Checkstyle configuration file to use.
   // https://github.com/checkstyle/checkstyle/tree/master/src/main/resources
   configFile = file("${projectDir}/config/checkstyle/google_checks.xml")
-
+  
   // Whether to allow the build to continue if there are warnings.
   ignoreFailures = true
 
@@ -704,81 +712,81 @@ task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
 
 check.dependsOn groovyCpdCheck
 
-// spotbugs {
-//   // The version of the code quality tool to be used.
-//   toolVersion = '4.0.2'
-// 
-//   // The source sets to be analyzed as part of the check and build tasks.
-//   // sourceSets = [
-//   //   sourceSets.main,
-//   // ]
-// 
-//   // Whether or not to allow the build to continue if there are warnings.
-//   ignoreFailures = true
-// 
-//   // Whether or not to show progress.
-//   showProgress = false
-// 
-//   // The directory where reports will be generated.
-//   // reportsDir = file("${project.reporting.baseDir}/spotbugs")
-// 
-//   // The analysis effort level. The value specified should be one of
-//   // min, default, or max. Higher levels increase precision and find more
-//   // bugs at the expense of running time and memory consumption.
-//   effort = 'max'
-// 
-//   // The priority threshold for reporting bugs. If set to low, all bugs
-//   // are reported. If set to medium (the default), medium and high priority
-//   // bugs are reported. If set to high, only high priority bugs are reported.
-//   reportLevel = 'low'
-// 
-//   // The bug detectors which should be run. The bug detectors are specified
-//   // by their class names, without any package qualification. By default, all
-//   // detectors which are not disabled by default are run.
-//   // visitors = [
-//   //   'FindSqlInjection',
-//   //   'SwitchFallthrough',
-//   // ]
-// 
-//   // Similar to visitors except that it specifies bug detectors which should
-//   // not be run. By default, no visitors are omitted.
-//   // omitVisitors = [
-//   //   'FindNonShortCircuit',
-//   // ]
-// 
-//   // The filename of a filter specifying which bugs are reported.
-//   // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
-// 
-//   // The filename of a filter specifying bugs to exclude from being reported.
-//   excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
-// 
-//   // onlyAnalyze = [
-//   //   'com.foobar.MyClass',
-//   //   'com.foobar.mypkg.*'
-//   // ]
-// 
-//   // maxHeapSize = '1g'
-// 
-//   extraArgs = [
-//     '-nested:false'
-//   ]
-// 
-//   jvmArgs = [
-//     '-Duser.language=ru'
-//   ]
-// }
-// 
-// tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
-//   reports {
-//     xml {
-//       enabled = false
-//     }
-//     html {
-//       enabled = true
-//       stylesheet = 'fancy-hist.xsl'
-//     }
-//   }
-// }
+spotbugs {
+  // The version of the code quality tool to be used.
+  toolVersion = '4.0.2'
+
+  // The source sets to be analyzed as part of the check and build tasks.
+  // sourceSets = [
+  //   sourceSets.main,
+  // ]
+
+  // Whether or not to allow the build to continue if there are warnings.
+  ignoreFailures = true
+
+  // Whether or not to show progress.
+  showProgress = false
+
+  // The directory where reports will be generated.
+  // reportsDir = file("${project.reporting.baseDir}/spotbugs")
+
+  // The analysis effort level. The value specified should be one of
+  // min, default, or max. Higher levels increase precision and find more
+  // bugs at the expense of running time and memory consumption.
+  effort = 'max'
+
+  // The priority threshold for reporting bugs. If set to low, all bugs
+  // are reported. If set to medium (the default), medium and high priority
+  // bugs are reported. If set to high, only high priority bugs are reported.
+  reportLevel = 'low'
+
+  // The bug detectors which should be run. The bug detectors are specified
+  // by their class names, without any package qualification. By default, all
+  // detectors which are not disabled by default are run.
+  // visitors = [
+  //   'FindSqlInjection',
+  //   'SwitchFallthrough',
+  // ]
+
+  // Similar to visitors except that it specifies bug detectors which should
+  // not be run. By default, no visitors are omitted.
+  // omitVisitors = [
+  //   'FindNonShortCircuit',
+  // ]
+
+  // The filename of a filter specifying which bugs are reported.
+  // includeFilter = file("${projectDir}/config/spotbugs/includeFilter.xml")
+
+  // The filename of a filter specifying bugs to exclude from being reported.
+  excludeFilter = file("${projectDir}/config/spotbugs/excludeFilter.xml")
+
+  // onlyAnalyze = [
+  //   'com.foobar.MyClass',
+  //   'com.foobar.mypkg.*'
+  // ]
+
+  // maxHeapSize = '1g'
+
+  extraArgs = [
+    '-nested:false'
+  ]
+
+  jvmArgs = [
+    '-Duser.language=ru'
+  ]
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+  reports {
+    xml {
+      enabled = false
+    }
+    html {
+      enabled = true
+      stylesheet = 'fancy-hist.xsl'
+    }
+  }
+}
 
 jacoco {
   // Version of Jacoco JARs to use.

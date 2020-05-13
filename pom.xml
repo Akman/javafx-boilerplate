@@ -26,6 +26,33 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 -->
+
+<!--
+    * [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,)
+
+    * [R] maven-project-info-reports-plugin (report: plugins)
+
+    * [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
+
+    * [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
+
+    * [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
+
+    - [B+R] codenarc-maven-plugin
+    
+
+
+    * [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
+
+    * [B] exec-maven-plugin (JPMS)
+
+    * [B] javafx-maven-plugin (BUG)
+    * javafx:jlink -> Error: automatic module cannot be used with
+    *                        jlink: org.apache.logging.log4j.core
+    
+    * [B] maven-jlink-plugin
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -34,7 +61,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.akman</groupId>
-  <artifactId>java-boilerplate-gradle</artifactId>
+  <artifactId>java-boilerplate</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -244,10 +271,12 @@
   </dependencies>
 
   <!--
-    [B] build-helper-maven-plugin
+    * [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
     [B] maven-antrun-plugin
     [B] maven-assembly-plugin
-    [B+R] maven-checkstyle-plugin
+    [B] maven-jar-plugin
+    [B] maven-shade-plugin
+    * [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
     [B] maven-clean-plugin
     [B] maven-compiler-plugin
     [B+R] maven-dependency-plugin
@@ -255,22 +284,20 @@
     [B] maven-enforcer-plugin
     [B] maven-failsafe-plugin
     [B] maven-install-plugin
-    [B] maven-jar-plugin
-    - [B] maven-jlink-plugin
     * [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,)
-    [B+R] maven-pmd-plugin
+    * [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
     [B] maven-release-plugin
     [B] maven-resources-plugin
     [B] maven-site-plugin
     [B] maven-source-plugin
     [B] maven-surefire-plugin
-    [B] exec-maven-plugin
+    * [B] exec-maven-plugin (JPMS)
     [B] native2ascii-maven-plugin
     [B+R] versions-maven-plugin
-    [B+R] spotbugs-maven-plugin
+    * [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
     [B+R] jacoco-maven-plugin
     [B] license-maven-plugin
-    [B] javafx-maven-plugin
+    * [B] javafx-maven-plugin (BUG)
     - [B+R] codenarc-maven-plugin
     [B] gmaven-plus
   -->
@@ -301,6 +328,24 @@
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>3.0.0</version>
+        <!--
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <configuration>
+              <target
+                name="The name of the target"
+                if="The name of the property that must be set in order for this task"
+                unless="The name of the property that must NOT be set in order for this task"
+                description="A short description of this target's function">
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        -->
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -311,6 +356,7 @@
           </descriptorRefs>
           <!-- https://maven.apache.org/shared/maven-archiver/index.html -->
           <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addDefaultEntries>false</addDefaultEntries>
               <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
@@ -330,6 +376,43 @@
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <!-- http://maven.apache.org/shared/maven-archiver/index.html -->
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+            <manifest>
+              <addDefaultEntries>false</addDefaultEntries>
+              <mainClass><!--${applicationModuleName}/-->${applicationClassName}</mainClass>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Title>${applicationName}</Implementation-Title>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>      
+      <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.1.1</version>
         <dependencies>
@@ -340,7 +423,8 @@
           </dependency>
         </dependencies>
         <configuration>
-          <configLocation>config/checkstyle/google_checks.xml</configLocation>
+          <!--configLocation>config/checkstyle/google_checks.xml</configLocation-->
+          <configLocation>google_checks.xml</configLocation>
           <headerLocation>LICENSE</headerLocation>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <consoleOutput>true</consoleOutput>
@@ -378,11 +462,41 @@
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
           <release>${javaVersion}</release>
+          <fork>true</fork>
+          <compilerArgs>
+            <!--
+              Give more detail for unchecked conversion warnings
+              that are mandated by the Java Language Specification.
+            -->
+            <arg>-Xlint:unchecked</arg>
+            <!--
+              Show a description of each use or override of a deprecated member
+              or class. Without this, javac shows a summary of the source files
+              that use or override deprecated members or classes.
+            -->
+            <arg>-Xlint:deprecation</arg>
+            <!--
+              Terminate compilation if warnings occur.
+            -->
+            <arg>-Werror</arg>
+          </compilerArgs>          
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.2</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
+              <includeScope>runtime</includeScope>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -415,10 +529,6 @@
         <version>3.0.0-M1</version>
       </plugin>
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
-      </plugin>
-      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
@@ -428,13 +538,32 @@
           <additionalOptions>-html5</additionalOptions>
         </configuration>
       </plugin>
-      <!--
+      <!-- http://maven.apache.org/plugins/maven-jlink-plugin/jlink-mojo.html -->
       <plugin>
         <artifactId>maven-jlink-plugin</artifactId>
         <version>3.0.0-alpha-1</version>
         <extensions>true</extensions>
+        <dependencies>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>8.0.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <noHeaderFiles>true</noHeaderFiles>
+          <noManPages>true</noManPages>
+          <stripDebug>true</stripDebug>
+          <compress>2</compress>
+          <!--
+          <addModules>
+            <addModule>org.apache.logging.log4j</addModule>
+            <addModule>log4j-api-2.13.2</addModule>
+            <addModule>log4j-core-2.13.2</addModule>
+          </addModules>
+          -->
+        </configuration>
       </plugin>
-      -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.13.0</version>
@@ -483,6 +612,7 @@
             <configuration>
               <filters>
                 <filter>target/generated-resources/filters/filter.properties</filter>
+                <!--filter>src/main/resources/filters/filter.properties</filter-->
               </filters>
               <resources>
                 <resource>
@@ -507,9 +637,8 @@
             </goals>
             <configuration>
               <filters>
-                <filter>
-                  target/generated-test-resources/filters/filter.properties
-                </filter>
+                <filter>target/generated-test-resources/filters/filter.properties</filter>
+                <!--filter>src/test/resources/filters/filter.properties</filter-->
               </filters>
               <resources>
                 <resource>
@@ -553,6 +682,11 @@
         <version>3.0.0-M4</version>
         <configuration>
           <argLine>-Dfile.encoding=${defaultEncoding} @{argLine}</argLine>
+          <consoleOutputReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
+            <encoding>${defaultEncoding}</encoding>
+            <disable>false</disable>
+            <usePhrasedFileName>true</usePhrasedFileName>
+          </consoleOutputReporter>
         </configuration>
       </plugin>
       <plugin>
@@ -625,11 +759,10 @@
         </dependencies>
         <configuration>
           <failOnError>false</failOnError>
-          <!--
           <effort>max</effort>
+          <reportLevel>low</reportLevel>
           <threshold>low</threshold>
           <nested>false</nested>
-          -->
           <excludeFilterFile>config/spotbugs/excludeFilter.xml</excludeFilterFile>
         </configuration>
         <executions>
@@ -719,11 +852,38 @@
           <target>${javaVersion}</target>
           <release>${javaVersion}</release>
           <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
+          <!-- Strips debug information out -->
           <stripDebug>true</stripDebug>
+          <!-- Strip Java debug attributes out (since Java 13) -->
+          <stripJavaDebugAttributes>true</stripJavaDebugAttributes>
+          <!-- Compression level of the resources being used -->
           <compress>2</compress>
+          <!-- Removes the includes directory in the resulting runtime image -->
           <noHeaderFiles>true</noHeaderFiles>
+          <!-- Removes the man directory in the resulting runtime image -->
           <noManPages>true</noManPages>
+          <!-- Adds a launcher script with the given name -->
+          <!--
+            If "options" are defined, these will be passed
+            to the launcher script as vm options.
+            If "commandLineArgs" are defined, these will be passed
+            to the launcher script as command line arguments.
+          -->
           <launcher>launcher</launcher>
+          <!-- Adds the option to bind services -->
+          <bindServices>false</bindServices>
+          <!-- Adds the option to ignore signing information -->
+          <ignoreSigningInformation>false</ignoreSigningInformation>
+          <!-- Adds the verbose option -->
+          <jlinkVerbose>false</jlinkVerbose>
+          <!-- The name of the folder with the resulting runtime image -->
+          <!--jlinkImageName></jlinkImageName-->
+          <!-- When set, creates a zip of the resulting runtime image -->
+          <!--jlinkZipName></jlinkZipName-->
+          <!-- The jlink executable. It can be a full path or the name -->
+          <!--jlinkExecutable></jlinkExecutable-->
+          <!-- Path to the local JavaFX jmods -->
+          <!--jmodsPath></jmodsPath-->
         </configuration>
       </plugin>
       <!--
