@@ -33,8 +33,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.akman.launcher.Launcher;
 
 /**
@@ -45,7 +45,7 @@ public final class LauncherHelper {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LogManager.getLogger(LauncherHelper.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LauncherHelper.class);
 
   private LauncherHelper() {
     // not called
@@ -72,16 +72,16 @@ public final class LauncherHelper {
           break;
         }
         if (LOG.isDebugEnabled()) {
-          LOG.debug("length: " + length);
-          LOG.debug("string: '" + line + "'");
-          LOG.debug("bytes: " + Arrays.toString(
+          LOG.debug("length: {}", length);
+          LOG.debug("string: '{}'", line);
+          LOG.debug("bytes: {}", Arrays.toString(
               line.getBytes(Charset.defaultCharset())));
         }
         System.out.println(line);
       }
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
+        LOG.error("IO Exception", ex);
       }
     }
   }

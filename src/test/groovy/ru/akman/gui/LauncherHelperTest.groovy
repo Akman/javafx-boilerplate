@@ -28,10 +28,8 @@
 package ru.akman.gui
 
 import groovy.transform.CompileDynamic
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-//import org.apache.logging.log4j.Level
-//import org.apache.logging.log4j.core.config.Configurator
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -58,7 +56,7 @@ class LauncherHelperTest extends Specification {
    * instance fields UNLESS they are annotated with @Shared.
    */
   @Shared
-  Logger logger = LogManager.getLogger(LauncherHelperTest)
+  Logger logger = LoggerFactory.getLogger(LauncherHelperTest)
 
   /**
    * Instance fields are a good place to store objects belonging to

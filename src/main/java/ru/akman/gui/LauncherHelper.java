@@ -41,8 +41,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.akman.launcher.Launcher;
 
 /**
@@ -83,7 +83,7 @@ public final class LauncherHelper extends Application {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LogManager.getLogger(LauncherHelper.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LauncherHelper.class);
 
   /**
    * Default scene.
@@ -125,7 +125,7 @@ public final class LauncherHelper extends Application {
       scene.setRoot(loadFxml(fxml));
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
+        LOG.error("IO Exception", ex);
       }
     }
   }
@@ -166,7 +166,7 @@ public final class LauncherHelper extends Application {
       scene = new Scene(loadFxml(PRIMARY_FXML), WIDTH, HEIGHT);
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
+        LOG.error("IO Exception", ex);
       }
       scene = new Scene(new Group(), WIDTH, HEIGHT);
     }
@@ -185,14 +185,14 @@ public final class LauncherHelper extends Application {
         LauncherHelper.class.getResourceAsStream(ICON)) {
       if (iconAsStream == null) {
         if (LOG.isErrorEnabled()) {
-          LOG.error("Can't load application icon: '" + ICON + "'");
+          LOG.error("Can't load application icon: '{}'", ICON);
         }
       } else {
         stage.getIcons().add(new Image(iconAsStream));
       }
     } catch (IOException ex) {
       if (LOG.isErrorEnabled()) {
-        LOG.error(ex);
+        LOG.error("IO Exception", ex);
       }
     }
     stage.setScene(scene);
@@ -305,7 +305,7 @@ public final class LauncherHelper extends Application {
         Platform.setImplicitExit(false);
       } catch (java.awt.AWTException ex) {
         if (LOG.isErrorEnabled()) {
-          LOG.error("Unable to init system tray: " + ex);
+          LOG.error("Unable to init system tray!", ex);
         }
         Platform.setImplicitExit(true);
       }

@@ -28,6 +28,8 @@
 
 package ru.akman.commons;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -36,8 +38,8 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utils.
@@ -47,7 +49,23 @@ public final class CommonUtils {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LogManager.getLogger(CommonUtils.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CommonUtils.class);
+
+  /**
+   * Default logger context.
+   */
+  private static final LoggerContext LOG_CONTEXT =
+      (LoggerContext) LoggerFactory.getILoggerFactory();
+
+  /**
+   * Default logger name.
+   */
+  private static final String ROOT_LOG_NAME = "ROOT";
+
+  /**
+   * Default logger level.
+   */
+  private static final Level DEFAULT_LOG_LEVEL = Level.ERROR;
 
   private CommonUtils() {
     // not called
@@ -55,6 +73,50 @@ public final class CommonUtils {
       LOG.error("Call private constructor");
     }
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Set root logger level.
+   * The <code>OFF</code> is used to turn off logging.
+   * The <code>ERROR</code> level designates error events which may or not
+   * be fatal to the application.
+   * The <code>WARN</code> level designates potentially harmful situations.
+   * The <code>INFO</code> level designates informational messages
+   * highlighting overall progress of the application.
+   * The <code>DEBUG</code> level designates informational events of lower
+   * importance.
+   * The <code>TRACE</code> level designates informational events of very low
+   * importance.
+   * The <code>ALL</code> is used to turn on all logging.
+   * If passing level is invalid then used default level <code>ERROR</code>.
+   * @param level root logger level
+   */
+  public static void setLoggerLevel(final String level) {
+    setLoggerLevel(level, ROOT_LOG_NAME);
+  }
+
+  /**
+   * Set logger level.
+   * The <code>OFF</code> is used to turn off logging.
+   * The <code>ERROR</code> level designates error events which may or not
+   * be fatal to the application.
+   * The <code>WARN</code> level designates potentially harmful situations.
+   * The <code>INFO</code> level designates informational messages
+   * highlighting overall progress of the application.
+   * The <code>DEBUG</code> level designates informational events of lower
+   * importance.
+   * The <code>TRACE</code> level designates informational events of very low
+   * importance.
+   * The <code>ALL</code> is used to turn on all logging.
+   * If passing level is invalid then used default level <code>ERROR</code>.
+   * @param level logger level
+   * @param name logger name (class name or <code>"ROOT"</code>)
+   */
+  public static void setLoggerLevel(final String level, final String name) {
+    if (LOG_CONTEXT != null) {
+      LOG_CONTEXT.getLogger(name).setLevel(
+          Level.toLevel(level, DEFAULT_LOG_LEVEL));
+    }
   }
 
   /**
@@ -96,11 +158,11 @@ public final class CommonUtils {
    */
   public static void dumpProperties(final Properties properties) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("locale = " + Locale.getDefault());
-      LOG.debug("charset = " + Charset.defaultCharset());
-      LOG.debug("file.encoding = " + System.getProperty("file.encoding"));
+      LOG.debug("locale = {}", Locale.getDefault());
+      LOG.debug("charset = {}", Charset.defaultCharset());
+      LOG.debug("file.encoding = {}", System.getProperty("file.encoding"));
       properties.stringPropertyNames().forEach(name -> {
-        LOG.debug(name + " = " + properties.getProperty(name));
+        LOG.debug("{} = {}", name, properties.getProperty(name));
       });
     }
   }

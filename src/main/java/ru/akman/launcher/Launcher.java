@@ -33,11 +33,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-//import javafx.application.Application;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.akman.commons.CommonUtils;
 
 /**
@@ -56,6 +53,11 @@ public final class Launcher {
   private static final String CLI_DEBUG = "--debug";
 
   /**
+   * Logger level for debug mode.
+   */
+  private static final String LOG_LEVEL_DEBUG = "DEBUG";
+
+  /**
    * Messages resource bundle name.
    */
   private static final String MESSAGES_NAME = "messages";
@@ -71,9 +73,29 @@ public final class Launcher {
   private static final String PROPS_CHARSET = "UTF-8";
 
   /**
+   * Application propertie for greeting.
+   */
+  private static final String PROP_APP_GREETING = "app.greeting";
+
+  /**
+   * Application propertie for CLI mode.
+   */
+  private static final String PROP_APP_MODE_CLI = "app.mode.cli";
+
+  /**
+   * Application propertie for GUI mode.
+   */
+  private static final String PROP_APP_MODE_GUI = "app.mode.gui";
+
+  /**
+   * Application propertie for parting.
+   */
+  private static final String PROP_APP_PARTING = "app.parting";
+
+  /**
    * Default logger.
    */
-  private static final Logger LOG = LogManager.getLogger(Launcher.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 
   /**
    * Message strings from resource bundle.
@@ -115,9 +137,6 @@ public final class Launcher {
 
   static {
     CommonUtils.setupSystemStreams();
-    // configuration: /log4j2.xml
-    // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
-    // Configurator.setRootLevel(Level.ERROR);
   }
 
   private Launcher() {
@@ -132,28 +151,29 @@ public final class Launcher {
   public static void main(final String... args) {
 
     if (Arrays.asList(args).contains(CLI_DEBUG)) {
-      Configurator.setRootLevel(Level.DEBUG);
+      // set root logger level to DEBUG
+      CommonUtils.setLoggerLevel(LOG_LEVEL_DEBUG);
     }
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug(getString("app.greeting"));
+      LOG.debug(getString(PROP_APP_GREETING));
     }
     CommonUtils.dumpProperties(PROPERTIES);
 
     if (Arrays.asList(args).contains(CLI_NO_GUI)) {
       if (LOG.isDebugEnabled()) {
-        LOG.debug(getString("app.mode.cli"));
+        LOG.debug(getString(PROP_APP_MODE_CLI));
       }
       ru.akman.cli.LauncherHelper.run(args);
     } else {
       if (LOG.isDebugEnabled()) {
-        LOG.debug(getString("app.mode.gui"));
+        LOG.debug(getString(PROP_APP_MODE_GUI));
       }
       ru.akman.gui.LauncherHelper.run(args);
     }
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug(getString("app.parting"));
+      LOG.debug(getString(PROP_APP_PARTING));
     }
 
   }

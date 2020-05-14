@@ -38,10 +38,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 // import java.util.LinkedList;
 import java.util.Properties;
-//import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-//import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,6 +48,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 // import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.akman.commons.CommonUtils;
 
 /**
@@ -63,7 +61,7 @@ class LauncherTest {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LogManager.getLogger(LauncherTest.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LauncherTest.class);
 
   /**
    * Application properties from properties file.

@@ -383,7 +383,11 @@ ruleset {
     UseAssertTrueInsteadOfNegation
     */
 
-    ruleset('rulesets/logging.xml')
+    ruleset('rulesets/logging.xml') {
+        LoggerWithWrongModifiers {
+            doNotApplyToClassNames = '*Test'
+        }
+    }
 
     /*
     LoggerForDifferentClass

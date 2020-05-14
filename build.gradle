@@ -26,13 +26,6 @@
   DEALINGS IN THE SOFTWARE.
 */
 
-/*
-  SpotBugs reported failures: org.gradle.api.GradleException:
-  Verification failed: SpotBugs violation found: 3
-    at com.github.spotbugs.snom.internal.SpotBugsRunnerForWorker$
-      SpotBugsExecutor.execute(SpotBugsRunnerForWorker.java:97) ...
-*/
-
 plugins {
   id 'application'
   id 'groovy'
@@ -46,9 +39,8 @@ plugins {
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.1'
 
-  // https://spotbugs.github.io
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.0.8'
+  id 'com.github.spotbugs' version '4.2.0'
 
   // https://github.com/CodeNarc/CodeNarc
   id 'codenarc'
@@ -85,8 +77,9 @@ ext {
   applicationModuleName = 'ru.akman.launcher'
   applicationClassName = 'ru.akman.launcher.Launcher'
   applicationJvmArgs = [
-    // '-Xms256m',
-    // '-Xmx512m',
+    '-Dfile.encoding=UTF-8',
+    '-Xms256m',
+    '-Xmx512m',
   ]
   applicationArgs = [
     // '--no-gui',
@@ -96,7 +89,9 @@ ext {
 }
 
 dependencies {
+  spotbugs 'com.github.spotbugs:spotbugs:4.0.2'
   implementation(
+    // JavaFX
     "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
     "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
     "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
@@ -104,10 +99,13 @@ dependencies {
     "org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
     //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
     //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
-    'org.apache.logging.log4j:log4j-api:2.13.2',
-    'org.apache.logging.log4j:log4j-core:2.13.2',
+    // SLF4J + Logback
+    'org.slf4j:slf4j-api:2.0.0-alpha1',
+    'ch.qos.logback:logback-classic:1.3.0-alpha4',
+    'ch.qos.logback:logback-core:1.3.0-alpha4',
   )
   testImplementation(
+    // JUpiter
     'org.junit.jupiter:junit-jupiter-api:5.7.0-M1',
     'org.junit.jupiter:junit-jupiter-params:5.7.0-M1',
     // JUnit 5
@@ -185,7 +183,7 @@ compileJava {
       '--add-modules', 'javafx.swing',
       //'--add-modules', 'javafx.web',
       //'--add-modules', 'javafx.media',
-      '--add-modules', 'org.apache.logging.log4j',
+      '--add-modules', 'org.slf4j',
     ]
     classpath = files()
   }
@@ -193,7 +191,7 @@ compileJava {
 
 application {
   applicationName = applicationName
-  mainClassName = "${applicationModuleName}/${applicationClassName}"
+  mainClassName = applicationClassName
   applicationDefaultJvmArgs = applicationJvmArgs
 }
 
@@ -352,7 +350,9 @@ startScripts {
 run {
   standardInput = System.in
   doFirst {
-    main = ''
+    // The value for task ':run' property 'mainClass' is final and
+    // cannot be changed any further (since gradle 6.4).
+    // main = ''
     args = []
     jvmArgs = applicationJvmArgs.collect { '"' + it + '"' }
     jvmArgs += [
@@ -712,9 +712,13 @@ task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
 
 check.dependsOn groovyCpdCheck
 
+// SpotBugs reported failures: org.gradle.api.GradleException:
+// Verification failed: SpotBugs violation found: 3
+// at com.github.spotbugs.snom.internal.SpotBugsRunnerForWorker$
+// SpotBugsExecutor.execute(SpotBugsRunnerForWorker.java:97) ...
 spotbugs {
   // The version of the code quality tool to be used.
-  toolVersion = '4.0.2'
+  // toolVersion = '4.0.2'
 
   // The source sets to be analyzed as part of the check and build tasks.
   // sourceSets = [
@@ -889,6 +893,9 @@ jlink {
     // JARs aren’t copied to the runtime image.
     // '--ignore-signing-information',
 
+    // Strips native executables
+    '--strip-native-commands',
+
     // Strips debug information
     '--strip-debug',
 
@@ -912,7 +919,7 @@ jlink {
   // the merged module. This method is useful when it should handle one or
   // more modular jars as non-modular. You can call this method multiple
   // times.
-  forceMerge 'log4j-api'
+  // forceMerge 'log4j-api'
 
   // addExtraDependencies(String... jarPrefixes)
   // Instructs the plugin to treat all jars matching the given prefixes

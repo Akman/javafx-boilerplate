@@ -30,19 +30,20 @@
  * This module provided application launcher.
  */
 module ru.akman.launcher {
+
+  // slf4j + logback
+  requires org.slf4j;
+  requires java.naming;
+  requires ch.qos.logback.classic;
+  // requires ch.qos.logback.core;
+
+  // javafx
   requires javafx.base;
   requires javafx.controls;
-  requires transitive javafx.graphics;
+  requires javafx.graphics;
   requires javafx.fxml;
   requires javafx.swing;
-  requires org.apache.logging.log4j;
-  requires org.apache.logging.log4j.core;
-  requires java.scripting;
-  requires java.desktop;
-  opens ru.akman.launcher;
-  opens ru.akman.cli;
-  opens ru.akman.gui;
-  exports ru.akman.launcher;
-  exports ru.akman.cli;
-  exports ru.akman.gui;
+  exports ru.akman.gui to javafx.graphics;
+  opens ru.akman.gui to javafx.fxml;
+
 }

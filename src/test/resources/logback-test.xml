@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Java Boilerplate Project
 
@@ -26,37 +26,21 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 -->
-<Configuration status="info">
-  <Properties>
-    <Property name="LOG_PATH">./log</Property>
-    <Property name="LOG_PATTERN">%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
-  </Properties>
-  <Appenders>
-    <RollingFile name="rollingFile"
-        fileName="${LOG_PATH}/console.log"
-        filePattern="${LOG_PATH}/console.%d{dd-MM-yyyy}-%i.log.gz"
-        ignoreExceptions="false">
-      <PatternLayout pattern="${LOG_PATTERN}" />
-      <Policies>
-        <SizeBasedTriggeringPolicy size="10 MB" />
-        <TimeBasedTriggeringPolicy />
-      </Policies>
-      <DefaultRolloverStrategy max="5" />
-    </RollingFile>
-    <Console name="console" target="SYSTEM_OUT" follow="true">
-      <PatternLayout pattern="${LOG_PATTERN}" />
-    </Console>
-  </Appenders>
-  <Loggers>
-    <Root level="error" additivity="false">
-      <AppenderRef ref="rollingFile" />
-      <AppenderRef ref="console" />
-    </Root>
-    <!--
-    <Logger level="debug" additivity="true"
-        name="ru.akman.launcher.Launcher">
-      <AppenderRef ref="console" />
-    </Logger>
-    -->
-  </Loggers>
-</Configuration>
+<configuration>
+  <property name="LOG_PATTERN"
+      value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+  <root level="debug">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <!--
+  <logger level="info" additivity="false"
+      name="ru.akman.launcher.LauncherTest">
+    <appender-ref ref="CONSOLE" />
+  </logger>
+  -->
+</configuration>
