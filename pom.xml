@@ -26,33 +26,6 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 -->
-
-<!--
-    * [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,)
-
-    * [R] maven-project-info-reports-plugin (report: plugins)
-
-    * [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
-
-    * [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
-
-    * [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
-
-    - [B+R] codenarc-maven-plugin
-    
-
-
-    * [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
-
-    * [B] exec-maven-plugin (JPMS)
-
-    * [B] javafx-maven-plugin (BUG)
-    * javafx:jlink -> Error: automatic module cannot be used with
-    *                        jlink: org.apache.logging.log4j.core
-    
-    * [B] maven-jlink-plugin
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -84,7 +57,6 @@
     <applicationAuthorName>Alexander Kapitman</applicationAuthorName>
     <applicationAuthorEmail>akman.ru@gmail.com</applicationAuthorEmail>
     <applicationAuthorUrl>https://akman.github.io/</applicationAuthorUrl>
-    <applicationAuthorTimezone>Europe/Kaliningrad</applicationAuthorTimezone>
     <applicationLicenseFile>LICENSE</applicationLicenseFile>
     <applicationLicenseName>MIT License</applicationLicenseName>
     <applicationLicenseType>MIT</applicationLicenseType>
@@ -94,6 +66,9 @@
     <applicationInceptionYear>2019</applicationInceptionYear>
     <applicationCurrentYear>2020</applicationCurrentYear>
     <applicationCopyright>Copyright (C) ${applicationInceptionYear} - ${applicationCurrentYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
+
+    <applicationModuleName>ru.akman.launcher</applicationModuleName>
+    <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
 
     <platformName>${os.name}</platformName>
     <platformFamily>${os.family}</platformFamily>
@@ -105,16 +80,28 @@
     <jvmRuntime>${java.runtime.version}</jvmRuntime>
 
     <mavenVersion>${maven.version}</mavenVersion>
-
     <javaVersion>13</javaVersion>
-    <javaFxVersion>13</javaFxVersion>
 
     <defaultEncoding>UTF-8</defaultEncoding>
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
-    <applicationModuleName>ru.akman.launcher</applicationModuleName>
-    <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
+    <checkstyle.tool.version>8.32</checkstyle.tool.version>
+    <spotbugs.tool.version>4.0.2</spotbugs.tool.version>
+    <codenarc.tool.version>1.5</codenarc.tool.version>
+    
+    <jlink.asm.version>8.0.1</jlink.asm.version>
+    
+    <junit.version>5.6.2</junit.version>
+    <spock.version>2.0-M2-groovy-3.0</spock.version>
+    <mockito.version>3.3.3</mockito.version>
+    <hamcrest.version>2.2</hamcrest.version>
+    <assertj.version>3.16.1</assertj.version>
+    
+    <javafx.version>13.0.2</javafx.version>
+    <slf4j.version>2.0.0-alpha1</slf4j.version>
+    <logback.version>1.3.0-alpha4</logback.version>
+
   </properties>
 
   <name>${applicationFullName}</name>
@@ -139,7 +126,6 @@
       <name>${applicationAuthorName}</name>
       <url>${applicationAuthorUrl}</url>
       <email>${applicationAuthorEmail}</email>
-      <timezone>${applicationAuthorTimezone}</timezone>
       <organization>${applicationVendor}</organization>
       <organizationUrl>${applicationVendorUrl}</organizationUrl>
       <roles>
@@ -149,105 +135,96 @@
   </developers>
 
   <dependencies>
-    <!-- implementation -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <!--
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
-      <version>${javaFxVersion}</version>
+      <version>${javafx.version}</version>
     </dependency>
     -->
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.13.2</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.13.2</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
     </dependency>
-    <!-- testImplementation -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+
+    <!-- JUnit -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.7.0-M1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.7.0-M1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.7.0-M1</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- JUnit 4 for Spock only -->
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>5.7.0-M1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- Spock -->
     <dependency>
       <groupId>org.spockframework</groupId>
       <artifactId>spock-core</artifactId>
-      <version>2.0-M2-groovy-3.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spockframework</groupId>
-      <artifactId>spock-junit4</artifactId>
-      <version>2.0-M2-groovy-3.0</version>
+      <version>${spock.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- Mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.3.3</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>3.3.3</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- Hamcrest -->
@@ -255,7 +232,7 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
-      <version>2.2</version>
+      <version>${hamcrest.version}</version>
       <scope>test</scope>
     </dependency>
     -->
@@ -264,50 +241,173 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.16.0</version>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
     -->
   </dependencies>
 
   <!--
-    * [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
-    [B] maven-antrun-plugin
-    [B] maven-assembly-plugin
-    [B] maven-jar-plugin
-    [B] maven-shade-plugin
-    * [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
-    [B] maven-clean-plugin
-    [B] maven-compiler-plugin
-    [B+R] maven-dependency-plugin
-    [B] maven-deploy-plugin
-    [B] maven-enforcer-plugin
-    [B] maven-failsafe-plugin
-    [B] maven-install-plugin
-    * [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,)
-    * [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
-    [B] maven-release-plugin
-    [B] maven-resources-plugin
-    [B] maven-site-plugin
-    [B] maven-source-plugin
-    [B] maven-surefire-plugin
-    * [B] exec-maven-plugin (JPMS)
-    [B] native2ascii-maven-plugin
-    [B+R] versions-maven-plugin
-    * [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
-    [B+R] jacoco-maven-plugin
-    [B] license-maven-plugin
-    * [B] javafx-maven-plugin (BUG)
-    - [B+R] codenarc-maven-plugin
-    [B] gmaven-plus
+    [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
+    [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,report: all)
+    [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
+    [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
+    [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
+    
+    [B+R] codenarc-maven-plugin (report: FAIL)
+
+    ERROR: Invalid argument format: [Boilerplate]. Expression: matcher. Values: matcher = java.util.regex.Matcher[pattern=\-(.*)\=(.*) region=0,11 lastmatch=]
+     [java] java.lang.AssertionError: Invalid argument format: [Boilerplate]. Expression: matcher. Values: matcher = java.util.regex.Matcher[pattern=\-(.*)\=(.*) region=0,11 lastmatch=]
+     [java]     at org.codehaus.groovy.runtime.InvokerHelper.assertFailed(InvokerHelper.java:388)
+
+    [WARNING] Could not transfer metadata org.codehaus.groovy:groovy-eclipse-batch/maven-metadata.xml from/to codehaus.org (http://repository.codehaus.org): Error transferring file: repository.codehaus.org from http://repository.codehaus.org/org/codehaus/groovy/groovy-eclipse-batch/maven-metadata.xml
+    [WARNING] Could not transfer metadata org.codehaus.groovy:groovy-eclipse-batch/maven-metadata.xml from/to codehaus-snapshots (http://nexus.codehaus.org/snapshots/): Error transferring file: nexus.codehaus.org from http://nexus.codehaus.org/snapshots/org/codehaus/groovy/groovy-eclipse-batch/maven-metadata.xml
   -->
+  
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.0.0-M4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.13.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.9.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.2.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>3.0.0-M4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jlink-plugin</artifactId>
+          <version>3.0.0-alpha-1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>native2ascii-maven-plugin</artifactId>
+          <version>2.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.gmavenplus</groupId>
+          <artifactId>gmavenplus-plugin</artifactId>
+          <version>1.9.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.5</version>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>codenarc-maven-plugin</artifactId>
+          <version>0.22-1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <!-- https://www.mojohaus.org/build-helper-maven-plugin/plugin-info.html -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.1.0</version>
         <executions>
           <execution>
             <phase>validate</phase>
@@ -327,29 +427,9 @@
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.0.0</version>
-        <!--
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <configuration>
-              <target
-                name="The name of the target"
-                if="The name of the property that must be set in order for this task"
-                unless="The name of the property that must NOT be set in order for this task"
-                description="A short description of this target's function">
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-        -->
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -359,10 +439,10 @@
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addDefaultEntries>false</addDefaultEntries>
-              <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
+              <mainClass><!--${applicationModuleName}/-->${applicationClassName}</mainClass>
             </manifest>
             <manifestEntries>
-              <Implementation-Title>${applicationName}</Implementation-Title>
+              <Implementation-Title>${applicationModuleName}/${applicationName}</Implementation-Title>
             </manifestEntries>
           </archive>
         </configuration>
@@ -377,7 +457,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
         <configuration>
           <!-- http://maven.apache.org/shared/maven-archiver/index.html -->
           <archive>
@@ -387,44 +466,22 @@
               <mainClass><!--${applicationModuleName}/-->${applicationClassName}</mainClass>
             </manifest>
             <manifestEntries>
-              <Implementation-Title>${applicationName}</Implementation-Title>
+              <Implementation-Title>${applicationModuleName}/${applicationName}</Implementation-Title>
             </manifestEntries>
           </archive>
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.3</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>      
-      <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.1</version>
         <dependencies>
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>8.32</version>
+            <version>${checkstyle.tool.version}</version>
           </dependency>
         </dependencies>
         <configuration>
-          <!--configLocation>config/checkstyle/google_checks.xml</configLocation-->
-          <configLocation>google_checks.xml</configLocation>
+          <configLocation>config/checkstyle/google_checks.xml</configLocation>
           <headerLocation>LICENSE</headerLocation>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <consoleOutput>true</consoleOutput>
@@ -444,7 +501,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>3.1.0</version>
         <configuration>
           <filesets>
             <fileset>
@@ -456,7 +512,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
         <configuration>
           <encoding>${defaultEncoding}</encoding>
           <source>${javaVersion}</source>
@@ -484,7 +539,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
@@ -500,11 +554,9 @@
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.0.0-M1</version>
       </plugin>
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
         <executions>
           <execution>
             <goals>
@@ -522,15 +574,12 @@
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M4</version>
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
-        <version>3.0.0-M1</version>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
         <configuration>
           <sourceFileExcludes>
             <sourceFileExclude>**/module-info.java</sourceFileExclude>
@@ -538,35 +587,8 @@
           <additionalOptions>-html5</additionalOptions>
         </configuration>
       </plugin>
-      <!-- http://maven.apache.org/plugins/maven-jlink-plugin/jlink-mojo.html -->
-      <plugin>
-        <artifactId>maven-jlink-plugin</artifactId>
-        <version>3.0.0-alpha-1</version>
-        <extensions>true</extensions>
-        <dependencies>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>8.0.1</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <noHeaderFiles>true</noHeaderFiles>
-          <noManPages>true</noManPages>
-          <stripDebug>true</stripDebug>
-          <compress>2</compress>
-          <!--
-          <addModules>
-            <addModule>org.apache.logging.log4j</addModule>
-            <addModule>log4j-api-2.13.2</addModule>
-            <addModule>log4j-core-2.13.2</addModule>
-          </addModules>
-          -->
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.13.0</version>
         <configuration>
           <linkXref>true</linkXref>
           <analysisCache>true</analysisCache>
@@ -594,11 +616,9 @@
       <!-- https://habr.com/ru/post/130936/ -->
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
-        <version>3.0.0-M1</version>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
         <configuration>
           <encoding>${defaultEncoding}</encoding>
         </configuration>
@@ -659,14 +679,12 @@
       </plugin>
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.9.0</version>
         <configuration>
           <locales>en,fr</locales>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -677,24 +695,50 @@
           </execution>
         </executions>
       </plugin>
+
+
+      <!-- https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M4</version>
         <configuration>
-          <argLine>-Dfile.encoding=${defaultEncoding} @{argLine}</argLine>
-          <consoleOutputReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
+          <argLine>
+            -Dfile.encoding=${defaultEncoding}
+            --add-opens ${applicationModuleName}/ru.akman.gui=ALL-UNNAMED
+            --add-opens ${applicationModuleName}/ru.akman.launcher=ALL-UNNAMED
+            @{argLine}
+          </argLine>
+          <!--
+          <consoleOutputReporter
+              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
             <encoding>${defaultEncoding}</encoding>
-            <disable>false</disable>
-            <usePhrasedFileName>true</usePhrasedFileName>
+            <usePhrasedFileName>false</usePhrasedFileName>
           </consoleOutputReporter>
+          <statelessTestsetInfoReporter
+              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
+            <usePhrasedFileName>false</usePhrasedFileName>
+            <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+            <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+          </statelessTestsetInfoReporter>          
+          <statelessTestsetReporter
+              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+            <version>3.0</version>
+            <usePhrasedFileName>false</usePhrasedFileName>
+            <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+            <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+            <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+          </statelessTestsetReporter>
+          -->
         </configuration>
       </plugin>
+
+      <!-- https://www.mojohaus.org/exec-maven-plugin/java-mojo.html -->
+      <!-- https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
         <configuration>
           <mainClass>${applicationClassName}</mainClass>
+          <commandlineArgs>--debug</commandlineArgs>
         </configuration>
         <executions>
           <execution>
@@ -705,10 +749,31 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- http://maven.apache.org/plugins/maven-jlink-plugin/jlink-mojo.html -->
+      <plugin>
+        <artifactId>maven-jlink-plugin</artifactId>
+        <extensions>true</extensions>
+        <dependencies>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${jlink.asm.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <noHeaderFiles>true</noHeaderFiles>
+          <noManPages>true</noManPages>
+          <stripDebug>true</stripDebug>
+          <compress>2</compress>
+        </configuration>
+      </plugin>
+
+
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
-        <version>2.0.1</version>
         <executions>
           <execution>
             <id>default-resources</id>
@@ -743,24 +808,21 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>2.7</version>
       </plugin>
       <!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.0.0</version>
         <dependencies>
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.0.2</version>
+            <version>${spotbugs.tool.version}</version>
           </dependency>
         </dependencies>
         <configuration>
           <failOnError>false</failOnError>
           <effort>max</effort>
-          <reportLevel>low</reportLevel>
           <threshold>low</threshold>
           <nested>false</nested>
           <excludeFilterFile>config/spotbugs/excludeFilter.xml</excludeFilterFile>
@@ -780,7 +842,6 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.5</version>
         <executions>
           <execution>
             <id>default-jacoco-prepare-agent</id>
@@ -801,14 +862,13 @@
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>3.0</version>
         <configuration>
           <encoding>${defaultEncoding}</encoding>
           <header>config/license/LICENSE</header>
           <strictCheck>true</strictCheck>
           <skipExistingHeaders>false</skipExistingHeaders>
           <failIfMissing>false</failIfMissing>
-          <failIfUnknown>true</failIfUnknown>
+          <failIfUnknown>false</failIfUnknown>
           <properties>
             <name>${applicationFullName}</name>
             <url>${applicationUrl}</url>
@@ -842,57 +902,11 @@
           </execution>
         </executions>
       </plugin>
-      <!-- https://github.com/openjfx/javafx-maven-plugin -->
-      <plugin>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.4</version>
-        <configuration>
-          <source>${javaVersion}</source>
-          <target>${javaVersion}</target>
-          <release>${javaVersion}</release>
-          <mainClass>${applicationModuleName}/${applicationClassName}</mainClass>
-          <!-- Strips debug information out -->
-          <stripDebug>true</stripDebug>
-          <!-- Strip Java debug attributes out (since Java 13) -->
-          <stripJavaDebugAttributes>true</stripJavaDebugAttributes>
-          <!-- Compression level of the resources being used -->
-          <compress>2</compress>
-          <!-- Removes the includes directory in the resulting runtime image -->
-          <noHeaderFiles>true</noHeaderFiles>
-          <!-- Removes the man directory in the resulting runtime image -->
-          <noManPages>true</noManPages>
-          <!-- Adds a launcher script with the given name -->
-          <!--
-            If "options" are defined, these will be passed
-            to the launcher script as vm options.
-            If "commandLineArgs" are defined, these will be passed
-            to the launcher script as command line arguments.
-          -->
-          <launcher>launcher</launcher>
-          <!-- Adds the option to bind services -->
-          <bindServices>false</bindServices>
-          <!-- Adds the option to ignore signing information -->
-          <ignoreSigningInformation>false</ignoreSigningInformation>
-          <!-- Adds the verbose option -->
-          <jlinkVerbose>false</jlinkVerbose>
-          <!-- The name of the folder with the resulting runtime image -->
-          <!--jlinkImageName></jlinkImageName-->
-          <!-- When set, creates a zip of the resulting runtime image -->
-          <!--jlinkZipName></jlinkZipName-->
-          <!-- The jlink executable. It can be a full path or the name -->
-          <!--jlinkExecutable></jlinkExecutable-->
-          <!-- Path to the local JavaFX jmods -->
-          <!--jmodsPath></jmodsPath-->
-        </configuration>
-      </plugin>
-      <!--
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>codenarc-maven-plugin</artifactId>
-        <version>0.22-1</version>
         <configuration>
-          <codeNarcVersion>1.5</codeNarcVersion>
+          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
           <failOnError>false</failOnError>
           <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
           <maxPriority1Violations>0</maxPriority1Violations>
@@ -900,16 +914,13 @@
           <maxPriority3Violations>0</maxPriority3Violations>
         </configuration>
       </plugin>
-      -->
       <!-- https://github.com/groovy/GMavenPlus/wiki -->
       <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.9.0</version>
         <executions>
           <execution>
             <goals>
-              <goal>compile</goal>
               <goal>compileTests</goal>
             </goals>
           </execution>
@@ -918,24 +929,10 @@
     </plugins>
   </build>
 
-  <!--
-    [B+R] maven-checkstyle-plugin
-    [B+R] maven-dependency-plugin
-    - [B+R] maven-javadoc-plugin
-    [R] maven-jxr-plugin
-    [B+R] maven-pmd-plugin
-    * [R] maven-project-info-reports-plugin (report: plugins)
-    [B+R] versions-maven-plugin
-    [B+R] spotbugs-maven-plugin
-    [R] maven-surefire-report-plugin
-    [B+R] jacoco-maven-plugin
-    - [B+R] codenarc-maven-plugin
-  -->
   <reporting>
     <plugins>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.1</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -946,7 +943,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -958,16 +954,13 @@
       <!--
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
       </plugin>
       -->
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>3.0.0</version>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.13.0</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -979,27 +972,10 @@
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.0.0</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>dependencies</report>
-              <report>dependency-info</report>
-              <report>index</report>
-              <report>licenses</report>
-              <report>plugin-management</report>
-              <!--report>plugins</report-->
-              <report>scm</report>
-              <report>summary</report>
-              <report>team</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>2.7</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -1013,17 +989,14 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.0.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>3.0.0-M4</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.5</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -1036,7 +1009,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>codenarc-maven-plugin</artifactId>
-        <version>0.22-1</version>
       </plugin>
       -->
     </plugins>

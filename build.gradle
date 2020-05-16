@@ -86,10 +86,24 @@ ext {
     // '--debug'
   ]
   logDir = file("${projectDir}/log")
+  addModules = [
+    // // JavaFX
+    // 'javafx.base',
+    // 'javafx.graphics',
+    // 'javafx.controls',
+    // 'javafx.fxml',
+    // 'javafx.swing',
+    // // 'javafx.web',
+    // // 'javafx.media',
+    // // SLF4J + Logback
+    // 'org.slf4j',
+    // 'ch.qos.logback.classic',
+    // 'java.naming',
+    // 'java.management',
+  ]
 }
 
 dependencies {
-  spotbugs 'com.github.spotbugs:spotbugs:4.0.2'
   implementation(
     // JavaFX
     "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
@@ -121,7 +135,7 @@ dependencies {
     // Hamcrest
     // 'org.hamcrest:hamcrest:2.2',
     // AssertJ
-    // 'org.assertj:assertj-core:3.14.0',
+    // 'org.assertj:assertj-core:3.16.1',
   )
 }
 
@@ -174,18 +188,15 @@ clean {
 
 compileJava {
   doFirst {
-    options.compilerArgs = [
+    options.compilerArgs += [
       '--module-path', classpath.asPath,
-      '--add-modules', 'javafx.base',
-      '--add-modules', 'javafx.graphics',
-      '--add-modules', 'javafx.controls',
-      '--add-modules', 'javafx.fxml',
-      '--add-modules', 'javafx.swing',
-      //'--add-modules', 'javafx.web',
-      //'--add-modules', 'javafx.media',
-      '--add-modules', 'org.slf4j',
     ]
     classpath = files()
+    addModules.each {
+      options.compilerArgs += [
+        '--add-modules', it
+      ]
+    }
   }
 }
 
@@ -291,9 +302,8 @@ artifacts {
 jar {
   manifest {
     attributes(
-      //'Automatic-Module-Name': "${applicationModuleName}",
       'Implementation-Title': "${applicationName}",
-      'Main-Class': "${applicationModuleName}/${applicationClassName}"
+      'Main-Class': "${applicationClassName}"
     )
   }
 }
@@ -302,7 +312,6 @@ task fatJar(type: Jar) {
   archiveAppendix = 'full'
   manifest {
     attributes(
-      //'Automatic-Module-Name': "${applicationModuleName}",
       'Implementation-Title': "${applicationName}",
       'Main-Class': "${applicationModuleName}/${applicationClassName}"
     )

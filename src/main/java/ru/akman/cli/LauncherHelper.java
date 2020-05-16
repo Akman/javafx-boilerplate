@@ -45,7 +45,8 @@ public final class LauncherHelper {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(LauncherHelper.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(LauncherHelper.class);
 
   private LauncherHelper() {
     // not called

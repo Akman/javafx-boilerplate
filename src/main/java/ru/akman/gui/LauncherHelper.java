@@ -83,7 +83,8 @@ public final class LauncherHelper extends Application {
   /**
    * Default logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(LauncherHelper.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(LauncherHelper.class);
 
   /**
    * Default scene.

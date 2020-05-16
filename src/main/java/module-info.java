@@ -34,6 +34,7 @@ module ru.akman.launcher {
   // slf4j + logback
   requires org.slf4j;
   requires java.naming;
+  // requires java.management;
   requires ch.qos.logback.classic;
   // requires ch.qos.logback.core;
 
@@ -43,7 +44,9 @@ module ru.akman.launcher {
   requires javafx.graphics;
   requires javafx.fxml;
   requires javafx.swing;
+
   exports ru.akman.gui to javafx.graphics;
+
   opens ru.akman.gui to javafx.fxml;
 
 }
