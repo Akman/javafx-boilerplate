@@ -695,7 +695,52 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <!-- https://www.mojohaus.org/exec-maven-plugin/java-mojo.html -->
+          <execution>
+            <id>cli</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>${applicationClassName}</mainClass>
+              <commandlineArgs>--debug --no-gui</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>gui</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>${applicationClassName}</mainClass>
+              <commandlineArgs>--debug</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html -->
+          <execution>
+            <id>default-cli</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-Dfile.encoding=${defaultEncoding}</argument>
+                <argument>--module-path</argument>
+                <modulepath/>
+                <argument>--module</argument>
+                <argument>${applicationModuleName}/${applicationClassName}</argument>
+                <argument>--debug</argument>
+                <argument>--no-gui</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
       <!-- https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html -->
       <plugin>
@@ -731,25 +776,6 @@
         </configuration>
       </plugin>
 
-      <!-- https://www.mojohaus.org/exec-maven-plugin/java-mojo.html -->
-      <!-- https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>${applicationClassName}</mainClass>
-          <commandlineArgs>--debug</commandlineArgs>
-        </configuration>
-        <executions>
-          <execution>
-            <id>no-gui</id>
-            <configuration>
-              <commandlineArgs>--debug --no-gui</commandlineArgs>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- http://maven.apache.org/plugins/maven-jlink-plugin/jlink-mojo.html -->
       <plugin>
         <artifactId>maven-jlink-plugin</artifactId>
@@ -768,8 +794,6 @@
           <compress>2</compress>
         </configuration>
       </plugin>
-
-
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
