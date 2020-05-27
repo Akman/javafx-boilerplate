@@ -41,9 +41,14 @@
 
   <scm>
     <connection>scm:git:git://github.com/akman/java-boilerplate-gradle</connection>
-    <developerConnection>scm:git:git://github.com/akman/java-boilerplate-gradle</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com:akman/java-boilerplate-gradle</developerConnection>
     <url>https://github.com/akman/java-boilerplate-gradle</url>
   </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/akman/java-boilerplate-gradle/issues</url>
+  </issueManagement>
 
   <properties>
     <applicationVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</applicationVersion>
@@ -75,12 +80,14 @@
     <platformVersion>${os.version}</platformVersion>
     <platformArch>${os.arch}</platformArch>
     <platformCpus>${cpu.count}</platformCpus>
+
     <jvmVendor>${java.vendor}</jvmVendor>
     <jvmVersion>${java.version}</jvmVersion>
     <jvmRuntime>${java.runtime.version}</jvmRuntime>
 
     <mavenVersion>${maven.version}</mavenVersion>
     <javaVersion>13</javaVersion>
+    <jdkToolchain>jdk13</jdkToolchain>
 
     <defaultEncoding>UTF-8</defaultEncoding>
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
@@ -89,8 +96,6 @@
     <checkstyle.tool.version>8.32</checkstyle.tool.version>
     <spotbugs.tool.version>4.0.2</spotbugs.tool.version>
     <codenarc.tool.version>1.5</codenarc.tool.version>
-    
-    <jlink.asm.version>8.0.1</jlink.asm.version>
     
     <junit.version>5.6.2</junit.version>
     <spock.version>2.0-M2-groovy-3.0</spock.version>
@@ -101,6 +106,8 @@
     <javafx.version>13.0.2</javafx.version>
     <slf4j.version>2.0.0-alpha1</slf4j.version>
     <logback.version>1.3.0-alpha4</logback.version>
+
+    <libsDir>${project.build.directory}/libs</libsDir>
 
   </properties>
 
@@ -268,6 +275,10 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <artifactId>maven-toolchains-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
@@ -352,10 +363,6 @@
           <version>3.0.0-M4</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jlink-plugin</artifactId>
-          <version>3.0.0-alpha-1</version>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>3.1.0</version>
@@ -400,10 +407,36 @@
           <artifactId>codenarc-maven-plugin</artifactId>
           <version>0.22-1</version>
         </plugin>
+        <plugin>
+          <groupId>ru.akman.maven.plugins</groupId>
+          <artifactId>jlink-maven-plugin</artifactId>
+          <version>0.1.0-SNAPSHOT</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <id>${jdkToolchain}</id>
+              <!--
+              <version>13.0.2</version>
+              <vendor>openjdk</vendor>
+              -->
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>      
       <!-- https://www.mojohaus.org/build-helper-maven-plugin/plugin-info.html -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -458,6 +491,7 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
+          <outputDirectory>${libsDir}</outputDirectory>
           <!-- http://maven.apache.org/shared/maven-archiver/index.html -->
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
@@ -546,7 +580,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/libs</outputDirectory>
+              <outputDirectory>${libsDir}</outputDirectory>
               <includeScope>runtime</includeScope>
             </configuration>
           </execution>
@@ -741,7 +775,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!-- https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -773,25 +806,6 @@
             <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
           </statelessTestsetReporter>
           -->
-        </configuration>
-      </plugin>
-
-      <!-- http://maven.apache.org/plugins/maven-jlink-plugin/jlink-mojo.html -->
-      <plugin>
-        <artifactId>maven-jlink-plugin</artifactId>
-        <extensions>true</extensions>
-        <dependencies>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>${jlink.asm.version}</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <noHeaderFiles>true</noHeaderFiles>
-          <noManPages>true</noManPages>
-          <stripDebug>true</stripDebug>
-          <compress>2</compress>
         </configuration>
       </plugin>
 
