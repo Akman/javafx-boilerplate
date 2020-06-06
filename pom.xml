@@ -33,7 +33,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ru.akman</groupId>
+  <groupId>com.github.akman</groupId>
   <artifactId>java-boilerplate</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
@@ -74,6 +74,10 @@
 
     <applicationModuleName>ru.akman.launcher</applicationModuleName>
     <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
+    <applicationJvmArgs>-Dfile.encoding=${defaultEncoding} -Xms256m -Xmx512m</applicationJvmArgs>
+    <applicationArgs>--debug</applicationArgs>
+    <applicationTemplateWin>${project.basedir}/package/win-script.template</applicationTemplateWin>
+    <applicationTemplateNix>${project.basedir}/package/nix-script.template</applicationTemplateNix>
 
     <platformName>${os.name}</platformName>
     <platformFamily>${os.family}</platformFamily>
@@ -86,15 +90,31 @@
     <jvmRuntime>${java.runtime.version}</jvmRuntime>
 
     <mavenVersion>${maven.version}</mavenVersion>
+
+    <jdkVersion>[13,)</jdkVersion>
     <javaVersion>13</javaVersion>
-    <jdkToolchain>jdk13</jdkToolchain>
 
     <defaultEncoding>UTF-8</defaultEncoding>
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
-    <checkstyle.tool.version>8.32</checkstyle.tool.version>
-    <spotbugs.tool.version>4.0.2</spotbugs.tool.version>
+    <checkstyle.tool.version>8.33</checkstyle.tool.version>
+    <checkstyle.config.location>config/checkstyle/google_checks.xml</checkstyle.config.location>
+    <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
+    <checkstyle.failOnViolation>false</checkstyle.failOnViolation>
+    <checkstyle.maxAllowedViolations>0</checkstyle.maxAllowedViolations>
+    <checkstyle.console>true</checkstyle.console>
+
+    <pmd.tool.version>6.24.0</pmd.tool.version>
+
+    <spotbugs.tool.version>4.0.3</spotbugs.tool.version>
+    <spotbugs.threshold>low</spotbugs.threshold>
+    <spotbugs.effort>max</spotbugs.effort>
+    <spotbugs.nested>false</spotbugs.nested>
+    <spotbugs.failOnError>false</spotbugs.failOnError>
+    <spotbugs.xmlOutput>true</spotbugs.xmlOutput>
+    <spotbugs.excludeFilterFile>config/spotbugs/excludeFilter.xml</spotbugs.excludeFilterFile>
+
     <codenarc.tool.version>1.5</codenarc.tool.version>
     
     <junit.version>5.6.2</junit.version>
@@ -107,7 +127,9 @@
     <slf4j.version>2.0.0-alpha1</slf4j.version>
     <logback.version>1.3.0-alpha4</logback.version>
 
-    <libsDir>${project.build.directory}/libs</libsDir>
+    <jlinkImageDir>${project.build.directory}/jlink/image</jlinkImageDir>
+    <jlinkModsDir>${project.build.directory}/jlink/mods</jlinkModsDir>
+    <jlinkLibsDir>${project.build.directory}/jlink/libs</jlinkLibsDir>
 
   </properties>
 
@@ -254,23 +276,6 @@
     -->
   </dependencies>
 
-  <!--
-    [B] build-helper-maven-plugin (timestamp-property: applicationCurrentYear)
-    [B+R] maven-javadoc-plugin (javadoc:test-javadoc,[test-]aggregate,report: all)
-    [B+R] maven-checkstyle-plugin (configLocation: google_checks.xml, rule: TodoComment)
-    [B+R] maven-pmd-plugin (rulesets: config/pmd/ruleset.xml)
-    [B+R] spotbugs-maven-plugin (effort: max, threshold: low, nested: false)
-    
-    [B+R] codenarc-maven-plugin (report: FAIL)
-
-    ERROR: Invalid argument format: [Boilerplate]. Expression: matcher. Values: matcher = java.util.regex.Matcher[pattern=\-(.*)\=(.*) region=0,11 lastmatch=]
-     [java] java.lang.AssertionError: Invalid argument format: [Boilerplate]. Expression: matcher. Values: matcher = java.util.regex.Matcher[pattern=\-(.*)\=(.*) region=0,11 lastmatch=]
-     [java]     at org.codehaus.groovy.runtime.InvokerHelper.assertFailed(InvokerHelper.java:388)
-
-    [WARNING] Could not transfer metadata org.codehaus.groovy:groovy-eclipse-batch/maven-metadata.xml from/to codehaus.org (http://repository.codehaus.org): Error transferring file: repository.codehaus.org from http://repository.codehaus.org/org/codehaus/groovy/groovy-eclipse-batch/maven-metadata.xml
-    [WARNING] Could not transfer metadata org.codehaus.groovy:groovy-eclipse-batch/maven-metadata.xml from/to codehaus-snapshots (http://nexus.codehaus.org/snapshots/): Error transferring file: nexus.codehaus.org from http://nexus.codehaus.org/snapshots/org/codehaus/groovy/groovy-eclipse-batch/maven-metadata.xml
-  -->
-  
   <build>
     <pluginManagement>
       <plugins>
@@ -301,6 +306,13 @@
         <plugin>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>3.1.1</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.tool.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -333,6 +345,28 @@
         <plugin>
           <artifactId>maven-pmd-plugin</artifactId>
           <version>3.13.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-core</artifactId>
+              <version>${pmd.tool.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-java</artifactId>
+              <version>${pmd.tool.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-javascript</artifactId>
+              <version>${pmd.tool.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-jsp</artifactId>
+              <version>${pmd.tool.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
@@ -391,6 +425,13 @@
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <version>4.0.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>${spotbugs.tool.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -408,7 +449,7 @@
           <version>0.22-1</version>
         </plugin>
         <plugin>
-          <groupId>ru.akman.maven.plugins</groupId>
+          <groupId>com.github.akman</groupId>
           <artifactId>jlink-maven-plugin</artifactId>
           <version>0.1.0-SNAPSHOT</version>
         </plugin>
@@ -428,11 +469,7 @@
         <configuration>
           <toolchains>
             <jdk>
-              <id>${jdkToolchain}</id>
-              <!--
-              <version>13.0.2</version>
-              <vendor>openjdk</vendor>
-              -->
+              <version>${jdkVersion}</version>
             </jdk>
           </toolchains>
         </configuration>
@@ -459,70 +496,27 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <!-- https://maven.apache.org/shared/maven-archiver/index.html -->
-          <archive>
-            <addMavenDescriptor>false</addMavenDescriptor>
-            <manifest>
-              <addDefaultEntries>false</addDefaultEntries>
-              <mainClass><!--${applicationModuleName}/-->${applicationClassName}</mainClass>
-            </manifest>
-            <manifestEntries>
-              <Implementation-Title>${applicationModuleName}/${applicationName}</Implementation-Title>
-            </manifestEntries>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <outputDirectory>${libsDir}</outputDirectory>
+          <outputDirectory>${jlinkModsDir}</outputDirectory>
           <!-- http://maven.apache.org/shared/maven-archiver/index.html -->
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addDefaultEntries>false</addDefaultEntries>
-              <mainClass><!--${applicationModuleName}/-->${applicationClassName}</mainClass>
+              <mainClass>${applicationClassName}</mainClass>
             </manifest>
             <manifestEntries>
-              <Implementation-Title>${applicationModuleName}/${applicationName}</Implementation-Title>
+              <Implementation-Title>${applicationName}</Implementation-Title>
             </manifestEntries>
           </archive>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>${checkstyle.tool.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
-          <configLocation>config/checkstyle/google_checks.xml</configLocation>
-          <headerLocation>LICENSE</headerLocation>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <consoleOutput>true</consoleOutput>
           <failsOnError>false</failsOnError>
-          <failOnViolation>false</failOnViolation>
-          <maxAllowedViolations>0</maxAllowedViolations>
-          <logViolationsToConsole>true</logViolationsToConsole>
         </configuration>
         <executions>
           <execution>
@@ -532,6 +526,38 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <linkXref>true</linkXref>
+          <analysisCache>true</analysisCache>
+          <failOnViolation>false</failOnViolation>
+          <printFailingErrors>true</printFailingErrors>
+          <minimumTokens>50</minimumTokens>
+          <maxAllowedViolations>0</maxAllowedViolations>
+          <ignoreAnnotations>false</ignoreAnnotations>
+          <ignoreIdentifiers>false</ignoreIdentifiers>
+          <ignoreLiterals>false</ignoreLiterals>
+          <includeTests>true</includeTests>
+          <rulesets>config/pmd/ruleset.xml</rulesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>codenarc-maven-plugin</artifactId>
+        <configuration>
+          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
+          <failOnError>false</failOnError>
+          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
+          <maxPriority1Violations>0</maxPriority1Violations>
+          <maxPriority2Violations>0</maxPriority2Violations>
+          <maxPriority3Violations>0</maxPriority3Violations>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
@@ -572,24 +598,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${libsDir}</outputDirectory>
-              <includeScope>runtime</includeScope>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-      </plugin>
-      <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
@@ -607,12 +615,6 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-install-plugin</artifactId>
-      </plugin>
-      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <sourceFileExcludes>
@@ -621,35 +623,12 @@
           <additionalOptions>-html5</additionalOptions>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <linkXref>true</linkXref>
-          <analysisCache>true</analysisCache>
-          <failOnViolation>false</failOnViolation>
-          <printFailingErrors>true</printFailingErrors>
-          <minimumTokens>50</minimumTokens>
-          <maxAllowedViolations>0</maxAllowedViolations>
-          <ignoreAnnotations>false</ignoreAnnotations>
-          <ignoreIdentifiers>false</ignoreIdentifiers>
-          <ignoreLiterals>false</ignoreLiterals>
-          <includeTests>true</includeTests>
-          <rulesets>config/pmd/ruleset.xml</rulesets>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default-pmd</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>check</goal>
-              <goal>cpd-check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <!-- https://habr.com/ru/post/130936/ -->
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -808,7 +787,6 @@
           -->
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
@@ -846,34 +824,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-      </plugin>
-      <!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs</artifactId>
-            <version>${spotbugs.tool.version}</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <failOnError>false</failOnError>
-          <effort>max</effort>
-          <threshold>low</threshold>
-          <nested>false</nested>
-          <excludeFilterFile>config/spotbugs/excludeFilter.xml</excludeFilterFile>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default-spotbugs</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <!-- https://www.eclemma.org/jacoco/trunk/doc/maven.html -->
       <!-- mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail -->
@@ -940,18 +890,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-        <configuration>
-          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
-          <failOnError>false</failOnError>
-          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
-          <maxPriority1Violations>0</maxPriority1Violations>
-          <maxPriority2Violations>0</maxPriority2Violations>
-          <maxPriority3Violations>0</maxPriority3Violations>
-        </configuration>
-      </plugin>
       <!-- https://github.com/groovy/GMavenPlus/wiki -->
       <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
@@ -964,6 +902,315 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.github.akman</groupId>
+        <artifactId>jlink-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jlink</goal>
+            </goals>
+            <configuration>
+              <!--
+                Specifies the JDK (home path) which provides the tool needed.
+              -->
+              <!--toolhome>${env.JAVA_HOME}</toolhome-->
+              <!--
+                Specifies the location in which modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/mods.
+              -->
+              <modsdir>${jlinkModsDir}</modsdir>
+              <!--
+                Specifies the location in which non modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/libs.
+              -->
+              <libsdir>${jlinkLibsDir}</libsdir>
+
+              <!-- jlink basic -->
+            
+              <!--
+                Specifies the module path. The path where the jlink tool discovers
+                observable modules: modular JAR files, JMOD files, exploded modules.
+                If this option is not specified, then the default module path
+                is $JAVA_HOME/jmods. This directory contains the java.base module
+                and the other standard and JDK modules. If this option is specified
+                but the java.base module cannot be resolved from it, then
+                the jlink command appends $JAVA_HOME/jmods to the module path.
+            
+                pathelements - passed to jlink as is
+                filesets - sets of files (without directories)
+                dirsets - sets of directories (without files)
+                dependencysets - sets of dependencies with specified includes and
+                                 excludes patterns (glob: or regex:) for file names
+                                 and regex patterns only for module names
+              -->
+              <modulepath>
+                <pathelements>
+                  <pathelement>${jlinkModsDir}</pathelement>
+                </pathelements>
+                <!--
+                <dirsets>
+                  <dirset>
+                    <directory>${build.dir}</directory>
+                    <includes>
+                      <include>classes</include>
+                    </includes>
+                  </dirset>
+                </dirsets>
+                -->
+                <!--
+                <dependencysets>
+                  <dependencyset>
+                    <includeoutput>true</includeoutput>
+                    <excludeautomatic>true</excludeautomatic>
+                    <excludenames>
+                      <excludename>javafx\..+Empty</excludename>
+                    </excludenames>
+                  </dependencyset>
+                </dependencysets>
+                -->
+              </modulepath>
+              <!--
+                Specifies the modules names (names of root modules) to add to
+                the runtime image. Their transitive dependencies will add too.
+              -->
+              <addmodules>
+                <addmodule>${applicationModuleName}</addmodule>
+              </addmodules>
+              <!--
+                Specifies the location of the generated runtime image.
+                Default value: ${project.build.directory}/runtime.
+              -->
+              <output>${jlinkImageDir}</output>
+              <!--
+                Limits the universe of observable modules to those in
+                the transitive closure of the named modules, mod,
+                plus the main module, if any, plus any further
+                modules specified in the "addmodules" property.
+                It used to limit resolve any services other than
+                the selected services, if the property "bindservices"
+                set to true.
+              -->
+              <!--limitmodules>
+                <limitmodule>org.example.limitmodule</limitmodule>
+              </limitmodules-->
+              <!--
+                Suggest providers that implement the given service types
+                from the module path.
+              -->
+              <!--suggestproviders>
+                <suggestprovider>provider.name</suggestprovider>
+              </suggestproviders-->
+              <!--
+                Save jlink options in the given file.
+              -->
+              <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+              <!--
+                The last plugin allowed to sort resources.
+              -->
+              <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+              <!--
+                Post process an existing image.
+              -->
+              <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Link service provider modules and their dependencies.
+                Default value: false.
+              -->
+              <!--bindservices>false</bindservices-->
+              <!--
+                Specifies the launcher command name for the module or
+                the command name for the module and main class (the module and
+                the main class names are separated by a slash). Arguments passed
+                to jvm, arguments passed to the application. Platform specific
+                templates for launcher script.
+              -->
+              <launcher>
+                <command>${applicationName}</command>
+                <mainmodule>${applicationModuleName}</mainmodule>
+                <mainclass>${applicationClassName}</mainclass>
+                <jvmargs>${applicationJvmArgs}</jvmargs>
+                <args>${applicationArgs}</args>
+                <nixtemplate>${applicationTemplateNix}</nixtemplate>
+                <wintemplate>${applicationTemplateWin}</wintemplate>
+              </launcher>
+              <!--
+                Excludes header files.
+                Default value: false.
+              -->
+              <noheaderfiles>true</noheaderfiles>
+              <!--
+                Excludes man pages.
+                Default value: false.
+              -->
+              <nomanpages>true</nomanpages>
+              <!--
+                Specifies the byte order of the generated
+                image { NATIVE | LITTLE | BIG }.
+                Default value: NATIVE (the format of your system's architecture).
+              -->
+              <!--endian>NATIVE</endian-->
+              <!--
+                Suppresses a fatal error when signed modular JARs are linked
+                in the runtime image. The signature-related files of the signed
+                modular JARs aren't copied to the runtime image.
+                Default value: false.
+              -->
+              <!--ignoresigninginformation>false</ignoresigninginformation-->
+              <!--
+                Disables the specified plug-ins.
+                For a complete list of all available plug-ins,
+                run the command: jlink ‒‒list-plugins
+              -->
+              <!--disableplugins>
+                <disableplugin>compress</disableplugin>
+                <disableplugin>dedup-legal-notices</disableplugin>
+              </disableplugins-->
+            
+              <!-- PLUGINS -->
+              <!--
+                For plug-in options that require a pattern-list, the value is
+                a comma-separated list of elements, with each element using one
+                the following forms:
+            
+                  - glob-pattern
+                  - glob:glob-pattern
+                  - regex:regex-pattern
+                  - @filename
+                  
+                Example: **/module-info.class,glob:/java.base/java/lang/**
+              -->
+            
+              <!--
+                Compresses all resources in the output image. Specify
+                compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
+                An optional pattern-list filter can be specified to list
+                the pattern of files to include.
+              -->
+              <compress>
+                <compression>ZIP</compression>
+                <!--filters>
+                  <filter>**/*-info.class</filter>
+                  <filter>glob:**/module-info.class</filter>
+                  <filter>regex:/java[a-z]+$</filter>
+                  <filter>@filename</filter>
+                </filters-->
+              </compress>
+              <!--
+                Includes the list of locales where langtag is
+                a BCP 47 language tag. This option supports locale matching as
+                defined in RFC 4647.
+                Ensure that you specified: ‒‒add-modules jdk.localedata when
+                using this property.
+              -->
+              <!--includelocales>
+                <includelocale>en</includelocale>
+                <includelocale>ru</includelocale>
+                <includelocale>*-IN</includelocale>
+              </includelocales-->
+              <!--
+                Orders the specified paths in priority order.
+              -->
+              <!--orderresources>
+                <orderresource>**/*-info.class</orderresource>
+                <orderresource>glob:**/module-info.class</orderresource>
+                <orderresource>regex:/java[a-z]+$</orderresource>
+                <orderresource>@filename</orderresource>
+              </orderresources-->
+              <!--
+                Specify resources to exclude.
+              -->
+              <!--excluderesources>
+                <excluderesource>**/*-info.class</excluderesource>
+                <excluderesource>glob:**/META-INF/**</excluderesource>
+                <excluderesource>regex:/java[a-z]+$</excluderesource>
+                <excluderesource>@filename</excluderesource>
+              </excluderesources-->
+              <!--
+                Strips debug information from the output image.
+                Default value: false.
+              -->
+              <stripdebug>true</stripdebug>
+              <!--
+                Strip Java debug attributes from classes in the output image.
+                Default value: false.
+              -->
+              <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+              <!--
+                Exclude native commands (such as java/java.exe) from the image.
+                Default value: false.
+              -->
+              <stripnativecommands>false</stripnativecommands>
+              <!--
+                De-duplicate all legal notices. If true is specified then
+                it will be an error if two files of the same filename
+                are different.
+                Default value: false.
+              -->
+              <!--deduplegalnotices>true</deduplegalnotices-->
+              <!--
+                Specify files to exclude.
+              -->
+              <!--excludefiles>
+                <excludefile>**/*-info.class</excludefile>
+                <excludefile>glob:**/META-INF/**</excludefile>
+                <excludefile>regex:/java[a-z]+$</excludefile>
+                <excludefile>@filename</excludefile>
+              </excludefiles-->
+              <!--
+                Specify a JMOD section to exclude { MAN | HEADERS }.
+              -->
+              <!--excludejmodsection>MAN</excludejmodsection-->
+              <!--
+                Specify a file listing the java.lang.invoke classes to pre-generate.
+                By default, this plugin may use a builtin list of classes
+                to pre-generate. If this plugin runs on a different runtime
+                version than the image being created then code generation
+                will be disabled by default to guarantee correctness add
+                ignore-version=true to override this.
+              -->
+              <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+              <!--
+                Load release properties from the supplied option file.
+                - adds: is to add properties to the release file.
+                - dels: is to delete the list of keys in release file.
+                - Any number of key=value pairs can be passed.
+              -->
+              <!--releaseinfo>
+                <file>file</file>
+                <adds>
+                  <key1>value1</key1>
+                  <key2>value2</key2>
+                </adds>
+                <dels>
+                  <key1 />
+                  <key2 />
+                </dels>
+              </releaseinfo-->
+              <!--
+                Fast loading of module descriptors. Always on.
+                The jlink CLI is: ‒‒system-modules=.
+                Default value: true.
+              -->
+              <!--systemmodules>false</systemmodules-->
+              <!--
+                Select the HotSpot VM in
+                the output image: { CLIENT | SERVER | MINIMAL | ALL }
+                Default value: ALL.
+              -->
+              <!--vm>ALL</vm-->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -971,6 +1218,10 @@
     <plugins>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <failsOnError>false</failsOnError>
+        </configuration>
         <reportSets>
           <reportSet>
             <reports>
@@ -978,6 +1229,34 @@
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <linkXref>true</linkXref>
+          <analysisCache>true</analysisCache>
+          <failOnViolation>false</failOnViolation>
+          <printFailingErrors>true</printFailingErrors>
+          <minimumTokens>50</minimumTokens>
+          <maxAllowedViolations>0</maxAllowedViolations>
+          <ignoreAnnotations>false</ignoreAnnotations>
+          <ignoreIdentifiers>false</ignoreIdentifiers>
+          <ignoreLiterals>false</ignoreLiterals>
+          <includeTests>true</includeTests>
+          <rulesets>config/pmd/ruleset.xml</rulesets>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>pmd</report>
+              <report>cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -989,24 +1268,29 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <!--
-      <plugin>
+      <!--plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>codenarc-maven-plugin</artifactId>
+        <configuration>
+          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
+          <failOnError>false</failOnError>
+          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
+          <maxPriority1Violations>0</maxPriority1Violations>
+          <maxPriority2Violations>0</maxPriority2Violations>
+          <maxPriority3Violations>0</maxPriority3Violations>
+        </configuration>
+      </plugin-->
+      <!--plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      -->
+        <configuration>
+          <sourceFileExcludes>
+            <sourceFileExclude>**/module-info.java</sourceFileExclude>
+          </sourceFileExcludes>
+          <additionalOptions>-html5</additionalOptions>
+        </configuration>
+      </plugin-->
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>pmd</report>
-              <report>cpd</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -1025,10 +1309,6 @@
         </reportSets>
       </plugin>
       <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
       </plugin>
@@ -1043,12 +1323,6 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-      </plugin>
-      -->
     </plugins>
   </reporting>
 
