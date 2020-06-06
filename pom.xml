@@ -913,7 +913,13 @@
             </goals>
             <configuration>
               <!--
-                Specifies the JDK (home path) which provides the tool needed.
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jlink tool executable will be find in
+                the following order:
+                
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
               -->
               <!--toolhome>${env.JAVA_HOME}</toolhome-->
               <!--
