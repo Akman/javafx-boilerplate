@@ -36,22 +36,35 @@
   <groupId>com.github.akman</groupId>
   <artifactId>java-boilerplate</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-
   <packaging>jar</packaging>
 
-  <scm>
-    <connection>scm:git:git://github.com/akman/java-boilerplate-gradle</connection>
-    <developerConnection>scm:git:ssh://git@github.com:akman/java-boilerplate-gradle</developerConnection>
-    <url>https://github.com/akman/java-boilerplate-gradle</url>
-  </scm>
-
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/akman/java-boilerplate-gradle/issues</url>
-  </issueManagement>
+  <name>${applicationFullName}</name>
+  <description>${applicationDescription}</description>
+  <url>${applicationUrl}</url>
+  <inceptionYear>${applicationInceptionYear}</inceptionYear>
 
   <properties>
+
+    <!-- Maven -->
+    <mavenVersion>3.6</mavenVersion>
+
+    <!-- Java -->
+    <javaVersion>13</javaVersion>
+    <maven.compiler.source>${javaVersion}</maven.compiler.source>
+    <maven.compiler.target>${javaVersion}</maven.compiler.target>
+    <maven.compiler.release>${javaVersion}</maven.compiler.release>
+
+    <!-- Encoding -->
+    <defaultEncoding>UTF-8</defaultEncoding>
+    <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
+
+    <!-- Application -->
+    <applicationProperties>${project.basedir}/project.properties</applicationProperties>
     <applicationVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</applicationVersion>
+    <applicationInceptionYear>2019</applicationInceptionYear>
+    <applicationCurrentYear>2020</applicationCurrentYear>
+    <applicationCopyright>Copyright (C) ${applicationCopyrightYears} ${project.developers[0].name} &lt;${project.developers[0].email}&gt;</applicationCopyright>
     <applicationName>launcher</applicationName>
     <applicationFullName>Java Boilerplate Project</applicationFullName>
     <applicationDescription>This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.</applicationDescription>
@@ -68,10 +81,6 @@
     <applicationLicenseDistribution>repo</applicationLicenseDistribution>
     <applicationLicenseComment>This is a lax, permissive non-copyleft free software license, compatible with the GNU GPL.</applicationLicenseComment>
     <applicationLicenseUrl>https://spdx.org/licenses/MIT.html</applicationLicenseUrl>
-    <applicationInceptionYear>2019</applicationInceptionYear>
-    <applicationCurrentYear>2020</applicationCurrentYear>
-    <applicationCopyright>Copyright (C) ${applicationInceptionYear} - ${applicationCurrentYear} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
-
     <applicationModuleName>ru.akman.launcher</applicationModuleName>
     <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
     <applicationJvmArgs>-Dfile.encoding=${defaultEncoding} -Xms256m -Xmx512m</applicationJvmArgs>
@@ -79,181 +88,179 @@
     <applicationTemplateWin>${project.basedir}/package/win-script.template</applicationTemplateWin>
     <applicationTemplateNix>${project.basedir}/package/nix-script.template</applicationTemplateNix>
 
-    <platformName>${os.name}</platformName>
-    <platformFamily>${os.family}</platformFamily>
-    <platformVersion>${os.version}</platformVersion>
-    <platformArch>${os.arch}</platformArch>
-    <platformCpus>${cpu.count}</platformCpus>
+    <!-- Dependencies -->
+    <version.javafx>15-ea+6</version.javafx>
+    <!--version.picocli>4.3.2</version.picocli-->
+    <version.slf4j>2.0.0-alpha1</version.slf4j>
+    <version.logback>[1.3.0-alpha4]</version.logback>
+    <version.junit>5.7.0-M1</version.junit>
+    <version.spock>2.0-M3-groovy-3.0</version.spock>
+    <version.groovy>3.0.4</version.groovy>
+    <version.mockito>3.3.3</version.mockito>
+    <version.hamcrest>2.2</version.hamcrest>
+    <version.assertj>3.16.1</version.assertj>
 
-    <jvmVendor>${java.vendor}</jvmVendor>
-    <jvmVersion>${java.version}</jvmVersion>
-    <jvmRuntime>${java.runtime.version}</jvmRuntime>
+    <!-- Tools -->
+    <version.checkstyle>8.34</version.checkstyle>
+    <version.pmd>6.25.0</version.pmd>
+    <version.spotbugs>4.0.6</version.spotbugs>
+    <version.codenarc>1.5</version.codenarc>
 
-    <mavenVersion>${maven.version}</mavenVersion>
+    <!-- Plugins -->
+    <version.maven-enforcer-plugin>3.0.0-M3</version.maven-enforcer-plugin>
+    <version.maven-clean-plugin>3.1.0</version.maven-clean-plugin>
+    <version.properties-maven-plugin>1.0.0</version.properties-maven-plugin>
+    <version.build-helper-maven-plugin>3.2.0</version.build-helper-maven-plugin>
+    <version.maven-toolchains-plugin>3.0.0</version.maven-toolchains-plugin>
+    <version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
+    <version.maven-antrun-plugin>3.0.0</version.maven-antrun-plugin>
+    <version.maven-checkstyle-plugin>3.1.1</version.maven-checkstyle-plugin>
+    <version.maven-pmd-plugin>3.13.0</version.maven-pmd-plugin>
+    <version.spotbugs-maven-plugin>4.0.4</version.spotbugs-maven-plugin>
+    <version.codenarc-maven-plugin>0.22-1</version.codenarc-maven-plugin>
+    <version.license-maven-plugin>4.0.rc1</version.license-maven-plugin>
+    <version.maven-resources-plugin>3.1.0</version.maven-resources-plugin>
+    <version.native2ascii-maven-plugin>2.0.1</version.native2ascii-maven-plugin>
+    <version.maven-source-plugin>3.2.1</version.maven-source-plugin>
+    <version.maven-javadoc-plugin>3.2.0</version.maven-javadoc-plugin>
+    <version.maven-jxr-plugin>3.0.0</version.maven-jxr-plugin>
+    <version.maven-jar-plugin>3.2.0</version.maven-jar-plugin>
+    <version.maven-assembly-plugin>3.3.0</version.maven-assembly-plugin>
+    <version.gmavenplus-plugin>1.9.0</version.gmavenplus-plugin>
+    <version.maven-surefire-plugin>3.0.0-M5</version.maven-surefire-plugin>
+    <version.maven-surefire-report-plugin>3.0.0-M5</version.maven-surefire-report-plugin>
+    <version.maven-failsafe-plugin>3.0.0-M5</version.maven-failsafe-plugin>
+    <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
+    <version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
+    <version.jlink-maven-plugin>0.1.8-SNAPSHOT</version.jlink-maven-plugin>
+    <version.jpackage-maven-plugin>0.1.2-SNAPSHOT</version.jpackage-maven-plugin>
+    <version.maven-install-plugin>3.0.0-M1</version.maven-install-plugin>
+    <version.maven-deploy-plugin>3.0.0-M1</version.maven-deploy-plugin>
+    <version.maven-release-plugin>3.0.0-M1</version.maven-release-plugin>
+    <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
+    <version.maven-scm-plugin>1.11.2</version.maven-scm-plugin>
+    <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
+    <version.versions-maven-plugin>2.7</version.versions-maven-plugin>
+    <version.maven-dependency-plugin>3.1.2</version.maven-dependency-plugin>
+    <version.maven-site-plugin>3.9.1</version.maven-site-plugin>
+    <version.maven-project-info-reports-plugin>3.1.0</version.maven-project-info-reports-plugin>
+    <version.taglist-maven-plugin>2.4</version.taglist-maven-plugin>
+    <version.maven-changelog-plugin>2.3</version.maven-changelog-plugin>
 
-    <jdkVersion>[13,)</jdkVersion>
-    <javaVersion>13</javaVersion>
-
-    <defaultEncoding>UTF-8</defaultEncoding>
-    <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
-
-    <checkstyle.tool.version>8.33</checkstyle.tool.version>
-    <checkstyle.config.location>config/checkstyle/google_checks.xml</checkstyle.config.location>
-    <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
-    <checkstyle.failOnViolation>false</checkstyle.failOnViolation>
-    <checkstyle.maxAllowedViolations>0</checkstyle.maxAllowedViolations>
-    <checkstyle.console>true</checkstyle.console>
-
-    <pmd.tool.version>6.24.0</pmd.tool.version>
-
-    <spotbugs.tool.version>4.0.3</spotbugs.tool.version>
-    <spotbugs.threshold>low</spotbugs.threshold>
-    <spotbugs.effort>max</spotbugs.effort>
-    <spotbugs.nested>false</spotbugs.nested>
-    <spotbugs.failOnError>false</spotbugs.failOnError>
-    <spotbugs.xmlOutput>true</spotbugs.xmlOutput>
-    <spotbugs.excludeFilterFile>config/spotbugs/excludeFilter.xml</spotbugs.excludeFilterFile>
-
-    <codenarc.tool.version>1.5</codenarc.tool.version>
-    
-    <junit.version>5.6.2</junit.version>
-    <spock.version>2.0-M2-groovy-3.0</spock.version>
-    <mockito.version>3.3.3</mockito.version>
-    <hamcrest.version>2.2</hamcrest.version>
-    <assertj.version>3.16.1</assertj.version>
-    
-    <javafx.version>13.0.2</javafx.version>
-    <slf4j.version>2.0.0-alpha1</slf4j.version>
-    <logback.version>1.3.0-alpha4</logback.version>
-
+    <!-- Directories -->
     <jlinkImageDir>${project.build.directory}/jlink/image</jlinkImageDir>
     <jlinkModsDir>${project.build.directory}/jlink/mods</jlinkModsDir>
     <jlinkLibsDir>${project.build.directory}/jlink/libs</jlinkLibsDir>
-
+    <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
+    <jpackageImageDir>${applicationName}</jpackageImageDir>
+    <jpackageConfigDir>package/${platformFamily}</jpackageConfigDir>
+    <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
   </properties>
 
-  <name>${applicationFullName}</name>
-  <description>${applicationDescription}</description>
-  <url>${applicationUrl}</url>
-  <inceptionYear>${applicationInceptionYear}</inceptionYear>
-  <licenses>
-    <license>
-      <name>${applicationLicenseName} (${applicationLicenseType})</name>
-      <url>${applicationLicenseUrl}</url>
-      <comments>${applicationLicenseComment}</comments>
-      <distribution>${applicationLicenseDistribution}</distribution>
-    </license>
-  </licenses>
-  <organization>
-    <name>${applicationVendor}</name>
-    <url>${applicationVendorUrl}</url>
-  </organization>
-  <developers>
-    <developer>
-      <id>${applicationAuthorNickname}</id>
-      <name>${applicationAuthorName}</name>
-      <url>${applicationAuthorUrl}</url>
-      <email>${applicationAuthorEmail}</email>
-      <organization>${applicationVendor}</organization>
-      <organizationUrl>${applicationVendorUrl}</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-  </developers>
-
   <dependencies>
+    <!-- JavaFX -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <!--
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
-      <version>${javafx.version}</version>
+      <version>${version.javafx}</version>
     </dependency>
     -->
+    <!-- picocli -->
+    <!--dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>${version.picocli}</version>
+    </dependency-->
+    <!-- slf4j + logback -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
+      <version>${version.slf4j}</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
+      <version>${version.logback}</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>${logback.version}</version>
-    </dependency>
-
+      <version>${version.logback}</version>
+    </dependency-->
     <!-- JUnit -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>${junit.version}</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
+    </dependency-->
+    <!--dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency-->
     <!-- Spock -->
     <dependency>
       <groupId>org.spockframework</groupId>
       <artifactId>spock-core</artifactId>
-      <version>${spock.version}</version>
+      <version>${version.spock}</version>
       <scope>test</scope>
     </dependency>
     <!-- Mockito -->
-    <dependency>
+    <!--dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
+      <version>${version.mockito}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito.version}</version>
+      <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy</artifactId>
+      <version>${version.groovy}</version>
       <scope>test</scope>
     </dependency>
     <!-- Hamcrest -->
@@ -261,7 +268,7 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
-      <version>${hamcrest.version}</version>
+      <version>${version.hamcrest}</version>
       <scope>test</scope>
     </dependency>
     -->
@@ -270,220 +277,908 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>${assertj.version}</version>
+      <version>${version.assertj}</version>
       <scope>test</scope>
     </dependency>
     -->
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}</directory>
+        <includes>
+          <include>LICENSE</include>
+          <include>NOTICE</include>
+        </includes>
+      </resource>
+    </resources>
     <pluginManagement>
       <plugins>
-        <plugin>
+        <plugin> <!-- maven-enforcer-plugin -->
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${version.maven-enforcer-plugin}</version>
+          <configuration>
+            <rules>
+              <requireMavenVersion>
+                <version>[${mavenVersion},)</version>
+              </requireMavenVersion>
+            </rules>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-clean-plugin -->
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>${version.maven-clean-plugin}</version>
+          <configuration>
+            <filesets>
+              <fileset>
+                <directory>${project.basedir}</directory>
+                <includes>
+                  <include>*.log</include>
+                </includes>
+              </fileset>
+              <fileset>
+                <directory>log</directory>
+                <followSymlinks>false</followSymlinks>
+              </fileset>
+            </filesets>
+          </configuration>
+        </plugin>
+        <plugin> <!-- properties-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>${version.properties-maven-plugin}</version>
+          <configuration>
+            <files>
+              <file>${applicationProperties}</file>
+            </files>
+          </configuration>
+        </plugin>
+        <plugin> <!-- build-helper-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${version.build-helper-maven-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-toolchains-plugin -->
           <artifactId>maven-toolchains-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${version.maven-toolchains-plugin}</version>
+          <configuration>
+            <toolchains>
+              <jdk>
+                <version>[${javaVersion},)</version>
+              </jdk>
+            </toolchains>
+          </configuration>
         </plugin>
-        <plugin>
+        <plugin> <!-- maven-compiler-plugin -->
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.maven-compiler-plugin}</version>
+          <configuration>
+            <fork>true</fork>
+            <compilerArgs>
+              <arg>-Xlint:unchecked</arg>
+              <arg>-Xlint:deprecation</arg>
+              <arg>-Werror</arg>
+              <!--arg>-Aproject=${project.groupId}/${project.artifactId}</arg-->
+            </compilerArgs>
+            <!--annotationProcessorPaths>
+              <path>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli-codegen</artifactId>
+                <version>${version.picocli}</version>
+              </path>
+            </annotationProcessorPaths-->
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-antrun-plugin -->
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${version.maven-antrun-plugin}</version>
         </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>3.0.0-M1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
-        </plugin>
-        <plugin>
+        <plugin> <!-- maven-checkstyle-plugin -->
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>${version.maven-checkstyle-plugin}</version>
           <dependencies>
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>${checkstyle.tool.version}</version>
+              <version>${version.checkstyle}</version>
             </dependency>
           </dependencies>
+          <configuration>
+            <!-- all -->
+            <configLocation>config/checkstyle/google_checks.xml</configLocation>
+            <excludes>**/build/**/*, **/target/**/*</excludes>
+            <resourceExcludes>**/build/**/*, **/target/**/*</resourceExcludes>
+            <consoleOutput>true</consoleOutput>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            <failsOnError>false</failsOnError>
+            <!-- check -->
+            <failOnViolation>false</failOnViolation>
+            <maxAllowedViolations>0</maxAllowedViolations>
+            <logViolationsToConsole>true</logViolationsToConsole>
+          </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.0.0-M1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.0.0-M4</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>3.0.0-M1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
-        </plugin>
-        <plugin>
+        <plugin> <!-- maven-pmd-plugin -->
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>${version.maven-pmd-plugin}</version>
           <dependencies>
             <dependency>
               <groupId>net.sourceforge.pmd</groupId>
               <artifactId>pmd-core</artifactId>
-              <version>${pmd.tool.version}</version>
+              <version>${version.pmd}</version>
             </dependency>
             <dependency>
               <groupId>net.sourceforge.pmd</groupId>
               <artifactId>pmd-java</artifactId>
-              <version>${pmd.tool.version}</version>
+              <version>${version.pmd}</version>
             </dependency>
             <dependency>
               <groupId>net.sourceforge.pmd</groupId>
               <artifactId>pmd-javascript</artifactId>
-              <version>${pmd.tool.version}</version>
+              <version>${version.pmd}</version>
             </dependency>
             <dependency>
               <groupId>net.sourceforge.pmd</groupId>
               <artifactId>pmd-jsp</artifactId>
-              <version>${pmd.tool.version}</version>
+              <version>${version.pmd}</version>
             </dependency>
           </dependencies>
+          <configuration>
+            <!-- all -->
+            <rulesets>config/pmd/ruleset.xml</rulesets>
+            <!--excludes>
+              <exclude></exclude>
+            </excludes-->
+            <linkXref>true</linkXref>
+            <analysisCache>true</analysisCache>
+            <minimumTokens>50</minimumTokens>
+            <maxAllowedViolations>0</maxAllowedViolations>
+            <ignoreAnnotations>false</ignoreAnnotations>
+            <ignoreIdentifiers>false</ignoreIdentifiers>
+            <ignoreLiterals>false</ignoreLiterals>
+            <includeTests>true</includeTests>
+            <!-- check -->
+            <failOnViolation>false</failOnViolation>
+            <printFailingErrors>false</printFailingErrors>
+          </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.9.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>3.2.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M4</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jxr-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>3.0.0-M4</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>native2ascii-maven-plugin</artifactId>
-          <version>2.0.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>versions-maven-plugin</artifactId>
-          <version>2.7</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.gmavenplus</groupId>
-          <artifactId>gmavenplus-plugin</artifactId>
-          <version>1.9.0</version>
-        </plugin>
-        <plugin>
+        <plugin> <!-- spotbugs-maven-plugin -->
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.0.0</version>
+          <version>${version.spotbugs-maven-plugin}</version>
           <dependencies>
             <dependency>
               <groupId>com.github.spotbugs</groupId>
               <artifactId>spotbugs</artifactId>
-              <version>${spotbugs.tool.version}</version>
+              <version>${version.spotbugs}</version>
             </dependency>
           </dependencies>
+          <configuration>
+            <threshold>low</threshold>
+            <effort>max</effort>
+            <nested>false</nested>
+            <failOnError>false</failOnError>
+            <excludeFilterFile>config/spotbugs/excludeFilter.xml</excludeFilterFile>
+            <xmlOutput>true</xmlOutput>
+          </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.5</version>
-        </plugin>
-        <plugin>
-          <groupId>com.mycila</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>3.0</version>
-        </plugin>
-        <plugin>
+        <plugin> <!-- codenarc-maven-plugin -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>codenarc-maven-plugin</artifactId>
-          <version>0.22-1</version>
+          <version>${version.codenarc-maven-plugin}</version>
+          <configuration>
+            <codeNarcVersion>${version.codenarc}</codeNarcVersion>
+            <failOnError>false</failOnError>
+            <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
+            <maxPriority1Violations>0</maxPriority1Violations>
+            <maxPriority2Violations>0</maxPriority2Violations>
+            <maxPriority3Violations>0</maxPriority3Violations>
+          </configuration>
         </plugin>
-        <plugin>
+        <plugin> <!-- license-maven-plugin -->
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${version.license-maven-plugin}</version>
+          <configuration>
+            <encoding>${defaultEncoding}</encoding>
+            <header>config/license/LICENSE</header>
+            <strictCheck>true</strictCheck>
+            <skipExistingHeaders>false</skipExistingHeaders>
+            <failIfMissing>false</failIfMissing>
+            <failIfUnknown>false</failIfUnknown>
+            <properties>
+              <name>${applicationFullName}</name>
+              <url>${applicationUrl}</url>
+              <licenseName>${applicationLicenseName}</licenseName>
+              <licenseType>${applicationLicenseType}</licenseType>
+              <copyright>${applicationCopyright}</copyright>
+            </properties>
+            <headerDefinitions>
+              <headerDefinition>config/license/xml_style.xml</headerDefinition>
+              <headerDefinition>config/license/javadoc_style.xml</headerDefinition>
+            </headerDefinitions>
+            <mapping>
+              <fxml>XML_STYLE</fxml>
+              <groovy>JAVADOC_STYLE</groovy>
+            </mapping>
+            <includes>
+              <include>pom.xml</include>
+              <include>src/**/*</include>
+            </includes>
+            <excludes>
+              <exclude>**/resources/**/*.properties</exclude>
+              <exclude>**/resources/**/*.png</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-resources-plugin -->
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${version.maven-resources-plugin}</version>
+          <configuration>
+            <encoding>${defaultEncoding}</encoding>
+          </configuration>
+        </plugin>
+        <plugin> <!-- native2ascii-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>native2ascii-maven-plugin</artifactId>
+          <version>${version.native2ascii-maven-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-source-plugin -->
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.maven-source-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-javadoc-plugin -->
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${version.maven-javadoc-plugin}</version>
+          <configuration>
+            <failOnError>false</failOnError>
+            <notimestamp>true</notimestamp>
+            <bottom>${applicationCopyright}</bottom>
+            <additionalOptions>-html5</additionalOptions>
+            <!--sourceFileExcludes>
+              <exclude>**/module-info.java</exclude>
+            </sourceFileExcludes-->
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-jxr-plugin -->
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${version.maven-jxr-plugin}</version>
+          <configuration>
+            <bottom>${applicationCopyright}</bottom>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-jar-plugin -->
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.maven-jar-plugin}</version>
+          <configuration>
+            <outputDirectory>${jlinkModsDir}</outputDirectory>
+            <!--excludes>
+              <exclude></exclude>
+            </excludes-->
+            <archive>
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <manifest>
+                <addDefaultEntries>false</addDefaultEntries>
+                <mainClass>${applicationClassName}</mainClass>
+              </manifest>
+              <manifestEntries>
+                <Implementation-Title>${applicationName}</Implementation-Title>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-assembly-plugin -->
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.maven-assembly-plugin}</version>
+        </plugin>
+        <plugin> <!-- gmavenplus-plugin -->
+          <groupId>org.codehaus.gmavenplus</groupId>
+          <artifactId>gmavenplus-plugin</artifactId>
+          <version>${version.gmavenplus-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-surefire-plugin -->
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.maven-surefire-plugin}</version>
+          <configuration>
+            <argLine>
+              -Dfile.encoding=${defaultEncoding}
+              --add-opens ${applicationModuleName}/ru.akman.gui=ALL-UNNAMED
+              --add-opens ${applicationModuleName}/ru.akman.launcher=ALL-UNNAMED
+              @{argLine}
+            </argLine>
+            <!--
+            <consoleOutputReporter
+                implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
+              <encoding>${defaultEncoding}</encoding>
+              <usePhrasedFileName>false</usePhrasedFileName>
+            </consoleOutputReporter>
+            <statelessTestsetInfoReporter
+                implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
+              <usePhrasedFileName>false</usePhrasedFileName>
+              <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+              <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+            </statelessTestsetInfoReporter>          
+            <statelessTestsetReporter
+                implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+              <version>3.0</version>
+              <usePhrasedFileName>false</usePhrasedFileName>
+              <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+              <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+              <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+            </statelessTestsetReporter>
+            -->
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-surefire-report-plugin -->
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>${version.maven-surefire-report-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-failsafe-plugin -->
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${version.maven-failsafe-plugin}</version>
+        </plugin>
+        <plugin> <!-- jacoco-maven-plugin -->
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${version.jacoco-maven-plugin}</version>
+        </plugin>
+        <plugin> <!-- exec-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${version.exec-maven-plugin}</version>
+        </plugin>
+        <plugin> <!-- jlink-maven-plugin -->
           <groupId>com.github.akman</groupId>
           <artifactId>jlink-maven-plugin</artifactId>
-          <version>0.1.0-SNAPSHOT</version>
+          <version>${version.jlink-maven-plugin}</version>
+          <configuration>
+            <!--
+              Specifies the JDK home path which provides the tool needed.
+              If not specified the jlink tool executable will be find in
+              the following order:
+              
+                - user specified JDK home directory by toolchains-plugin
+                - JDK home directory specified by system variable JAVA_HOME
+                - system path specified by system variable PATH
+            -->
+            <toolhome>${env.JAVA_HOME}</toolhome>
+            <!--
+              Specifies the location in which modular dependencies
+              will be placed.
+              Default value: ${project.build.directory}/jlink/mods.
+            -->
+            <modsdir>${jlinkModsDir}</modsdir>
+            <!--
+              Specifies the location in which non modular dependencies
+              will be placed.
+              Default value: ${project.build.directory}/jlink/libs.
+            -->
+            <libsdir>${jlinkLibsDir}</libsdir>
+
+            <!-- jlink basic -->
+          
+            <!--
+              Specifies the module path. The path where the jlink tool discovers
+              observable modules: modular JAR files, JMOD files, exploded modules.
+              If this option is not specified, then the default module path
+              is $JAVA_HOME/jmods. This directory contains the java.base module
+              and the other standard and JDK modules. If this option is specified
+              but the java.base module cannot be resolved from it, then
+              the jlink command appends $JAVA_HOME/jmods to the module path.
+          
+              pathelements - passed to jlink as is
+              filesets - sets of files (without directories)
+              dirsets - sets of directories (without files)
+              dependencysets - sets of dependencies with specified includes and
+                               excludes patterns (glob: or regex:) for file names
+                               and regex patterns only for module names
+            -->
+            <modulepath>
+              <pathelements>
+                <pathelement>${jlinkModsDir}</pathelement>
+              </pathelements>
+              <!--
+              <dirsets>
+                <dirset>
+                  <directory>${build.dir}</directory>
+                  <includes>
+                    <include>classes</include>
+                  </includes>
+                </dirset>
+              </dirsets>
+              -->
+              <!--
+              <dependencysets>
+                <dependencyset>
+                  <includeoutput>true</includeoutput>
+                  <excludeautomatic>true</excludeautomatic>
+                  <excludenames>
+                    <excludename>javafx\..+Empty</excludename>
+                  </excludenames>
+                </dependencyset>
+              </dependencysets>
+              -->
+            </modulepath>
+            <!--
+              Specifies the modules names (names of root modules) to add to
+              the runtime image. Their transitive dependencies will add too.
+            -->
+            <addmodules>
+              <addmodule>${applicationModuleName}</addmodule>
+            </addmodules>
+            <!--
+              Specifies the location of the generated runtime image.
+              Default value: ${project.build.directory}/runtime.
+            -->
+            <output>${jlinkImageDir}</output>
+            <!--
+              Limits the universe of observable modules to those in
+              the transitive closure of the named modules, mod,
+              plus the main module, if any, plus any further
+              modules specified in the "addmodules" property.
+              It used to limit resolve any services other than
+              the selected services, if the property "bindservices"
+              set to true.
+            -->
+            <!--limitmodules>
+              <limitmodule>org.example.limitmodule</limitmodule>
+            </limitmodules-->
+            <!--
+              Suggest providers that implement the given service types
+              from the module path.
+            -->
+            <!--suggestproviders>
+              <suggestprovider>provider.name</suggestprovider>
+            </suggestproviders-->
+            <!--
+              Save jlink options in the given file.
+            -->
+            <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+            <!--
+              The last plugin allowed to sort resources.
+            -->
+            <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+            <!--
+              Post process an existing image.
+            -->
+            <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+            <!--
+              Enable verbose tracing.
+              Default value: false.
+            -->
+            <verbose>true</verbose>
+            <!--
+              Link service provider modules and their dependencies.
+              Default value: false.
+            -->
+            <!--bindservices>false</bindservices-->
+            <!--
+              Specifies the launcher command name for the module or
+              the command name for the module and main class (the module and
+              the main class names are separated by a slash). Arguments passed
+              to jvm, arguments passed to the application. Platform specific
+              templates for launcher script.
+            -->
+            <launcher>
+              <command>${applicationName}</command>
+              <mainmodule>${applicationModuleName}</mainmodule>
+              <mainclass>${applicationClassName}</mainclass>
+              <jvmargs>${applicationJvmArgs}</jvmargs>
+              <args>${applicationArgs}</args>
+              <nixtemplate>${applicationTemplateNix}</nixtemplate>
+              <wintemplate>${applicationTemplateWin}</wintemplate>
+            </launcher>
+            <!--
+              Excludes header files.
+              Default value: false.
+            -->
+            <noheaderfiles>true</noheaderfiles>
+            <!--
+              Excludes man pages.
+              Default value: false.
+            -->
+            <nomanpages>true</nomanpages>
+            <!--
+              Specifies the byte order of the generated
+              image { NATIVE | LITTLE | BIG }.
+              Default value: NATIVE (the format of your system's architecture).
+            -->
+            <!--endian>NATIVE</endian-->
+            <!--
+              Suppresses a fatal error when signed modular JARs are linked
+              in the runtime image. The signature-related files of the signed
+              modular JARs aren't copied to the runtime image.
+              Default value: false.
+            -->
+            <!--ignoresigninginformation>false</ignoresigninginformation-->
+            <!--
+              Disables the specified plug-ins.
+              For a complete list of all available plug-ins,
+              run the command: jlink ‒‒list-plugins
+            -->
+            <!--disableplugins>
+              <disableplugin>compress</disableplugin>
+              <disableplugin>dedup-legal-notices</disableplugin>
+            </disableplugins-->
+          
+            <!-- PLUGINS -->
+            <!--
+              For plug-in options that require a pattern-list, the value is
+              a comma-separated list of elements, with each element using one
+              the following forms:
+          
+                - glob-pattern
+                - glob:glob-pattern
+                - regex:regex-pattern
+                - @filename
+                
+              Example: **/module-info.class,glob:/java.base/java/lang/**
+            -->
+          
+            <!--
+              Compresses all resources in the output image. Specify
+              compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
+              An optional pattern-list filter can be specified to list
+              the pattern of files to include.
+            -->
+            <compress>
+              <compression>ZIP</compression>
+              <!--filters>
+                <filter>**/*-info.class</filter>
+                <filter>glob:**/module-info.class</filter>
+                <filter>regex:/java[a-z]+$</filter>
+                <filter>@filename</filter>
+              </filters-->
+            </compress>
+            <!--
+              Includes the list of locales where langtag is
+              a BCP 47 language tag. This option supports locale matching as
+              defined in RFC 4647.
+              Ensure that you specified: ‒‒add-modules jdk.localedata when
+              using this property.
+            -->
+            <!--includelocales>
+              <includelocale>en</includelocale>
+              <includelocale>ru</includelocale>
+              <includelocale>*-IN</includelocale>
+            </includelocales-->
+            <!--
+              Orders the specified paths in priority order.
+            -->
+            <!--orderresources>
+              <orderresource>**/*-info.class</orderresource>
+              <orderresource>glob:**/module-info.class</orderresource>
+              <orderresource>regex:/java[a-z]+$</orderresource>
+              <orderresource>@filename</orderresource>
+            </orderresources-->
+            <!--
+              Specify resources to exclude.
+            -->
+            <!--excluderesources>
+              <excluderesource>**/*-info.class</excluderesource>
+              <excluderesource>glob:**/META-INF/**</excluderesource>
+              <excluderesource>regex:/java[a-z]+$</excluderesource>
+              <excluderesource>@filename</excluderesource>
+            </excluderesources-->
+            <!--
+              Strips debug information from the output image.
+              Default value: false.
+            -->
+            <stripdebug>true</stripdebug>
+            <!--
+              Strip Java debug attributes from classes in the output image.
+              Default value: false.
+            -->
+            <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+            <!--
+              Exclude native commands (such as java/java.exe) from the image.
+              Default value: false.
+            -->
+            <stripnativecommands>true</stripnativecommands>
+            <!--
+              De-duplicate all legal notices. If true is specified then
+              it will be an error if two files of the same filename
+              are different.
+              Default value: false.
+            -->
+            <!--deduplegalnotices>true</deduplegalnotices-->
+            <!--
+              Specify files to exclude.
+            -->
+            <!--excludefiles>
+              <excludefile>**/*-info.class</excludefile>
+              <excludefile>glob:**/META-INF/**</excludefile>
+              <excludefile>regex:/java[a-z]+$</excludefile>
+              <excludefile>@filename</excludefile>
+            </excludefiles-->
+            <!--
+              Specify a JMOD section to exclude { MAN | HEADERS }.
+            -->
+            <!--excludejmodsection>MAN</excludejmodsection-->
+            <!--
+              Specify a file listing the java.lang.invoke classes to pre-generate.
+              By default, this plugin may use a builtin list of classes
+              to pre-generate. If this plugin runs on a different runtime
+              version than the image being created then code generation
+              will be disabled by default to guarantee correctness add
+              ignore-version=true to override this.
+            -->
+            <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+            <!--
+              Load release properties from the supplied option file.
+              - adds: is to add properties to the release file.
+              - dels: is to delete the list of keys in release file.
+              - Any number of key=value pairs can be passed.
+            -->
+            <!--releaseinfo>
+              <file>file</file>
+              <adds>
+                <key1>value1</key1>
+                <key2>value2</key2>
+              </adds>
+              <dels>
+                <key1 />
+                <key2 />
+              </dels>
+            </releaseinfo-->
+            <!--
+              Fast loading of module descriptors. Always on.
+              The jlink CLI is: ‒‒system-modules=.
+              Default value: true.
+            -->
+            <!--systemmodules>false</systemmodules-->
+            <!--
+              Select the HotSpot VM in
+              the output image: { CLIENT | SERVER | MINIMAL | ALL }
+              Default value: ALL.
+            -->
+            <!--vm>ALL</vm-->
+          </configuration>
+        </plugin>
+        <plugin> <!-- jpackage-maven-plugin -->
+          <groupId>com.github.akman</groupId>
+          <artifactId>jpackage-maven-plugin</artifactId>
+          <version>${version.jpackage-maven-plugin}</version>
+          <configuration>
+            <!--
+              Specifies the JDK home path which provides the tool needed.
+              If not specified the jpackage tool executable will be find in
+              the following order:
+
+                - user specified JDK home directory by toolchains-plugin
+                - JDK home directory specified by system variable JAVA_HOME
+                - system path specified by system variable PATH
+            -->
+            <toolhome>${env.JPACKAGE_HOME}</toolhome>
+            <!--
+              Specifies the location in which generated output files are placed.
+              Default value: ${project.build.directory}/jpackage
+            -->
+            <dest>${jpackageDir}</dest>
+            <!--
+              Specifies the location in which temporary files are placed.
+              If specified, the directory will not be removed upon the task
+              completion and must be removed manually.
+            -->
+            <!--temp>${project.build.directory}/jpackage/temp-app-image</temp-->
+            <!--
+              Specifies the name of subdirectory relative to
+              the destination directory in which files of generated
+              application image are placed.
+            -->
+            <name>${jpackageImageDir}</name>
+            <!--
+              Enable verbose tracing.
+              Default value: false.
+            -->
+            <verbose>true</verbose>
+            <!--
+              Specifies version of the application and/or package.
+            -->
+            <appversion>${applicationVersion}</appversion>
+            <!--
+              Specifies copyright for the application.
+            -->
+            <copyright>${applicationCopyright}</copyright>
+            <!--
+              Specifies description of the application.
+            -->
+            <description>${applicationDescription}</description>
+            <!--
+              Specifies vendor of the application.
+            -->
+            <vendor>${applicationVendor}</vendor>
+            <!--
+              Specifies the location of a resources directory that override
+              jpackage resources. Icons, template files, and other resources
+              of jpackage can be overridden by adding replacement resources
+              to this directory.
+            -->
+            <resourcedir>${jpackageResourcesDir}</resourcedir>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-install-plugin -->
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${version.maven-install-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-deploy-plugin -->
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.maven-deploy-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-release-plugin -->
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${version.maven-release-plugin}</version>
+          <configuration>
+            <tagNameFormat>v@{project.version}</tagNameFormat>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+            <!--
+              Goals to run as part of the preparation step,
+              after changing the version in the POMs from x-SNAPSHOT to
+              a new version but before committing.
+            -->
+            <preparationGoals>
+              clean
+              package
+              site:site
+              resources:copy-resources@prepare
+              antrun:run@prepare
+              scm:checkin@prepare
+            </preparationGoals>
+            <!--
+              Goals to run on completion of the preparation step,
+              after transformation back to the next development version
+              but before committing.
+            -->
+            <!--
+            <completionGoals>
+            </completionGoals>
+            -->
+            <goals>deploy</goals>
+          </configuration>
+        </plugin>
+        <plugin> <!-- nexus-staging-maven-plugin -->
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>${version.nexus-staging-maven-plugin}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            <!--skipStaging>true</skipStaging-->
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-scm-plugin -->
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>${version.maven-scm-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-gpg-plugin -->
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${version.maven-gpg-plugin}</version>
+          <configuration>
+            <useAgent>true</useAgent>
+          </configuration>
+        </plugin>
+        <plugin> <!-- versions-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${version.versions-maven-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-dependency-plugin -->
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${version.maven-dependency-plugin}</version>
+        </plugin>
+        <plugin> <!-- maven-site-plugin -->
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${version.maven-site-plugin}</version>
+          <!--configuration>
+            <locales>en</locales>
+          </configuration-->
+        </plugin>
+        <plugin> <!-- maven-project-info-reports-plugin -->
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>${version.maven-project-info-reports-plugin}</version>
+        </plugin>
+        <plugin> <!-- taglist-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>taglist-maven-plugin</artifactId>
+          <version>${version.taglist-maven-plugin}</version>
+          <configuration>
+            <tagListOptions>
+              <tagClasses>
+                <tagClass>
+                  <displayName>Documentation</displayName>
+                  <tags>
+                    <tag>
+                      <matchString>DOCME</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>DOCUMENT_ME</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>NOT_YET_DOCUMENTED</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                  </tags>
+                </tagClass>
+                <tagClass>
+                  <displayName>Code</displayName>
+                  <tags>
+                    <tag>
+                      <matchString>TODO</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>@todo</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>FIXME</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>@fixme</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>DOCME</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>@docme</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                  </tags>
+                </tagClass>
+              </tagClasses>
+            </tagListOptions>
+          </configuration>
+        </plugin>
+        <plugin> <!-- maven-changelog-plugin -->
+          <artifactId>maven-changelog-plugin</artifactId>
+          <version>${version.maven-changelog-plugin}</version>
         </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <artifactId>maven-toolchains-plugin</artifactId>
+      <plugin> <!-- maven-enforcer-plugin -->
+        <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
             <goals>
-              <goal>toolchain</goal>
+              <goal>enforce</goal>
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>${jdkVersion}</version>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin>      
-      <!-- https://www.mojohaus.org/build-helper-maven-plugin/plugin-info.html -->
-      <plugin>
+      </plugin>
+      <plugin> <!-- maven-clean-plugin -->
+        <artifactId>maven-clean-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- properties-maven-plugin -->
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
+        <artifactId>properties-maven-plugin</artifactId>
         <executions>
           <execution>
             <phase>validate</phase>
             <goals>
-              <goal>cpu-count</goal>
-              <goal>parse-version</goal>
+              <goal>read-project-properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- build-helper-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>timestamp-property</id>
+            <phase>validate</phase>
+            <goals>
               <goal>timestamp-property</goal>
             </goals>
             <configuration>
@@ -493,31 +1188,67 @@
               <unit>year</unit>
             </configuration>
           </execution>
+          <execution>
+            <id>regex-property</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>regex-property</goal>
+            </goals>
+            <configuration>
+              <name>applicationCopyrightYears</name>
+              <value>${applicationInceptionYear} - ${applicationCurrentYear}</value>
+              <regex>(\d{4}) - \1</regex>
+              <failIfNoMatch>false</failIfNoMatch>
+              <replacement>${applicationCurrentYear}</replacement>
+            </configuration>
+          </execution>
+          <execution>
+            <id>parse-version</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>released-version</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>released-version</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <outputDirectory>${jlinkModsDir}</outputDirectory>
-          <!-- http://maven.apache.org/shared/maven-archiver/index.html -->
-          <archive>
-            <addMavenDescriptor>false</addMavenDescriptor>
-            <manifest>
-              <addDefaultEntries>false</addDefaultEntries>
-              <mainClass>${applicationClassName}</mainClass>
-            </manifest>
-            <manifestEntries>
-              <Implementation-Title>${applicationName}</Implementation-Title>
-            </manifestEntries>
-          </archive>
-        </configuration>
+      <plugin> <!-- maven-toolchains-plugin -->
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>      
+      <plugin> <!-- maven-compiler-plugin -->
+        <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
-      <plugin>
+      <plugin> <!-- maven-antrun-plugin -->
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <echo>antrun:run@prepare</echo>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- maven-checkstyle-plugin -->
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <failsOnError>false</failsOnError>
-        </configuration>
         <executions>
           <execution>
             <phase>process-test-classes</phase>
@@ -527,114 +1258,46 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <plugin> <!-- maven-pmd-plugin -->
         <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <linkXref>true</linkXref>
-          <analysisCache>true</analysisCache>
-          <failOnViolation>false</failOnViolation>
-          <printFailingErrors>true</printFailingErrors>
-          <minimumTokens>50</minimumTokens>
-          <maxAllowedViolations>0</maxAllowedViolations>
-          <ignoreAnnotations>false</ignoreAnnotations>
-          <ignoreIdentifiers>false</ignoreIdentifiers>
-          <ignoreLiterals>false</ignoreLiterals>
-          <includeTests>true</includeTests>
-          <rulesets>config/pmd/ruleset.xml</rulesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-        <configuration>
-          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
-          <failOnError>false</failOnError>
-          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
-          <maxPriority1Violations>0</maxPriority1Violations>
-          <maxPriority2Violations>0</maxPriority2Violations>
-          <maxPriority3Violations>0</maxPriority3Violations>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>log</directory>
-              <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <encoding>${defaultEncoding}</encoding>
-          <source>${javaVersion}</source>
-          <target>${javaVersion}</target>
-          <release>${javaVersion}</release>
-          <fork>true</fork>
-          <compilerArgs>
-            <!--
-              Give more detail for unchecked conversion warnings
-              that are mandated by the Java Language Specification.
-            -->
-            <arg>-Xlint:unchecked</arg>
-            <!--
-              Show a description of each use or override of a deprecated member
-              or class. Without this, javac shows a summary of the source files
-              that use or override deprecated members or classes.
-            -->
-            <arg>-Xlint:deprecation</arg>
-            <!--
-              Terminate compilation if warnings occur.
-            -->
-            <arg>-Werror</arg>
-          </compilerArgs>          
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
             <goals>
-              <goal>enforce</goal>
+              <goal>cpd-check</goal>
+              <goal>check</goal>
             </goals>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <version>${mavenVersion}</version>
-                </requireMavenVersion>
-              </rules>
-            </configuration>
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <sourceFileExcludes>
-            <sourceFileExclude>**/module-info.java</sourceFileExclude>
-          </sourceFileExcludes>
-          <additionalOptions>-html5</additionalOptions>
-        </configuration>
+      <plugin> <!-- spotbugs-maven-plugin -->
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-      <!-- https://habr.com/ru/post/130936/ -->
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
+      <plugin> <!-- codenarc-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>codenarc-maven-plugin</artifactId>
       </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
+      <plugin> <!-- license-maven-plugin -->
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-      <plugin>
+      <plugin> <!-- maven-resources-plugin -->
         <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <encoding>${defaultEncoding}</encoding>
-        </configuration>
         <executions>
           <execution>
             <id>default-resources</id>
@@ -688,106 +1351,27 @@
               </resources>
             </configuration>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <locales>en,fr</locales>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
           <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
+            <id>prepare</id>
             <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <!-- https://www.mojohaus.org/exec-maven-plugin/java-mojo.html -->
-          <execution>
-            <id>cli</id>
-            <goals>
-              <goal>java</goal>
+              <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <mainClass>${applicationClassName}</mainClass>
-              <commandlineArgs>--debug --no-gui</commandlineArgs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>gui</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>${applicationClassName}</mainClass>
-              <commandlineArgs>--debug</commandlineArgs>
-            </configuration>
-          </execution>
-          <!-- https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html -->
-          <execution>
-            <id>default-cli</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>java</executable>
-              <arguments>
-                <argument>-Dfile.encoding=${defaultEncoding}</argument>
-                <argument>--module-path</argument>
-                <modulepath/>
-                <argument>--module</argument>
-                <argument>${applicationModuleName}/${applicationClassName}</argument>
-                <argument>--debug</argument>
-                <argument>--no-gui</argument>
-              </arguments>
+              <outputDirectory>${project.basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>config/readme</directory>
+                  <includes>
+                    <include>README.md</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      <!-- https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>
-            -Dfile.encoding=${defaultEncoding}
-            --add-opens ${applicationModuleName}/ru.akman.gui=ALL-UNNAMED
-            --add-opens ${applicationModuleName}/ru.akman.launcher=ALL-UNNAMED
-            @{argLine}
-          </argLine>
-          <!--
-          <consoleOutputReporter
-              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
-            <encoding>${defaultEncoding}</encoding>
-            <usePhrasedFileName>false</usePhrasedFileName>
-          </consoleOutputReporter>
-          <statelessTestsetInfoReporter
-              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
-            <usePhrasedFileName>false</usePhrasedFileName>
-            <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
-            <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
-          </statelessTestsetInfoReporter>          
-          <statelessTestsetReporter
-              implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
-            <version>3.0</version>
-            <usePhrasedFileName>false</usePhrasedFileName>
-            <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
-            <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
-            <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
-          </statelessTestsetReporter>
-          -->
-        </configuration>
-      </plugin>
-      <plugin>
+      <plugin> <!-- native2ascii-maven-plugin -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
         <executions>
@@ -821,13 +1405,52 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
+      <plugin> <!-- maven-source-plugin -->
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
       </plugin>
-      <!-- https://www.eclemma.org/jacoco/trunk/doc/maven.html -->
-      <!-- mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail -->
-      <plugin>
+      <plugin> <!-- maven-javadoc-plugin -->
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- maven-jar-plugin -->
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-assembly-plugin -->
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- gmavenplus-plugin -->
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compileTests</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- maven-surefire-plugin -->
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-failsafe-plugin -->
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- jacoco-maven-plugin -->
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
@@ -846,63 +1469,51 @@
           </execution>
         </executions>
       </plugin>
-      <!-- http://mycila.mathieu.photography/license-maven-plugin/#supported-comment-types -->
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <encoding>${defaultEncoding}</encoding>
-          <header>config/license/LICENSE</header>
-          <strictCheck>true</strictCheck>
-          <skipExistingHeaders>false</skipExistingHeaders>
-          <failIfMissing>false</failIfMissing>
-          <failIfUnknown>false</failIfUnknown>
-          <properties>
-            <name>${applicationFullName}</name>
-            <url>${applicationUrl}</url>
-            <licenseName>${applicationLicenseName}</licenseName>
-            <licenseType>${applicationLicenseType}</licenseType>
-            <copyright>${applicationCopyright}</copyright>
-          </properties>
-          <headerDefinitions>
-            <headerDefinition>config/license/xml_style.xml</headerDefinition>
-            <headerDefinition>config/license/javadoc_style.xml</headerDefinition>
-          </headerDefinitions>
-          <mapping>
-            <fxml>XML_STYLE</fxml>
-            <groovy>JAVADOC_STYLE</groovy>
-          </mapping>
-          <includes>
-            <include>pom.xml</include>
-            <include>src/**/*</include>
-          </includes>
-          <excludes>
-            <exclude>**/resources/**/*.properties</exclude>
-            <exclude>**/resources/**/*.png</exclude>
-          </excludes>
-        </configuration>
+      <plugin> <!-- exec-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <phase>initialize</phase>
+            <id>cli</id>
             <goals>
-              <goal>check</goal>
+              <goal>java</goal>
             </goals>
+            <configuration>
+              <mainClass>${applicationClassName}</mainClass>
+              <commandlineArgs>--debug --no-gui</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>gui</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>${applicationClassName}</mainClass>
+              <commandlineArgs>--debug</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-cli</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-Dfile.encoding=${defaultEncoding}</argument>
+                <argument>--module-path</argument>
+                <modulepath/>
+                <argument>--module</argument>
+                <argument>${applicationModuleName}/${applicationClassName}</argument>
+                <argument>--debug</argument>
+                <argument>--no-gui</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>
-      <!-- https://github.com/groovy/GMavenPlus/wiki -->
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
+      <plugin> <!-- jlink-maven-plugin -->
         <groupId>com.github.akman</groupId>
         <artifactId>jlink-maven-plugin</artifactId>
         <executions>
@@ -911,360 +1522,308 @@
             <goals>
               <goal>jlink</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- jpackage-maven-plugin -->
+        <groupId>com.github.akman</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>jpackage-image</id>
+            <goals>
+              <goal>jpackage</goal>
+            </goals>
             <configuration>
               <!--
-                Specifies the JDK home path which provides the tool needed.
-                If not specified the jlink tool executable will be find in
-                the following order:
-                
-                  - user specified JDK home directory by toolchains-plugin
-                  - JDK home directory specified by system variable JAVA_HOME
-                  - system path specified by system variable PATH
+                Specifies the type of package to
+                create: { PLATFORM | IMAGE | EXE | MSI }.
+                Default value: PLATFORM (a platform dependent default type)
               -->
-              <!--toolhome>${env.JAVA_HOME}</toolhome-->
+              <type>IMAGE</type>
               <!--
-                Specifies the location in which modular dependencies
-                will be placed.
-                Default value: ${project.build.directory}/jlink/mods.
+                Specifies the location of the predefined runtime
+                image (result of jlink) that will be copied into
+                the application image.
+                If not specified, jpackage will run jlink to create
+                the runtime image using options:
+                  - strip-debug
+                  - no-header-files
+                  - no-man-pages
+                  - strip-native-commands
               -->
-              <modsdir>${jlinkModsDir}</modsdir>
+              <runtimeimage>${jlinkImageDir}</runtimeimage>
               <!--
-                Specifies the location in which non modular dependencies
-                will be placed.
-                Default value: ${project.build.directory}/jlink/libs.
+                Specifies the main module (and optionally main class) of
+                the application. This module must be located on the module path.
+                When this option is specified, the main module will be linked
+                in the Java runtime image.
+                Either module or main-jar option can be specified
+                but not both.
               -->
-              <libsdir>${jlinkLibsDir}</libsdir>
-
-              <!-- jlink basic -->
-            
+              <module>${applicationModuleName}/${applicationClassName}</module>
               <!--
-                Specifies the module path. The path where the jlink tool discovers
-                observable modules: modular JAR files, JMOD files, exploded modules.
-                If this option is not specified, then the default module path
-                is $JAVA_HOME/jmods. This directory contains the java.base module
-                and the other standard and JDK modules. If this option is specified
-                but the java.base module cannot be resolved from it, then
-                the jlink command appends $JAVA_HOME/jmods to the module path.
-            
-                pathelements - passed to jlink as is
-                filesets - sets of files (without directories)
-                dirsets - sets of directories (without files)
-                dependencysets - sets of dependencies with specified includes and
-                                 excludes patterns (glob: or regex:) for file names
-                                 and regex patterns only for module names
+                Specifies the command line arguments to pass to the main class
+                if no command line arguments are given to the launcher.
               -->
-              <modulepath>
-                <pathelements>
-                  <pathelement>${jlinkModsDir}</pathelement>
-                </pathelements>
-                <!--
-                <dirsets>
-                  <dirset>
-                    <directory>${build.dir}</directory>
-                    <includes>
-                      <include>classes</include>
-                    </includes>
-                  </dirset>
-                </dirsets>
-                -->
-                <!--
-                <dependencysets>
-                  <dependencyset>
-                    <includeoutput>true</includeoutput>
-                    <excludeautomatic>true</excludeautomatic>
-                    <excludenames>
-                      <excludename>javafx\..+Empty</excludename>
-                    </excludenames>
-                  </dependencyset>
-                </dependencysets>
-                -->
-              </modulepath>
+              <arguments>${applicationArgs}</arguments>
               <!--
-                Specifies the modules names (names of root modules) to add to
-                the runtime image. Their transitive dependencies will add too.
+                Specifies the options to pass to the Java runtime.
               -->
-              <addmodules>
-                <addmodule>${applicationModuleName}</addmodule>
-              </addmodules>
+              <javaoptions>${applicationJvmArgs}</javaoptions>
               <!--
-                Specifies the location of the generated runtime image.
-                Default value: ${project.build.directory}/runtime.
+                Specifies the location of the icon of the application package.
               -->
-              <output>${jlinkImageDir}</output>
+              <icon>${jpackageConfigDir}/${applicationName}.${platformIconExtension}</icon>
               <!--
-                Limits the universe of observable modules to those in
-                the transitive closure of the named modules, mod,
-                plus the main module, if any, plus any further
-                modules specified in the "addmodules" property.
-                It used to limit resolve any services other than
-                the selected services, if the property "bindservices"
-                set to true.
+                Enable creating a console launcher for the application,
+                should be specified for application which requires console
+                interactions.
+                Default value: false
               -->
-              <!--limitmodules>
-                <limitmodule>org.example.limitmodule</limitmodule>
-              </limitmodules-->
+              <!--winconsole>false</winconsole-->
+            </configuration>
+          </execution>
+          <execution>
+            <id>jpackage-installer</id>
+            <goals>
+              <goal>jpackage</goal>
+            </goals>
+            <configuration>
               <!--
-                Suggest providers that implement the given service types
-                from the module path.
+                Specifies the type of package to
+                create: { PLATFORM | IMAGE | EXE | MSI }.
+                Default value: PLATFORM (a platform dependent default type)
               -->
-              <!--suggestproviders>
-                <suggestprovider>provider.name</suggestprovider>
-              </suggestproviders-->
+              <type>MSI</type>
               <!--
-                Save jlink options in the given file.
+                Specifies the location of the predefined application image
+                that is used to build an installable package.
               -->
-              <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+              <appimage>${jpackageDir}/${jpackageImageDir}</appimage>
               <!--
-                The last plugin allowed to sort resources.
+                Specifies the location of a properties file that contains
+                list of key, value pairs. The keys "extension", "mime-type",
+                "icon", and "description" can be used to describe the association.
               -->
-              <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+              <fileassociations>${jpackageConfigDir}/associations.properties</fileassociations>
               <!--
-                Post process an existing image.
+                Specifies the relative sub-path under the default installation
+                location of the application for Windows, or absolute path of the
+                installation directory of the application for Mac or Linux.
               -->
-              <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+              <installdir>${applicationVendor}/${applicationName}</installdir>
               <!--
-                Enable verbose tracing.
-                Default value: false.
+                Specifies the location of a license file.
               -->
-              <verbose>true</verbose>
+              <licensefile>${applicationLicenseFile}</licensefile>
               <!--
-                Link service provider modules and their dependencies.
-                Default value: false.
+                Enable adding a dialog to choose a directory in which
+                the product is installed.
+                Default value: false
               -->
-              <!--bindservices>false</bindservices-->
+              <windirchooser>true</windirchooser>
               <!--
-                Specifies the launcher command name for the module or
-                the command name for the module and main class (the module and
-                the main class names are separated by a slash). Arguments passed
-                to jvm, arguments passed to the application. Platform specific
-                templates for launcher script.
+                Enable adding the application to the system menu.
+                Default value: false
               -->
-              <launcher>
-                <command>${applicationName}</command>
-                <mainmodule>${applicationModuleName}</mainmodule>
-                <mainclass>${applicationClassName}</mainclass>
-                <jvmargs>${applicationJvmArgs}</jvmargs>
-                <args>${applicationArgs}</args>
-                <nixtemplate>${applicationTemplateNix}</nixtemplate>
-                <wintemplate>${applicationTemplateWin}</wintemplate>
-              </launcher>
+              <winmenu>true</winmenu>
               <!--
-                Excludes header files.
-                Default value: false.
+                Start menu group this application is placed in.
               -->
-              <noheaderfiles>true</noheaderfiles>
+              <winmenugroup>${applicationVendor}/${applicationName}</winmenugroup>
               <!--
-                Excludes man pages.
-                Default value: false.
+                Enable requesting to perform an install on a per-user basis.
+                Default value: false
               -->
-              <nomanpages>true</nomanpages>
+              <winperuserinstall>true</winperuserinstall>
               <!--
-                Specifies the byte order of the generated
-                image { NATIVE | LITTLE | BIG }.
-                Default value: NATIVE (the format of your system's architecture).
+                Enable creating a desktop shortcut for the application.
+                Default value: false
               -->
-              <!--endian>NATIVE</endian-->
+              <winshortcut>true</winshortcut>
               <!--
-                Suppresses a fatal error when signed modular JARs are linked
-                in the runtime image. The signature-related files of the signed
-                modular JARs aren't copied to the runtime image.
-                Default value: false.
+                UUID associated with upgrades for this package.
               -->
-              <!--ignoresigninginformation>false</ignoresigninginformation-->
+              <winupgradeuuid>8CF81762-0B19-46A6-875E-1F839A1700D0</winupgradeuuid>
               <!--
-                Disables the specified plug-ins.
-                For a complete list of all available plug-ins,
-                run the command: jlink ‒‒list-plugins
+                An identifier that uniquely identifies the application for macOS.
+                Defaults to the main class name. May only use
+                alphanumeric (A-Z,a-z,0-9), hyphen (-), and period (.) characters.
               -->
-              <!--disableplugins>
-                <disableplugin>compress</disableplugin>
-                <disableplugin>dedup-legal-notices</disableplugin>
-              </disableplugins-->
-            
-              <!-- PLUGINS -->
+              <!--macpackageidentifier>macPackageIdentifier</macpackageidentifier-->
               <!--
-                For plug-in options that require a pattern-list, the value is
-                a comma-separated list of elements, with each element using one
-                the following forms:
-            
-                  - glob-pattern
-                  - glob:glob-pattern
-                  - regex:regex-pattern
-                  - @filename
-                  
-                Example: **/module-info.class,glob:/java.base/java/lang/**
+                Name of the application as it appears in the Menu Bar.
+                This can be different from the application name.
+                This name must be less than 16 characters long and be suitable for
+                displaying in the menu bar and the application Info window.
+                Defaults to the application name.
               -->
-            
+              <!--macpackagename>macPackageName</macpackagename-->
               <!--
-                Compresses all resources in the output image. Specify
-                compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
-                An optional pattern-list filter can be specified to list
-                the pattern of files to include.
+                When signing the application package, this value is prefixed
+                to all components that need to be signed that don't have
+                an existing package identifier.
               -->
-              <compress>
-                <compression>ZIP</compression>
-                <!--filters>
-                  <filter>**/*-info.class</filter>
-                  <filter>glob:**/module-info.class</filter>
-                  <filter>regex:/java[a-z]+$</filter>
-                  <filter>@filename</filter>
-                </filters-->
-              </compress>
+              <!--macpackagesigningprefix>macPackageSigningPrefix</macpackagesigningprefix-->
               <!--
-                Includes the list of locales where langtag is
-                a BCP 47 language tag. This option supports locale matching as
-                defined in RFC 4647.
-                Ensure that you specified: ‒‒add-modules jdk.localedata when
-                using this property.
+                Request that the package be signed.
+                Default value: false
               -->
-              <!--includelocales>
-                <includelocale>en</includelocale>
-                <includelocale>ru</includelocale>
-                <includelocale>*-IN</includelocale>
-              </includelocales-->
+              <!--macsign>false</macsign-->
               <!--
-                Orders the specified paths in priority order.
+                Path of the keychain to search for the signing identity
+                (absolute path or relative to the current directory).
+                If not specified, the standard keychains are used.
               -->
-              <!--orderresources>
-                <orderresource>**/*-info.class</orderresource>
-                <orderresource>glob:**/module-info.class</orderresource>
-                <orderresource>regex:/java[a-z]+$</orderresource>
-                <orderresource>@filename</orderresource>
-              </orderresources-->
+              <!--macsigningkeychain>macSigningKeyChain</macsigningkeychain-->
               <!--
-                Specify resources to exclude.
+                Team name portion in Apple signing identities' names.
+                For example "Developer ID Application: ".
               -->
-              <!--excluderesources>
-                <excluderesource>**/*-info.class</excluderesource>
-                <excluderesource>glob:**/META-INF/**</excluderesource>
-                <excluderesource>regex:/java[a-z]+$</excluderesource>
-                <excluderesource>@filename</excluderesource>
-              </excluderesources-->
+              <!--macsigningkeyusername>macSigningKeyUserName</macsigningkeyusername-->
               <!--
-                Strips debug information from the output image.
-                Default value: false.
+                Name for Linux package, defaults to the application name.
               -->
-              <stripdebug>true</stripdebug>
+              <!--linuxpackagename>linuxPackageName</linuxpackagename-->
               <!--
-                Strip Java debug attributes from classes in the output image.
-                Default value: false.
+                Maintainer for .deb package (email).
               -->
-              <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+              <!--linuxdebmaintainer>linuxDebMaintainer</linuxdebmaintainer-->
               <!--
-                Exclude native commands (such as java/java.exe) from the image.
-                Default value: false.
+                Menu group this application is placed in.
               -->
-              <stripnativecommands>false</stripnativecommands>
+              <!--linuxmenugroup>linuxMenuGroup</linuxmenugroup-->
               <!--
-                De-duplicate all legal notices. If true is specified then
-                it will be an error if two files of the same filename
-                are different.
-                Default value: false.
+                Required packages or capabilities for the application.
+                Default value: false
               -->
-              <!--deduplegalnotices>true</deduplegalnotices-->
+              <!--linuxpackagedeps>false</linuxpackagedeps-->
               <!--
-                Specify files to exclude.
+                Type of the license ("License: <name>" of the RPM .spec).
               -->
-              <!--excludefiles>
-                <excludefile>**/*-info.class</excludefile>
-                <excludefile>glob:**/META-INF/**</excludefile>
-                <excludefile>regex:/java[a-z]+$</excludefile>
-                <excludefile>@filename</excludefile>
-              </excludefiles-->
+              <!--linuxrpmlicensetype>MIT</linuxrpmlicensetype-->
               <!--
-                Specify a JMOD section to exclude { MAN | HEADERS }.
+                Release value of the RPM <name>.spec file or Debian revision value
+                of the DEB control file.
               -->
-              <!--excludejmodsection>MAN</excludejmodsection-->
+              <!--linuxapprelease>linuxAppRelease</linuxapprelease-->
               <!--
-                Specify a file listing the java.lang.invoke classes to pre-generate.
-                By default, this plugin may use a builtin list of classes
-                to pre-generate. If this plugin runs on a different runtime
-                version than the image being created then code generation
-                will be disabled by default to guarantee correctness add
-                ignore-version=true to override this.
+                Group value of the RPM <name>.spec file or Section value
+                of DEB control file.
               -->
-              <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+              <!--linuxappcategory>linuxAppCategory</linuxappcategory-->
               <!--
-                Load release properties from the supplied option file.
-                - adds: is to add properties to the release file.
-                - dels: is to delete the list of keys in release file.
-                - Any number of key=value pairs can be passed.
+                Creates a shortcut for the application.
+                Default value: false
               -->
-              <!--releaseinfo>
-                <file>file</file>
-                <adds>
-                  <key1>value1</key1>
-                  <key2>value2</key2>
-                </adds>
-                <dels>
-                  <key1 />
-                  <key2 />
-                </dels>
-              </releaseinfo-->
-              <!--
-                Fast loading of module descriptors. Always on.
-                The jlink CLI is: ‒‒system-modules=.
-                Default value: true.
-              -->
-              <!--systemmodules>false</systemmodules-->
-              <!--
-                Select the HotSpot VM in
-                the output image: { CLIENT | SERVER | MINIMAL | ALL }
-                Default value: ALL.
-              -->
-              <!--vm>ALL</vm-->
+              <!--linuxshortcut>true</linuxshortcut-->
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin> <!-- maven-install-plugin -->
+        <artifactId>maven-install-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-deploy-plugin -->
+        <artifactId>maven-deploy-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- maven-release-plugin -->
+        <artifactId>maven-release-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- nexus-staging-maven-plugin -->
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-scm-plugin -->
+        <artifactId>maven-scm-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare</id>
+            <goals>
+              <goal>checkin</goal>
+            </goals>
+            <configuration>
+              <message>[maven-release-plugin] update version number</message>
+              <includes>README.md</includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> <!-- versions-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-dependency-plugin -->
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-site-plugin -->
+        <artifactId>maven-site-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
 
   <reporting>
     <plugins>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <failsOnError>false</failsOnError>
-        </configuration>
+      <plugin> <!-- maven-project-info-reports-plugin -->
+        <artifactId>maven-project-info-reports-plugin</artifactId>
         <reportSets>
           <reportSet>
             <reports>
-              <report>checkstyle</report>
+              <report>index</report>
+              <report>summary</report>
+              <!--report>modules</report-->
+              <report>dependency-management</report>
+              <report>dependencies</report>
+              <!--report>dependency-info</report-->
+              <!--report>dependency-convergence</report-->
+              <report>plugin-management</report>
+              <report>plugins</report>
+              <report>distribution-management</report>
+              <report>scm</report>
+              <report>issue-management</report>
+              <report>ci-management</report>
+              <!--report>mailing-lists</report-->
+              <report>licenses</report>
+              <report>team</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <linkXref>true</linkXref>
-          <analysisCache>true</analysisCache>
-          <failOnViolation>false</failOnViolation>
-          <printFailingErrors>true</printFailingErrors>
-          <minimumTokens>50</minimumTokens>
-          <maxAllowedViolations>0</maxAllowedViolations>
-          <ignoreAnnotations>false</ignoreAnnotations>
-          <ignoreIdentifiers>false</ignoreIdentifiers>
-          <ignoreLiterals>false</ignoreLiterals>
-          <includeTests>true</includeTests>
-          <rulesets>config/pmd/ruleset.xml</rulesets>
-        </configuration>
+      <plugin> <!-- maven-jxr-plugin -->
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+      <plugin> <!-- maven-source-plugin -->
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+
+      <!-- maven-javadoc-plugin -->
+      <!--plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin-->
+
+      <plugin> <!-- versions-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
         <reportSets>
           <reportSet>
             <reports>
-              <report>pmd</report>
-              <report>cpd</report>
+              <report>property-updates-report</report>
+              <report>dependency-updates-report</report>
+              <report>plugin-updates-report</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
+      <plugin> <!-- maven-dependency-plugin -->
         <artifactId>maven-dependency-plugin</artifactId>
         <reportSets>
           <reportSet>
@@ -1274,51 +1833,47 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <!--plugin>
+      <plugin> <!-- taglist-maven-plugin -->
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-        <configuration>
-          <codeNarcVersion>${codenarc.tool.version}</codeNarcVersion>
-          <failOnError>false</failOnError>
-          <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
-          <maxPriority1Violations>0</maxPriority1Violations>
-          <maxPriority2Violations>0</maxPriority2Violations>
-          <maxPriority3Violations>0</maxPriority3Violations>
-        </configuration>
-      </plugin-->
-      <!--plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <sourceFileExcludes>
-            <sourceFileExclude>**/module-info.java</sourceFileExclude>
-          </sourceFileExcludes>
-          <additionalOptions>-html5</additionalOptions>
-        </configuration>
-      </plugin-->
-      <plugin>
-        <artifactId>maven-jxr-plugin</artifactId>
+        <artifactId>taglist-maven-plugin</artifactId>
       </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
+      <plugin> <!-- maven-checkstyle-plugin -->
+        <artifactId>maven-checkstyle-plugin</artifactId>
         <reportSets>
           <reportSet>
             <reports>
-              <report>dependency-updates-report</report>
-              <report>plugin-updates-report</report>
-              <report>property-updates-report</report>
+              <report>checkstyle</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
-      <plugin>
+      <plugin> <!-- maven-pmd-plugin -->
+        <artifactId>maven-pmd-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>cpd</report>
+              <report>pmd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin> <!-- spotbugs-maven-plugin -->
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+
+      <!-- codenarc-maven-plugin -->
+      <!--plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>codenarc-maven-plugin</artifactId>
+      </plugin-->
+
+      <plugin> <!-- maven-surefire-report-plugin -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
       </plugin>
-      <plugin>
+      <plugin> <!-- jacoco-maven-plugin -->
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <reportSets>
@@ -1329,7 +1884,151 @@
           </reportSet>
         </reportSets>
       </plugin>
+      <plugin> <!-- maven-changelog-plugin -->
+        <artifactId>maven-changelog-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changelog</report>
+              <!--report>file-activity</report-->
+              <!--report>dev-activity</report-->
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
     </plugins>
   </reporting>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin> <!-- maven-gpg-plugin -->
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <platformFamily>windows</platformFamily>
+        <platformIconExtension>ico</platformIconExtension>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>unix</family>
+        </os>
+      </activation>
+      <properties>
+        <platformFamily>linux</platformFamily>
+        <platformIconExtension>png</platformIconExtension>
+      </properties>
+    </profile>
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <platformFamily>mac</platformFamily>
+        <platformIconExtension>icns</platformIconExtension>
+      </properties>
+    </profile>
+  </profiles>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>snapshots</id>
+      <name>OSS Sonatype Snapshots Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <licenses>
+    <license>
+      <name>${applicationLicenseName} (${applicationLicenseType})</name>
+      <url>${applicationLicenseUrl}</url>
+      <comments>${applicationLicenseComment}</comments>
+      <distribution>${applicationLicenseDistribution}</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>${applicationVendor}</name>
+    <url>${applicationVendorUrl}</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>${applicationAuthorNickname}</id>
+      <organization>${applicationVendor}</organization>
+      <organizationUrl>${applicationVendorUrl}</organizationUrl>
+      <name>${applicationAuthorName}</name>
+      <email>${applicationAuthorEmail}</email>
+      <url>${applicationAuthorUrl}</url>
+      <timezone>Europe/Kaliningrad</timezone>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/akman/java-boilerplate-gradle/tree/${project.scm.tag}</url>
+    <connection>scm:git:git@github.com:akman/java-boilerplate-gradle.git</connection>
+    <developerConnection>scm:git:git@github.com:akman/java-boilerplate-gradle.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/akman/java-boilerplate-gradle/issues</url>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <name>OSS Sonatype Snapshots Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <name>OSS Sonatype Releases Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
+
+  <ciManagement>
+    <system>Travis CI</system>
+    <url>https://travis-ci.com/github/akman/java-boilerplate-gradle</url>
+  </ciManagement>
 
 </project>
