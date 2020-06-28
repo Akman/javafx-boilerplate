@@ -480,35 +480,37 @@
           <artifactId>license-maven-plugin</artifactId>
           <version>${version.license-maven-plugin}</version>
           <configuration>
-            <encoding>${defaultEncoding}</encoding>
-            <header>config/license/LICENSE</header>
-            <strictCheck>true</strictCheck>
-            <skipExistingHeaders>false</skipExistingHeaders>
             <failIfMissing>false</failIfMissing>
-            <failIfUnknown>false</failIfUnknown>
-            <properties>
+            <defaultUseDefaultExcludes>false</defaultUseDefaultExcludes>
+            <defaultProperties>
               <name>${applicationFullName}</name>
               <url>${applicationUrl}</url>
               <licenseName>${applicationLicenseName}</licenseName>
               <licenseType>${applicationLicenseType}</licenseType>
               <copyright>${applicationCopyright}</copyright>
-            </properties>
-            <headerDefinitions>
-              <headerDefinition>config/license/xml_style.xml</headerDefinition>
-              <headerDefinition>config/license/javadoc_style.xml</headerDefinition>
-            </headerDefinitions>
+            </defaultProperties>
+            <defaultHeaderDefinitions>
+              <defaultHeaderDefinition>config/license/xml_style.xml</defaultHeaderDefinition>
+              <defaultHeaderDefinition>config/license/javadoc_style.xml</defaultHeaderDefinition>
+            </defaultHeaderDefinitions>
             <mapping>
               <fxml>XML_STYLE</fxml>
               <groovy>JAVADOC_STYLE</groovy>
+              <java>JAVADOC_STYLE</java>
             </mapping>
-            <includes>
-              <include>pom.xml</include>
-              <include>src/**/*</include>
-            </includes>
-            <excludes>
-              <exclude>**/resources/**/*.properties</exclude>
-              <exclude>**/resources/**/*.png</exclude>
-            </excludes>
+            <licenseSets>
+              <licenseSet>
+                <header>config/license/LICENSE</header>
+                <includes>
+                  <include>pom.xml</include>
+                  <include>src/**/*</include>
+                </includes>
+                <excludes>
+                  <exclude>**/resources/**/*.properties</exclude>
+                  <exclude>**/resources/**/*.png</exclude>
+                </excludes>
+              </licenseSet>
+            </licenseSets>
           </configuration>
         </plugin>
         <plugin> <!-- maven-resources-plugin -->
