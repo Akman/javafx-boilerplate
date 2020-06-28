@@ -59,6 +59,19 @@
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
+    <!-- JLink -->
+    <jlinkConfigDir>${project.basedir}/package</jlinkConfigDir>
+    <jlinkDir>${project.build.directory}/jlink</jlinkDir>
+    <jlinkModsDir>${jlinkDir}/mods</jlinkModsDir>
+    <jlinkLibsDir>${jlinkDir}/libs</jlinkLibsDir>
+    <jlinkImageDir>${jlinkDir}/image</jlinkImageDir>
+
+    <!-- JPackage -->
+    <jpackageConfigDir>${project.basedir}/package/${platformFamily}</jpackageConfigDir>
+    <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
+    <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
+    <jpackageImageDir>${applicationName}</jpackageImageDir>
+
     <!-- Application -->
     <applicationProperties>${project.basedir}/project.properties</applicationProperties>
     <applicationVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</applicationVersion>
@@ -97,14 +110,14 @@
     <version.spock>2.0-M3-groovy-3.0</version.spock>
     <version.groovy>3.0.4</version.groovy>
     <version.mockito>3.3.3</version.mockito>
-    <version.hamcrest>2.2</version.hamcrest>
-    <version.assertj>3.16.1</version.assertj>
+    <!--version.hamcrest>2.2</version.hamcrest-->
+    <!--version.assertj>3.16.1</version.assertj-->
 
     <!-- Tools -->
     <version.checkstyle>8.34</version.checkstyle>
     <version.pmd>6.25.0</version.pmd>
     <version.spotbugs>4.0.6</version.spotbugs>
-    <version.codenarc>1.5</version.codenarc>
+    <version.codenarc>0.22</version.codenarc>
 
     <!-- Plugins -->
     <version.maven-enforcer-plugin>3.0.0-M3</version.maven-enforcer-plugin>
@@ -147,14 +160,6 @@
     <version.taglist-maven-plugin>2.4</version.taglist-maven-plugin>
     <version.maven-changelog-plugin>2.3</version.maven-changelog-plugin>
 
-    <!-- Directories -->
-    <jlinkImageDir>${project.build.directory}/jlink/image</jlinkImageDir>
-    <jlinkModsDir>${project.build.directory}/jlink/mods</jlinkModsDir>
-    <jlinkLibsDir>${project.build.directory}/jlink/libs</jlinkLibsDir>
-    <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
-    <jpackageImageDir>${applicationName}</jpackageImageDir>
-    <jpackageConfigDir>package/${platformFamily}</jpackageConfigDir>
-    <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
   </properties>
 
   <dependencies>
@@ -462,19 +467,23 @@
             <xmlOutput>true</xmlOutput>
           </configuration>
         </plugin>
-        <plugin> <!-- codenarc-maven-plugin -->
+
+        <!-- codenarc-maven-plugin -->
+        <!--plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>codenarc-maven-plugin</artifactId>
           <version>${version.codenarc-maven-plugin}</version>
           <configuration>
+            <sourceDirectory>${project.basedir}/src/test/groovy</sourceDirectory>
             <codeNarcVersion>${version.codenarc}</codeNarcVersion>
             <failOnError>false</failOnError>
-            <ruleSetFiles>config/codenarc/rules.groovy</ruleSetFiles>
+            <ruleSetFiles>${project.basedir}/config/codenarc/rules.groovy</ruleSetFiles>
             <maxPriority1Violations>0</maxPriority1Violations>
             <maxPriority2Violations>0</maxPriority2Violations>
             <maxPriority3Violations>0</maxPriority3Violations>
           </configuration>
-        </plugin>
+        </plugin-->
+
         <plugin> <!-- license-maven-plugin -->
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
@@ -538,7 +547,7 @@
             <bottom>${applicationCopyright}</bottom>
             <additionalOptions>-html5</additionalOptions>
             <!--sourceFileExcludes>
-              <exclude>**/module-info.java</exclude>
+              <sourceFileExclude>**/module-info.java</sourceFileExclude>
             </sourceFileExcludes-->
           </configuration>
         </plugin>
@@ -1022,7 +1031,7 @@
             -->
             <preparationGoals>
               clean
-              package
+              validate
               site:site
               resources:copy-resources@prepare
               antrun:run@prepare
@@ -1282,10 +1291,13 @@
           </execution>
         </executions>
       </plugin>
-      <plugin> <!-- codenarc-maven-plugin -->
+
+      <!-- codenarc-maven-plugin -->
+      <!--plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>codenarc-maven-plugin</artifactId>
-      </plugin>
+      </plugin-->
+
       <plugin> <!-- license-maven-plugin -->
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
@@ -1505,7 +1517,7 @@
               <arguments>
                 <argument>-Dfile.encoding=${defaultEncoding}</argument>
                 <argument>--module-path</argument>
-                <modulepath/>
+                <modulepath />
                 <argument>--module</argument>
                 <argument>${applicationModuleName}/${applicationClassName}</argument>
                 <argument>--debug</argument>
