@@ -29,28 +29,27 @@
 package ru.akman.launcher;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import ru.akman.commons.CommonUtils;
 
 /**
  * Application launcher.
  */
-public final class Launcher {
-
-  /**
-   * CLI option to run the application without GUI.
-   */
-  private static final String CLI_NO_GUI = "--no-gui";
-
-  /**
-   * CLI option to run the application in debug mode.
-   */
-  private static final String CLI_DEBUG = "--debug";
+@Command(
+    name = "launcher",
+    description = "Launcher application",
+    version = "Version 1.0",
+    mixinStandardHelpOptions = true
+)
+public final class Launcher implements Callable<Integer> {
 
   /**
    * Logger level for debug mode.
@@ -110,6 +109,40 @@ public final class Launcher {
       PROPS_NAME, Charset.forName(PROPS_CHARSET));
 
   /**
+   * Debug mode.
+   */
+  @Option(
+      names = {"-d", "--debug"},
+      description = "Log in debug mode."
+  )
+  private boolean debugEnabled;
+
+  /**
+   * GUI mode.
+   */
+  @Option(
+      names = {"-g", "--gui"},
+      description = "Run application in GUI mode."
+  )
+  private boolean guiEnabled;
+
+  /**
+   * Is DEBUG mode enabled.
+   * @return true if DEBUG mode is enabled
+   */
+  public boolean isDebugEnabled() {
+    return debugEnabled;
+  }
+
+  /**
+   * Is GUI mode enabled.
+   * @return true if GUI mode is enabled
+   */
+  public boolean isGuiEnabled() {
+    return guiEnabled;
+  }
+
+  /**
    * Get string from the application resources.
    * @param key resource string key
    * @return resource string value
@@ -135,47 +168,45 @@ public final class Launcher {
     return PROPERTIES;
   }
 
-  static {
-    CommonUtils.setupSystemStreams();
-  }
-
-  private Launcher() {
-    // not called
-    throw new UnsupportedOperationException();
-  }
-
   /**
    * Main entry point of application.
    * @param args system CLI arguments
    */
-  public static void main(final String... args) {
+  public static void main(final String[] args) {
+    CommonUtils.setupSystemStreams();
+    final CommandLine cmdLine = new CommandLine(new Launcher());
+    System.exit(cmdLine.execute(args));
+  }
 
-    if (Arrays.asList(args).contains(CLI_DEBUG)) {
-      // set root logger level to DEBUG
+  /**
+   * Command line user interface.
+   *
+   * @return Exit code
+   */
+  @Override
+  public Integer call() throws Exception {
+    if (isDebugEnabled()) {
       CommonUtils.setLoggerLevel(LOG_LEVEL_DEBUG);
     }
-
     if (LOG.isDebugEnabled()) {
       LOG.debug(getString(PROP_APP_GREETING));
     }
     CommonUtils.dumpProperties(PROPERTIES);
-
-    if (Arrays.asList(args).contains(CLI_NO_GUI)) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(getString(PROP_APP_MODE_CLI));
-      }
-      ru.akman.cli.LauncherHelper.run(args);
-    } else {
+    if (isGuiEnabled()) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(getString(PROP_APP_MODE_GUI));
       }
-      ru.akman.gui.LauncherHelper.run(args);
+      ru.akman.gui.LauncherHelper.run();
+    } else {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(getString(PROP_APP_MODE_CLI));
+      }
+      ru.akman.cli.LauncherHelper.run();
     }
-
     if (LOG.isDebugEnabled()) {
       LOG.debug(getString(PROP_APP_PARTING));
     }
-
+    return 0;
   }
 
 }

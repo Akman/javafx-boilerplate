@@ -28,6 +28,7 @@
 
 plugins {
   id 'application'
+
   id 'groovy'
 
   // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
@@ -40,7 +41,7 @@ plugins {
   id 'de.aaschmid.cpd' version '3.1'
 
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.2.0'
+  id 'com.github.spotbugs' version '4.4.4'
 
   // https://github.com/CodeNarc/CodeNarc
   id 'codenarc'
@@ -49,7 +50,7 @@ plugins {
   id 'jacoco'
 
   // https://badass-jlink-plugin.beryx.org
-  id 'org.beryx.jlink' version '2.18.0'
+  id 'org.beryx.jlink' version '2.20.0'
 
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.15.0'
@@ -62,6 +63,10 @@ plugins {
 
   id 'eclipse'
 
+  id 'project-report'
+
+  id 'build-dashboard'
+
   // https://github.com/Akman/vscode-tasks
   id 'ru.akman.vscode-tasks' version '0.4.0'
 }
@@ -70,53 +75,172 @@ repositories {
   jcenter()
 }
 
-apply from: 'common.gradle'
+// Properties
+// new ru.akman.utils.PropertiesMap("${projectDir}/project.properties")
+//     .getProperties()
+//     .each {
+//   logger.lifecycle('{} = {}', it.key, it.value)
+//   ext.set(it.key, it.value);
+// }
 
 ext {
-  javaFXVersion = javaVersion
+  // Java
+  javaVersion = JavaVersion.VERSION_13 // JavaVersion.current()
+
+  // JavaFX
+  javaFXVersion = '15-ea+6'
+
+  // Encoding
+  defaultEncoding = 'UTF-8'
+
+  // Tools
+  checkstyleVersion = '8.34'
+  pmdVersion = '6.25.0'
+  spotbugsVersion = '4.0.6'
+  codenarcVersion = '1.6'
+  jacocoVersion = '0.8.5'
+
+  // Application
+  applicationName = 'Java Boilerplate Project'
+  applicationVersion = project.version.replaceAll('-SNAPSHOT', '')
+  applicationFullName = "${applicationName} v${applicationVersion}"
+  applicationDescription = 'This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.'
+  applicationScmUser = 'akman'
+  applicationScmRepo = 'java-boilerplate-gradle'
+  applicationUrl = "https://github.com/${applicationScmUser}/${applicationScmRepo}"
+  applicationInceptionYear = 2019
+  applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
+  applicationAuthorNickname = 'Akman'
+  applicationAuthorName = 'Alexander Kapitman'
+  applicationAuthorEmail = 'akman.ru@gmail.com'
+  applicationAuthorUrl = 'https://akman.github.io/'
+  applicationAuthorRole = 'developer'
+  applicationAuthorTimezone = 'Europe/Kaliningrad'
+  applicationCopyright = "Copyright (C) ${applicationInceptionYear}"
+  if (applicationInceptionYear != applicationCurrentYear) {
+    applicationCopyright += " - ${applicationCurrentYear}"
+  }
+  applicationCopyright += " ${applicationAuthorName}";
+  applicationCopyright += " <${applicationAuthorEmail}>";
+  applicationVendor = 'Akman'
+  applicationVendorUrl = 'https://akman.github.io/'
+  applicationLicenseFile = 'LICENSE'
+  applicationLicenseName = 'MIT License'
+  applicationLicenseType = 'MIT'
+  applicationLicenseDistribution = 'repo'
+  applicationLicenseComment = 'This is a lax, permissive non-copyleft free software license, compatible with the GNU GPL.'
+  applicationLicenseUrl = 'https://spdx.org/licenses/MIT.html'
+
+  // Launcher
+  applicationLauncherName = 'launcher'
   applicationModuleName = 'ru.akman.launcher'
   applicationClassName = 'ru.akman.launcher.Launcher'
   applicationJvmArgs = [
-    '-Dfile.encoding=UTF-8',
     '-Xms256m',
     '-Xmx512m',
   ]
   applicationArgs = [
-    // '--no-gui',
-    // '--debug'
+    '--debug'
   ]
+
+  // Platform
+  os = org.gradle.internal.os.OperatingSystem.current()
+  platformModifier = os.isWindows() ? 'win' : (os.isLinux() ? 'linux' : 'mac')
+  platformFamily = os.isWindows() ? 'windows' : (os.isLinux() ? 'linux' : 'mac')
+  switch (platformFamily) {
+    case 'windows':
+      platformImageName = 'Launcher'
+      platformIconExtension = 'ico'
+      platformLauncherName = "${applicationLauncherName}"
+      platformArgs = applicationArgs + [
+        '--gui'
+      ]
+      platformJvmArgs = applicationJvmArgs + [
+        "-Dfile.encoding=${defaultEncoding}",
+        '-splash:$ROOTDIR/splash.png'
+      ]
+      platformInstallDir = "${applicationVendor}/${platformImageName}"
+      platformMenuGroup = "${applicationVendor}/${platformImageName}"
+      platformUUID = '8CF81762-0B19-46A6-875E-1F839A1700D0'
+      break
+    case 'linux':
+      platformImageName = 'Launcher'
+      platformIconExtension = 'png'
+      platformLauncherName = "${applicationLauncherName}"
+      platformArgs = applicationArgs + [
+        '--gui'
+      ]
+      platformJvmArgs = applicationJvmArgs + [
+          "-Dfile.encoding=${defaultEncoding}",
+          '-splash:$ROOTDIR/splash.png'
+      ]
+      platformInstallDir = "${applicationVendor}/${platformImageName}"
+      platformMenuGroup = "${applicationVendor}/${platformImageName}"
+      platformUUID = ''
+      break
+    case 'mac':
+      platformImageName = 'Launcher'
+      platformIconExtension = 'icns'
+      platformLauncherName = "${applicationLauncherName}"
+      platformArgs = applicationArgs + [
+        '--gui'
+      ]
+      platformJvmArgs = applicationJvmArgs + [
+          "-Dfile.encoding=${defaultEncoding}",
+          '-splash:$ROOTDIR/splash.png'
+      ]
+      platformInstallDir = "${applicationVendor}/${platformImageName}"
+      platformMenuGroup = "${applicationVendor}/${platformImageName}"
+      platformUUID = ''
+      break
+  }
+
+  // JLink
+  jlinkConfigDir = "${projectDir}/package"
+  jlinkTemplateWin = "${jlinkConfigDir}/win-script.template"
+  jlinkTemplateNix = "${jlinkConfigDir}/nix-script.template"
+  jlinkDir = "${buildDir}/jlink"
+  jlinkModsDir = "${jlinkDir}/mods"
+  jlinkLibsDir = "${jlinkDir}/libs"
+  jlinkImageDir = "${jlinkDir}/runtime-image"
+
+  // JPackage
+  jpackageCommonConfigDir = "${projectDir}/package"
+  jpackageConfigDir = "${projectDir}/package/${platformFamily}"
+  jpackageResourcesDir = "${jpackageConfigDir}/resources"
+  jpackageDir = "${buildDir}/jpackage"
+  jpackageImageDir = "${jpackageDir}/${platformImageName}"
+
+  // Log
   logDir = file("${projectDir}/log")
-  addModules = [
-    // // JavaFX
-    // 'javafx.base',
-    // 'javafx.graphics',
-    // 'javafx.controls',
-    // 'javafx.fxml',
-    // 'javafx.swing',
-    // // 'javafx.web',
-    // // 'javafx.media',
-    // // SLF4J + Logback
-    // 'org.slf4j',
-    // 'ch.qos.logback.classic',
-    // 'java.naming',
-    // 'java.management',
-  ]
+}
+
+java {
+  sourceCompatibility = javaVersion
+  targetCompatibility = javaVersion
+  // releaseCompatibility = javaVersion
+  modularity.inferModulePath.set(true)  
 }
 
 dependencies {
+  annotationProcessor(
+    'info.picocli:picocli-codegen:4.3.2'
+  )
   implementation(
     // JavaFX
-    "org.openjfx:javafx-base:${javaFXVersion}:${platform}",
-    "org.openjfx:javafx-controls:${javaFXVersion}:${platform}",
-    "org.openjfx:javafx-graphics:${javaFXVersion}:${platform}",
-    "org.openjfx:javafx-fxml:${javaFXVersion}:${platform}",
-    "org.openjfx:javafx-swing:${javaFXVersion}:${platform}",
-    //"org.openjfx:javafx-web:${javaFXVersion}:${platform}",
-    //"org.openjfx:javafx-media:${javaFXVersion}:${platform}",
+    "org.openjfx:javafx-base:${javaFXVersion}:${platformModifier}",
+    "org.openjfx:javafx-controls:${javaFXVersion}:${platformModifier}",
+    "org.openjfx:javafx-graphics:${javaFXVersion}:${platformModifier}",
+    "org.openjfx:javafx-fxml:${javaFXVersion}:${platformModifier}",
+    "org.openjfx:javafx-swing:${javaFXVersion}:${platformModifier}",
+    //"org.openjfx:javafx-web:${javaFXVersion}:${platformModifier}",
+    //"org.openjfx:javafx-media:${javaFXVersion}:${platformModifier}",
     // SLF4J + Logback
     'org.slf4j:slf4j-api:2.0.0-alpha1',
     'ch.qos.logback:logback-classic:1.3.0-alpha4',
     'ch.qos.logback:logback-core:1.3.0-alpha4',
+    // Picocli
+    'info.picocli:picocli:4.3.2'
   )
   testImplementation(
     // JUpiter
@@ -127,8 +251,8 @@ dependencies {
     // JUnit 4 for Spock only
     'org.junit.vintage:junit-vintage-engine:5.7.0-M1',
     // Spock
-    'org.spockframework:spock-core:2.0-M2-groovy-3.0',
-    'org.spockframework:spock-junit4:2.0-M2-groovy-3.0',
+    'org.spockframework:spock-core:2.0-M3-groovy-3.0',
+    'org.spockframework:spock-junit4:2.0-M3-groovy-3.0',
     // Mockito
     'org.mockito:mockito-core:3.3.3',
     'org.mockito:mockito-junit-jupiter:3.3.3',
@@ -183,27 +307,42 @@ clean {
     '-Xlint:deprecation',
     // Terminate compilation if warnings occur.
     '-Werror',
+    "-Aproject=${project.group}/${project.name}"
   ]
 }
 
-compileJava {
-  doFirst {
-    options.compilerArgs += [
-      '--module-path', classpath.asPath,
-    ]
-    classpath = files()
-    addModules.each {
-      options.compilerArgs += [
-        '--add-modules', it
-      ]
-    }
-  }
-}
+// compileJava {
+//   doFirst {
+//     options.compilerArgs += [
+//       '--module-path', classpath.asPath,
+//     ]
+//     classpath = files()
+//     [
+//       // 'javafx.base',
+//       // 'javafx.graphics',
+//       // 'javafx.controls',
+//       // 'javafx.fxml',
+//       // 'javafx.swing',
+//       // // 'javafx.web',
+//       // // 'javafx.media',
+//       // // SLF4J + Logback
+//       // 'org.slf4j',
+//       // 'ch.qos.logback.classic',
+//       // 'java.naming',
+//       // 'java.management',
+//     ].each {
+//       options.compilerArgs += [
+//         '--add-modules', it
+//       ]
+//     }
+//   }
+// }
 
 application {
-  applicationName = applicationName
+  // for jlink
   mainClassName = applicationClassName
   applicationDefaultJvmArgs = applicationJvmArgs
+  applicationName = platformImageName
 }
 
 task processFilteredResources(type: Copy) {
@@ -280,48 +419,63 @@ tasks.withType(Test) {
 }
 
 javadoc {
-  exclude '**/module-info.java'
-  options.addBooleanOption 'html5', true
+  failOnError = false
+  //exclude '**/module-info.java'
   options.encoding defaultEncoding
+  options.addStringOption 'bottom', applicationCopyright
+  options.addBooleanOption 'html5', true
+  options.addBooleanOption 'notimestamp', true
 }
 
-task srcJar(type: Jar, dependsOn: classes) {
-  // classifier = 'sources'
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier 'sources'
   from sourceSets.main.allSource
 }
 
-task docJar(type: Jar, dependsOn: classes) {
+task javadocJar(type: Jar, dependsOn: classes) {
   classifier 'javadoc'
   from javadoc
 }
 
 artifacts {
-  archives srcJar, docJar
+  archives sourcesJar, javadocJar
 }
 
 jar {
   manifest {
     attributes(
-      'Implementation-Title': "${applicationName}",
-      'Main-Class': "${applicationClassName}"
+      'Main-Class': "${applicationClassName}",
+      // 'Class-Path': configurations.runtimeClasspath.collect { it.getName() }
+      //     .join(' '),
+      'Specification-Title': "${applicationName}",
+      'Specification-Version': "${project.version}",
+      'Specification-Vendor': "${applicationVendor}",
+      'Implementation-Title': "${applicationModuleName}",
+      'Implementation-Version': "${project.version}",
+      'Implementation-Vendor': "${applicationVendor}"
     )
   }
 }
 
-task fatJar(type: Jar) {
-  archiveAppendix = 'full'
-  manifest {
-    attributes(
-      'Implementation-Title': "${applicationName}",
-      'Main-Class': "${applicationModuleName}/${applicationClassName}"
-    )
-  }
-  from {
-    configurations.runtimeClasspath.collect {
-      it.isDirectory() ? it : zipTree(it)
-    }
-  }
-}
+// task fatJar(type: Jar) {
+//   archiveAppendix = 'full'
+//   manifest {
+//     attributes(
+//       'Main-Class': "${applicationClassName}",
+//       'Specification-Title': "${applicationName}",
+//       'Specification-Version': "${version}",
+//       'Specification-Vendor': "${applicationVendor}",
+//       'Implementation-Title': "${applicationModuleName}",
+//       'Implementation-Version': "${version}",
+//       'Implementation-Vendor': "${applicationVendor}"
+//     )
+//   }
+//   from {
+//     configurations.runtimeClasspath.collect {
+//       it.isDirectory() ? it : zipTree(it)
+//     }
+//   }
+// }
 
 startScripts {
   doFirst {
@@ -332,7 +486,7 @@ startScripts {
     classpath = files()
   }
   doLast{
-    def bashFile = new File(outputDir, applicationName)
+    def bashFile = new File(outputDir, applicationLauncherName)
     String bashContent = bashFile.text
     bashFile.text = bashContent
         .replaceFirst('APP_HOME_LIB',
@@ -343,7 +497,7 @@ startScripts {
         .replaceFirst(/(?m)^eval set -- .+$/,
             java.util.regex.Matcher.quoteReplacement(
                 'eval set -- $JAVA_OPTS $DEFAULT_JVM_OPTS "$APP_ARGS"'))
-    def batFile = new File(outputDir, applicationName + ".bat")
+    def batFile = new File(outputDir, applicationLauncherName + ".bat")
     String batContent = batFile.text
     batFile.text = batContent
         .replaceFirst('APP_HOME_LIB',
@@ -386,7 +540,7 @@ task exec(type: ru.akman.utils.ExecTask) {
   group 'application'
   dependsOn classes
   standardInput = System.in
-  executable = jvm.javaExecutable
+  executable = org.gradle.internal.jvm.Jvm.current().javaExecutable
   args = applicationJvmArgs
   args += [
     '-Dfile.encoding=' + System.properties['file.encoding'],
@@ -547,6 +701,7 @@ license {
     '**/*.png',
   ])
   mapping([
+    'java': 'JAVADOC_STYLE',
     'groovy': 'JAVADOC_STYLE',
     'fxml': 'XML_STYLE',
   ])
@@ -561,12 +716,12 @@ license {
 
 checkstyle {
   // The version of the code quality tool to be used.
-  toolVersion = '8.29'
+  toolVersion = checkstyleVersion
 
   // The Checkstyle configuration file to use.
   // https://github.com/checkstyle/checkstyle/tree/master/src/main/resources
   configFile = file("${projectDir}/config/checkstyle/google_checks.xml")
-  
+
   // Whether to allow the build to continue if there are warnings.
   ignoreFailures = true
 
@@ -587,7 +742,7 @@ checkstyle {
 
 pmd {
   // The version of the code quality tool to be used.
-  toolVersion = '6.21.0'
+  toolVersion = pmdVersion
 
   // Whether or not to write PMD results to System.out.
   consoleOutput = false
@@ -727,7 +882,7 @@ check.dependsOn groovyCpdCheck
 // SpotBugsExecutor.execute(SpotBugsRunnerForWorker.java:97) ...
 spotbugs {
   // The version of the code quality tool to be used.
-  // toolVersion = '4.0.2'
+  toolVersion = spotbugsVersion
 
   // The source sets to be analyzed as part of the check and build tasks.
   // sourceSets = [
@@ -803,7 +958,7 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 
 jacoco {
   // Version of Jacoco JARs to use.
-  toolVersion = '0.8.5'
+  toolVersion = jacocoVersion
 
   // The directory where reports will be generated.
   // reportsDir = file("${project.reporting.baseDir}/jacoco")
@@ -821,7 +976,7 @@ jacocoTestReport {
 build.dependsOn jacocoTestReport
 
 codenarc {
-  toolVersion = '1.5'
+  toolVersion = codenarcVersion
   configFile = file("${projectDir}/config/codenarc/rules.groovy")
   ignoreFailures = true
   maxPriority1Violations = 0
@@ -831,45 +986,64 @@ codenarc {
   reportFormat = 'html'
 }
 
+// dependencyReport (txt)
+// htmlDependencyReport (html)
+// propertyReport (txt)
+// taskReport (txt)
+// projectReport (txt)
+buildDashboard.dependsOn projectReport
+// buildDashboard (html)
+// checkstyleMain (html)(xml)
+// checkstyleTest (html)(xml)
+// codenarcMain (html)
+// codenarcTest (html)
+// cpdCheck (text)(xml)
+// groovyCpdCheck (text)(xml)
+// jacocoTestReport (html)(xml)
+// pmdMain (html)(xml)
+// pmdTest (html)(xml)
+// test (html)(junitXml)
+buildDashboard {
+  reports {
+    html {
+      //aggregate report, ...
+      destination file("${project.reporting.baseDir}")
+    }
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 jlink {
   // The path to the JDK providing the tools needed
-  // by the plugin (javac, jar, jlink etc.).
-  // defaultValue: the first non-empty value from:
-  //  - the badass.jlink.java.home system property
-  //  - the BADASS_JLINK_JAVA_HOME environment variable
-  //  - the java.home system property (only if it points to a JRE containing
-  //    the javac, jar, and jlink tools)
-  //  - the JAVA_HOME environment variable
-  // javaHome = '/usr/lib/jvm/open-jdk'
+  javaHome = System.getenv('JAVA_HOME')
 
   // The name of the Gradle dependency configuration used to
   // execute your application.
   // defaultValue: 'runtimeClasspath'
-  // configuration = 'myAppRuntime'
+  // configuration = 'runtimeClasspath'
 
   // The directory into which the custom runtime image should be generated.
   // If you use the targetPlatform method to generate images for
   // other platforms, the corresponding images will be created in
   // subdirectories of imageDir.
-  imageDir = file("${buildDir}/jlink/image")
+  imageDir = file("${jlinkImageDir}")
 
   // The file into which a zip archive of the custom runtime image
   // should be created.
-  imageZip = file(
-      "${buildDir}/jlink/${applicationName}-${applicationVersion}.zip")
+  // imageZip = file(
+  //     "${jlinkDir}/${applicationLauncherName}-${project.version}.zip")
 
   // Convenience property for setting the values
   // of both imageDir and imageZip as follows:
   // imageDir <- buildDir/imageName
   // imageZip <- buildDir/imageName.zip
-  // imageName = applicationName
+  // imageName = applicationLauncherName
 
   // The path to the base directory that will be used by the plugin
   // to store intermediate outputs.
   // defaultValue: "${buildDir}/jlinkbase"
-  jlinkBasePath = "${buildDir}/jlink/base"
+  jlinkBasePath = "${jlinkDir}/temp"
 
   // The main class to be provided as part of the --launcher option of jlink.
   // defaultValue: project.mainClassName from the Application plugin
@@ -891,31 +1065,12 @@ jlink {
   // defaultValue: project.version
   // mergedModuleJarVersion = version
 
-  // Options for creating the runtime image
+  // A list of options to be passed to jlink.
   options = [
-    // Specifies the byte order of the generated image: "little" or "big".
-    // The default value is the format of your system's architecture.
-    // '--endian', 'little',
-
-    // Suppresses a fatal error when signed modular JARs are linked in
-    // the runtime image. The signature-related files of the signed modular
-    // JARs aren’t copied to the runtime image.
-    // '--ignore-signing-information',
-
-    // Strips native executables
     '--strip-native-commands',
-
-    // Strips debug information
     '--strip-debug',
-
-    // Excludes include header files
     '--no-header-files',
-
-    // Excludes man pages
     '--no-man-pages',
-
-    // Enable compression of resources: "0" - no compression,
-    // "1" - constant string sharing, "2" - zip
     '--compress', '2',
   ]
 
@@ -928,7 +1083,7 @@ jlink {
   // the merged module. This method is useful when it should handle one or
   // more modular jars as non-modular. You can call this method multiple
   // times.
-  // forceMerge 'log4j-api'
+  // forceMerge(String... jarPrefixes)
 
   // addExtraDependencies(String... jarPrefixes)
   // Instructs the plugin to treat all jars matching the given prefixes
@@ -947,7 +1102,6 @@ jlink {
   // addExtraModulePath '/usr/lib/jmods'
 
   // targetPlatform(String name, String jdkHome, List<String> options = [])
-  // targetPlatform('linux-x64', '/usr/lib/jvm/jdk_x64_linux_hotspot_11_28')
   // targetPlatform(
   //   'linux-s390x',
   //   '/usr/lib/jvm/jdk_s390x_linux_hotspot_11_28',
@@ -962,40 +1116,14 @@ jlink {
   //   addOptions("--endian", "big")
   //   addExtraModulePath("/usr/lib/openjfx/linux-s390x/jmods")
   // }
-  // targetPlatform("mac") {
-  //   jdkHome = "/usr/lib/jvm/mac/jdk-11.0.2+9"
-  //   addExtraModulePath("/usr/lib/openjfx/mac/jmods")
-  // }
-  // targetPlatform("win") {
-  //   jdkHome = "/usr/lib/jvm/win/jdk-11.0.2+9"
-  //   addExtraModulePath("/usr/lib/openjfx/win/jmods")
-  // }
 
-  launcher {
-    name = applicationName.capitalize()
-    moduleName = applicationModuleName
-    mainClassName = applicationClassName
-    jvmArgs = applicationJvmArgs
-    args = applicationArgs
-    unixScriptTemplate = file("${projectDir}/package/nix-script.template")
-    windowsScriptTemplate = file(
-        "${projectDir}/package/win-script.template")
-  }
-
-  // The plugin can generate script files for additional applications besides
-  // the main one. For each additional application you configure a
-  // secondaryLauncher block. This block supports all properties
-  // of the launcher block and also the following ones:
-  //     mainClass - the main class of this additional application.
-  //     moduleName - the module containing the main class of this additional
-  //                  application. defaultValue: the value of the moduleName
-  //                  property in the enclosing jlink extension
-  // secondaryLauncher {
-  //   name = 'my-additional-app'
-  //   mainClass = 'org.example.MyAdditionalApp'
-  //   args = ['--user', 'emma']
+  // mergedModule {
+  //   version
+  //   additive
+  //   excludeRequires(String... modules)
+  //   excludeUses(String... services)
+  //   excludeProvides(Map constraints)
   // }
-
   // mergedModule {
   //   additive = true
   //   requires 'java.desktop'
@@ -1005,6 +1133,41 @@ jlink {
   //   excludeRequires 'java.compiler', 'java.rmi'
   //   excludeUses 'org.apache.logging.log4j.message.ThreadDumpMessage'
   //   excludeProvides servicePattern: 'org.apache.logging.*'
+  // }
+
+  launcher {
+    moduleName = applicationModuleName
+    mainClass = applicationClassName
+    name = applicationLauncherName
+    jvmArgs = applicationJvmArgs + [ "-Dfile.encoding=${defaultEncoding}" ]
+    args = applicationArgs
+    unixScriptTemplate = file("${jlinkTemplateNix}")
+    windowsScriptTemplate = file("${jlinkTemplateWin}")
+    // If true, the application will be launched without an associated
+    // console window (using javaw instead of java).
+    // defaultValue: false
+    // noConsole = true
+  }
+
+  // The plugin can generate script files for additional applications
+  // besides the main one. For each additional application you configure
+  // a secondaryLauncher block.
+  // This block supports all properties of the launcher block and also
+  // the following ones:
+  //
+  // mainClass - the main class of this additional application
+  // moduleName - the module containing the main class (default value -
+  //              the value of the moduleName property in the enclosing
+  //              jlink extension
+  // secondaryLauncher {
+  //   moduleName = applicationModuleName
+  //   mainClass = applicationClassName
+  //   name = applicationLauncherName
+  //   jvmArgs = applicationJvmArgs
+  //   args = applicationArgs
+  //   unixScriptTemplate = file("${jlinkTemplateNix}")
+  //   windowsScriptTemplate = file("${jlinkTemplateWin}")
+  //   // noConsole = false
   // }
 
   // By default, all application modules are included in the custom runtime
@@ -1022,45 +1185,48 @@ jlink {
   // Create a platform-specific application image and installer
   // https://openjdk.java.net/jeps/343
   jpackage {
-
     // The path to the JDK providing the jpackage tool.
-    // defaultValue: the first non-empty value from:
-    //  - the badass.jlink.jpackage.home system property
-    //  - the BADASS_JLINK_JPACKAGE_HOME environment variable
-    //  - the java.home system property (only if it points to a JRE
-    //    containing the jpackage tool)
-    //  - the JAVA_HOME environment variable
-    // jpackageHome = "/usr/lib/jvm/jdk14"
+    jpackageHome = System.getenv('JPACKAGE_HOME')
 
     // Convenience property for setting both imageOutputDir and
     // installerOutputDir with the value "${buildDir}/${outputDir}".
     // defaultValue: "jpackage"
-    outputDir = 'jpackage'
+    // outputDir = "${jpackageDir}"
 
     // The directory passed as argument to the --output option of jpackage
     // when executing the jpackageImage task.
     // defaultValue: buildDir/outputDir
-    imageOutputDir = file("${buildDir}/${outputDir}")
+    // imageOutputDir = file("${jpackageImageDir}")
 
     // The argument passed to the --name option when executing the
     // jpackageImage task.
     // defaultValue: the name value configured in the launcher block
     // or project.name
-    imageName = applicationName.capitalize()
+    imageName = platformImageName
+
+    // List of additional options to be passed to the jpackage executable
+    // when executing the jpackageImage task.
+    // defaultValue: empty list
+    imageOptions = [
+      // Copyright for the application
+      '--copyright', applicationCopyright,
+      // Description of the application
+      '--description', applicationDescription,
+      // Vendor of the application
+      '--vendor', applicationVendor,
+      // Path of the icon of the application bundle (absolute path
+      // or relative to the current directory)
+      '--icon', "${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}",
+      '--add-launcher', "${platformLauncherName}-cli=${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties"
+    ]
+
 
     // The directory passed as argument to the --resource-dir option
     // when running jpackage to create an application installer.
     // It is also applicable when creating an application image
     // when you want your own application image
     // instead of the default java image.
-    // resourceDir = file("${buildDir}/my-packaging-resources")
-
-    // This property is required only when using the targetPlatform method.
-    // It specifies which of the images produced by jlink should be used as
-    // runtime image by jpackage. Its value must match the name provided
-    // in one of the calls to the targetPlatform method.
-    // defaultValue: null
-    // targetPlatform = "linux"
+    resourceDir = file("${jpackageResourcesDir}")
 
     // Boolean value that lets you generate only the platform-specific
     // application image and skip the generation of the platform-specific
@@ -1068,72 +1234,80 @@ jlink {
     // defaultValue: false
     skipInstaller = false
 
+    // The type of the installer to create. Valid values are: "exe",
+    // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+    // specified (in create-installer mode) all supported types of
+    // installable packages for the current platform will be created.
+    // installerType = 'msi'
+
     // The directory passed as argument to the --output option when running
     // jpackage when executing the jpackage task.
     // defaultValue: ${buildDir}/${outputDir}
-    installerOutputDir = file("${buildDir}/${outputDir}")
+    // installerOutputDir = file("${jpackageImageDir}")
 
     // The argument passed to the --name option when running jpackage
     // when executing the jpackage task.
     // defaultValue: the name value configured in the launcher block or
     // project.name
-    // installerName = !BUG! <- if set then jpackage fail
+    installerName = platformImageName
 
     // The argument passed to the --app-version option when running
     // jpackage when executing the jpackage and jpackageImage tasks.
     // defaultValue: the project version
-    // appVersion = applicationVersion
+    appVersion = applicationVersion
 
     // List of JVM arguments to be passed to the virtual machine.
     // defaultValue: the jvmArgs value configured in the launcher block or
     // an empty list
-    jvmArgs = applicationJvmArgs
+    jvmArgs = platformJvmArgs
 
-    // List of additional options to be passed to the jpackage executable
-    // when executing the jpackageImage task.
-    // defaultValue: empty list
-    imageOptions = [
-      // Description of the application
-      '--description', applicationDescription,
-      // Vendor of the application
-      '--vendor', applicationVendor,
-      // Copyright for the application
-      '--copyright', applicationCopyright,
-    ]
-
-    // The type of the installer to create. Valid values are: "exe",
-    // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
-    // specified (in create-installer mode) all supported types of
-    // installable packages for the current platform will be created.
-    // installerType = 'pkg'
+    // List of arguments to be passed to the application.
+    // defaultValue: the args value configured in the launcher block or
+    // an empty list
+    args = platformArgs
 
     // List of additional options to be passed to the jpackage executable
     // when executing the jpackage task.
     // defaultValue: empty list
     installerOptions = [
+      // Copyright for the application
+      '--copyright', applicationCopyright,
       // Description of the application
       '--description', applicationDescription,
       // Vendor of the application
       '--vendor', applicationVendor,
-      // Copyright for the application
-      '--copyright', applicationCopyright,
       // Path to the license file (absolute path or relative to the
       // current directory)
       '--license-file', applicationLicenseFile,
+      // Path to a Properties file that contains list of
+      // key, value pairs (absolute path or relative to the
+      // current directory). The keys: "extension", "mime-type",
+      // "icon", and "description" can be used to describe the
+      // association. This option can be used multiple times.
+      '--file-associations', "${jpackageConfigDir}/associations.properties",
+      // Absolute path of the installation directory of the
+      // application on OS X or Linux. Relative sub-path of the
+      // installation location of the application such as
+      // "Program Files" or "AppData" on Windows.
+      '--install-dir', "${platformInstallDir}",
     ]
 
-    switch (platform) {
+    // This property is required only when using the targetPlatform method.
+    // It specifies which of the images produced by jlink should be used as
+    // runtime image by jpackage. Its value must match the name provided
+    // in one of the calls to the targetPlatform method.
+    // defaultValue: null
+    // targetPlatformName = "linux"
+
+    switch (platformFamily) {
       case 'mac':
         imageOptions += [
-          // Path of the icon of the application bundle (absolute path
-          // or relative to the current directory)
-          '--icon', "${projectDir}/package/mac/launcher.icns",
 
           // Name of the application as it appears in the menu bar
           // (defaults to the application name; must be less than 16
           // characters long and be suitable for displaying in the
           // menu bar and the application Info window)
-          '--mac-package-name', applicationName.capitalize(),
+          '--mac-package-name', platformImageName,
 
           // An identifier that uniquely identifies the application
           // for macOS (defaults to the main class name; limited to
@@ -1156,48 +1330,15 @@ jlink {
           // an existing bundle identifier
           // '--mac-bundle-signing-prefix <prefix string>',
         ]
-        installerOptions += [
-          // Path to a Properties file that contains list of
-          // key, value pairs (absolute path or relative to the
-          // current directory). The keys: "extension", "mime-type",
-          // "icon", and "description" can be used to describe the
-          // association. This option can be used multiple times.
-          '--file-associations',
-          "${projectDir}/package/mac/associations.properties",
-
-          // Absolute path of the installation directory of the
-          // application on OS X or Linux. Relative sub-path of the
-          // installation location of the application such as
-          // "Program Files" or "AppData" on Windows.
-          // '--install-dir <file path>',
-        ]
         break
-      case 'win':
+      case 'windows':
         imageOptions += [
-          // Path of the icon of the application bundle (absolute path
-          // or relative to the current directory)
-          '--icon', "${projectDir}/package/windows/launcher.ico",
-
           // Creates a console launcher for the application (should
           // be specified for applications which require console
           // interactions)
           // '--win-console',
         ]
         installerOptions += [
-          // Path to a Properties file that contains list of
-          // key, value pairs (absolute path or relative to the
-          // current directory). The keys: "extension", "mime-type",
-          // "icon", and "description" can be used to describe the
-          // association. This option can be used multiple times.
-          '--file-associations',
-          "${projectDir}/package/windows/associations.properties",
-
-          // Absolute path of the installation directory of the
-          // application on OS X or Linux. Relative sub-path of the
-          // installation location of the application such as
-          // "Program Files" or "AppData" on Windows.
-          '--install-dir', applicationName.capitalize(),
-
           // Adds a dialog to enable the user to choose a directory
           // in which to install the application
           '--win-dir-chooser',
@@ -1206,7 +1347,7 @@ jlink {
           '--win-menu',
 
           // Start Menu group in which to place this application
-          '--win-menu-group', applicationName.capitalize(),
+          '--win-menu-group', platformMenuGroup,
 
           // Install the application on a per-user basis
           '--win-per-user-install',
@@ -1215,8 +1356,7 @@ jlink {
           '--win-shortcut',
 
           // UUID associated with upgrades for this package
-          '--win-upgrade-uuid',
-          '8C5094E6-C97E-47D8-8465-1DF16124700F',
+          '--win-upgrade-uuid', platformUUID
         ]
         // The type of the installer to create. Valid values are: "exe",
         // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
@@ -1226,35 +1366,16 @@ jlink {
         installerType = 'msi'
         break
       case 'linux':
-        imageOptions += [
-          // Path of the icon of the application bundle (absolute path
-          // or relative to the current directory)
-          '--icon', "${projectDir}/package/linux/launcher.png",
-        ]
         installerOptions += [
-          // Path to a Properties file that contains list of
-          // key, value pairs (absolute path or relative to the
-          // current directory). The keys: "extension", "mime-type",
-          // "icon", and "description" can be used to describe the
-          // association. This option can be used multiple times.
-          '--file-associations',
-          "${projectDir}/package/linux/associations.properties",
-
-          // Absolute path of the installation directory of the
-          // application on OS X or Linux. Relative sub-path of the
-          // installation location of the application such as
-          // "Program Files" or "AppData" on Windows.
-          // '--install-dir <file path>',
-
           // Name for the Linux package, defaults to the
           // application name
-          // '--linux-package-name', applicationName,
+          // '--linux-package-name', applicationLauncherName,
 
           // Maintainer for .deb bundle
           '--linux-deb-maintainer', applicationAuthorName + ' <' + applicationAuthorEmail + '>',
 
           // Menu group this application is placed in
-          '--linux-menu-group', applicationVendor,
+          '--linux-menu-group', platformMenuGroup,
 
           // Required packages or capabilities for the application
           // '--linux-package-deps',
@@ -1275,6 +1396,14 @@ jlink {
         ]
         break
     }
+  }
+}
+
+jpackageImage.doLast {
+  copy {
+    from "${jpackageCommonConfigDir}"
+    include "splash.png"
+    into "${jpackageImageDir}"
   }
 }
 

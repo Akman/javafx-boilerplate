@@ -9,7 +9,7 @@ JPACKAGE_JDK_ARCHIVE_NAME=openjdk-15-ea+15_windows-x64_bin.zip
 JPACKAGE_JDK_HOME=jdk-15
 wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 7z x -bd $JPACKAGE_JDK_ARCHIVE_NAME
-echo "export BADASS_JLINK_JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
+echo "export JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 
 # FeatureMain	Core AdoptOpenJDK installation (DEFAULT)
 # FeatureEnvironment	Update the PATH environment variable (DEFAULT)

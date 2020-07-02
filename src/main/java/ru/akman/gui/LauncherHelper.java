@@ -30,7 +30,6 @@ package ru.akman.gui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -108,13 +107,12 @@ public final class LauncherHelper extends Application {
 
   /**
    * Run the application.
-   * @param args CLI arguments
    */
-  public static void run(final String... args) {
+  public static void run() {
     if (LOG.isInfoEnabled()) {
       LOG.info(Launcher.getString("app.starting"));
     }
-    Application.launch(LauncherHelper.class, args);
+    Application.launch(LauncherHelper.class);
   }
 
   /**
@@ -175,12 +173,8 @@ public final class LauncherHelper extends Application {
 
   private static void setupStage() {
     final Properties properties = Launcher.getProperties();
-    final String appName = properties.getProperty("application.name");
-    final String appVersion = properties.getProperty("application.version");
     final String applicationTitle =
-        appName.substring(0, 1).toUpperCase(Locale.getDefault())
-        + appName.substring(1)
-        + " " + appVersion;
+        properties.getProperty("application.fullname");
     stage.setTitle(applicationTitle);
     try (InputStream iconAsStream =
         LauncherHelper.class.getResourceAsStream(ICON)) {

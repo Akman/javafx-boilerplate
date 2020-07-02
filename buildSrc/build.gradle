@@ -49,7 +49,41 @@ repositories {
   jcenter()
 }
 
-apply from: '../common.gradle'
+ext {
+  // Encoding
+  defaultEncoding = 'UTF-8'
+
+  // Application
+  applicationName = 'Java Boilerplate Project'
+  applicationVersion = project.version.replaceAll('-SNAPSHOT', '')
+  applicationFullName = "${applicationName} v${applicationVersion}"
+  applicationDescription = 'This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.'
+  applicationScmUser = 'akman'
+  applicationScmRepo = 'java-boilerplate-gradle'
+  applicationUrl = "https://github.com/${applicationScmUser}/${applicationScmRepo}"
+  applicationInceptionYear = 2019
+  applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)
+  applicationAuthorNickname = 'Akman'
+  applicationAuthorName = 'Alexander Kapitman'
+  applicationAuthorEmail = 'akman.ru@gmail.com'
+  applicationAuthorUrl = 'https://akman.github.io/'
+  applicationAuthorRole = 'developer'
+  applicationAuthorTimezone = 'Europe/Kaliningrad'
+  applicationCopyright = "Copyright (C) ${applicationInceptionYear}"
+  if (applicationInceptionYear != applicationCurrentYear) {
+    applicationCopyright += " - ${applicationCurrentYear}"
+  }
+  applicationCopyright += " ${applicationAuthorName}";
+  applicationCopyright += " <${applicationAuthorEmail}>";
+  applicationVendor = 'Akman'
+  applicationVendorUrl = 'https://akman.github.io/'
+  applicationLicenseFile = 'LICENSE'
+  applicationLicenseName = 'MIT License'
+  applicationLicenseType = 'MIT'
+  applicationLicenseDistribution = 'repo'
+  applicationLicenseComment = 'This is a lax, permissive non-copyleft free software license, compatible with the GNU GPL.'
+  applicationLicenseUrl = 'https://spdx.org/licenses/MIT.html'
+}  
 
 dependencies {
 

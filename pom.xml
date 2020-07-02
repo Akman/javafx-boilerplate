@@ -38,7 +38,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>${applicationFullName}</name>
+  <name>${applicationName}</name>
   <description>${applicationDescription}</description>
   <url>${applicationUrl}</url>
   <inceptionYear>${applicationInceptionYear}</inceptionYear>
@@ -59,57 +59,66 @@
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
-    <!-- JLink -->
-    <jlinkConfigDir>${project.basedir}/package</jlinkConfigDir>
-    <jlinkDir>${project.build.directory}/jlink</jlinkDir>
-    <jlinkModsDir>${jlinkDir}/mods</jlinkModsDir>
-    <jlinkLibsDir>${jlinkDir}/libs</jlinkLibsDir>
-    <jlinkImageDir>${jlinkDir}/image</jlinkImageDir>
-
-    <!-- JPackage -->
-    <jpackageConfigDir>${project.basedir}/package/${platformFamily}</jpackageConfigDir>
-    <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
-    <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
-    <jpackageImageDir>${applicationName}</jpackageImageDir>
+    <!-- Properties -->
+    <defaultProperties>${project.basedir}/project.properties</defaultProperties>
 
     <!-- Application -->
-    <applicationProperties>${project.basedir}/project.properties</applicationProperties>
+    <applicationName>Java Boilerplate Project</applicationName>
     <applicationVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</applicationVersion>
-    <applicationInceptionYear>2019</applicationInceptionYear>
-    <applicationCurrentYear>2020</applicationCurrentYear>
-    <applicationCopyright>Copyright (C) ${applicationCopyrightYears} ${project.developers[0].name} &lt;${project.developers[0].email}&gt;</applicationCopyright>
-    <applicationName>launcher</applicationName>
-    <applicationFullName>Java Boilerplate Project</applicationFullName>
+    <applicationFullName>${applicationName} v${applicationVersion}</applicationFullName>
     <applicationDescription>This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.</applicationDescription>
-    <applicationVendor>Akman</applicationVendor>
-    <applicationVendorUrl>https://akman.github.io/</applicationVendorUrl>
-    <applicationUrl>https://github.com/akman/java-boilerplate-gradle</applicationUrl>
+    <applicationScmUser>akman</applicationScmUser>
+    <applicationScmRepo>java-boilerplate-gradle</applicationScmRepo>
+    <applicationUrl>https://github.com/${applicationScmUser}/${applicationScmRepo}</applicationUrl>
+    <applicationInceptionYear>2019</applicationInceptionYear>
     <applicationAuthorNickname>Akman</applicationAuthorNickname>
     <applicationAuthorName>Alexander Kapitman</applicationAuthorName>
     <applicationAuthorEmail>akman.ru@gmail.com</applicationAuthorEmail>
     <applicationAuthorUrl>https://akman.github.io/</applicationAuthorUrl>
+    <applicationAuthorRole>developer</applicationAuthorRole>
+    <applicationAuthorTimezone>Europe/Kaliningrad</applicationAuthorTimezone>
+    <applicationCopyright>Copyright (C) ${applicationCopyrightYears} ${applicationAuthorName} &lt;${applicationAuthorEmail}&gt;</applicationCopyright>
+    <applicationVendor>Akman</applicationVendor>
+    <applicationVendorUrl>https://akman.github.io/</applicationVendorUrl>
     <applicationLicenseFile>LICENSE</applicationLicenseFile>
     <applicationLicenseName>MIT License</applicationLicenseName>
     <applicationLicenseType>MIT</applicationLicenseType>
     <applicationLicenseDistribution>repo</applicationLicenseDistribution>
     <applicationLicenseComment>This is a lax, permissive non-copyleft free software license, compatible with the GNU GPL.</applicationLicenseComment>
     <applicationLicenseUrl>https://spdx.org/licenses/MIT.html</applicationLicenseUrl>
+
+    <!-- Launcher -->
+    <applicationLauncherName>launcher</applicationLauncherName>
     <applicationModuleName>ru.akman.launcher</applicationModuleName>
     <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
-    <applicationJvmArgs>-Dfile.encoding=${defaultEncoding} -Xms256m -Xmx512m</applicationJvmArgs>
+    <applicationJvmArgs>-Xms256m -Xmx512m</applicationJvmArgs>
     <applicationArgs>--debug</applicationArgs>
-    <applicationTemplateWin>${project.basedir}/package/win-script.template</applicationTemplateWin>
-    <applicationTemplateNix>${project.basedir}/package/nix-script.template</applicationTemplateNix>
+
+    <!-- JLink -->
+    <jlinkConfigDir>${project.basedir}/package</jlinkConfigDir>
+    <jlinkTemplateWin>${jlinkConfigDir}/win-script.template</jlinkTemplateWin>
+    <jlinkTemplateNix>${jlinkConfigDir}/nix-script.template</jlinkTemplateNix>
+    <jlinkDir>${project.build.directory}/jlink</jlinkDir>
+    <jlinkModsDir>${jlinkDir}/mods</jlinkModsDir>
+    <jlinkLibsDir>${jlinkDir}/libs</jlinkLibsDir>
+    <jlinkImageDir>${jlinkDir}/runtime-image</jlinkImageDir>
+
+    <!-- JPackage -->
+    <jpackageConfigDir>${project.basedir}/package/${platformFamily}</jpackageConfigDir>
+    <jpackageCommonConfigDir>${project.basedir}/package</jpackageCommonConfigDir>
+    <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
+    <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
+    <jpackageImageDir>${jpackageDir}/${platformImageName}</jpackageImageDir>
 
     <!-- Dependencies -->
     <version.javafx>15-ea+6</version.javafx>
-    <!--version.picocli>4.3.2</version.picocli-->
+    <version.picocli>4.3.2</version.picocli>
     <version.slf4j>2.0.0-alpha1</version.slf4j>
     <version.logback>[1.3.0-alpha4]</version.logback>
     <version.junit>5.7.0-M1</version.junit>
     <version.spock>2.0-M3-groovy-3.0</version.spock>
-    <version.groovy>3.0.4</version.groovy>
     <version.mockito>3.3.3</version.mockito>
+    <version.groovy>3.0.4</version.groovy>
     <!--version.hamcrest>2.2</version.hamcrest-->
     <!--version.assertj>3.16.1</version.assertj-->
 
@@ -117,7 +126,7 @@
     <version.checkstyle>8.34</version.checkstyle>
     <version.pmd>6.25.0</version.pmd>
     <version.spotbugs>4.0.6</version.spotbugs>
-    <version.codenarc>0.22</version.codenarc>
+    <version.codenarc>1.6</version.codenarc>
 
     <!-- Plugins -->
     <version.maven-enforcer-plugin>3.0.0-M3</version.maven-enforcer-plugin>
@@ -130,7 +139,6 @@
     <version.maven-checkstyle-plugin>3.1.1</version.maven-checkstyle-plugin>
     <version.maven-pmd-plugin>3.13.0</version.maven-pmd-plugin>
     <version.spotbugs-maven-plugin>4.0.4</version.spotbugs-maven-plugin>
-    <version.codenarc-maven-plugin>0.22-1</version.codenarc-maven-plugin>
     <version.license-maven-plugin>4.0.rc1</version.license-maven-plugin>
     <version.maven-resources-plugin>3.1.0</version.maven-resources-plugin>
     <version.native2ascii-maven-plugin>2.0.1</version.native2ascii-maven-plugin>
@@ -202,11 +210,11 @@
     </dependency>
     -->
     <!-- picocli -->
-    <!--dependency>
+    <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
       <version>${version.picocli}</version>
-    </dependency-->
+    </dependency>
     <!-- slf4j + logback -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -242,6 +250,13 @@
       <version>${version.junit}</version>
       <scope>test</scope>
     </dependency-->
+    <!-- Groovy -->
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy</artifactId>
+      <version>${version.groovy}</version>
+      <scope>test</scope>
+    </dependency>
     <!-- Spock -->
     <dependency>
       <groupId>org.spockframework</groupId>
@@ -260,12 +275,6 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${version.mockito}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-      <version>${version.groovy}</version>
       <scope>test</scope>
     </dependency>
     <!-- Hamcrest -->
@@ -300,6 +309,16 @@
     </resources>
     <pluginManagement>
       <plugins>
+        <plugin> <!-- properties-maven-plugin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>${version.properties-maven-plugin}</version>
+          <configuration>
+            <files>
+              <file>${defaultProperties}</file>
+            </files>
+          </configuration>
+        </plugin>
         <plugin> <!-- maven-enforcer-plugin -->
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>${version.maven-enforcer-plugin}</version>
@@ -329,16 +348,6 @@
             </filesets>
           </configuration>
         </plugin>
-        <plugin> <!-- properties-maven-plugin -->
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>properties-maven-plugin</artifactId>
-          <version>${version.properties-maven-plugin}</version>
-          <configuration>
-            <files>
-              <file>${applicationProperties}</file>
-            </files>
-          </configuration>
-        </plugin>
         <plugin> <!-- build-helper-maven-plugin -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
@@ -364,20 +373,29 @@
               <arg>-Xlint:unchecked</arg>
               <arg>-Xlint:deprecation</arg>
               <arg>-Werror</arg>
-              <!--arg>-Aproject=${project.groupId}/${project.artifactId}</arg-->
             </compilerArgs>
-            <!--annotationProcessorPaths>
+            <annotationProcessorPaths>
               <path>
                 <groupId>info.picocli</groupId>
                 <artifactId>picocli-codegen</artifactId>
                 <version>${version.picocli}</version>
               </path>
-            </annotationProcessorPaths-->
+            </annotationProcessorPaths>
+            <compilerArgs>
+              <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+            </compilerArgs>
           </configuration>
         </plugin>
         <plugin> <!-- maven-antrun-plugin -->
           <artifactId>maven-antrun-plugin</artifactId>
           <version>${version.maven-antrun-plugin}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.codenarc</groupId>
+              <artifactId>CodeNarc</artifactId>
+              <version>${version.codenarc}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin> <!-- maven-checkstyle-plugin -->
           <artifactId>maven-checkstyle-plugin</artifactId>
@@ -467,23 +485,6 @@
             <xmlOutput>true</xmlOutput>
           </configuration>
         </plugin>
-
-        <!-- codenarc-maven-plugin -->
-        <!--plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>codenarc-maven-plugin</artifactId>
-          <version>${version.codenarc-maven-plugin}</version>
-          <configuration>
-            <sourceDirectory>${project.basedir}/src/test/groovy</sourceDirectory>
-            <codeNarcVersion>${version.codenarc}</codeNarcVersion>
-            <failOnError>false</failOnError>
-            <ruleSetFiles>${project.basedir}/config/codenarc/rules.groovy</ruleSetFiles>
-            <maxPriority1Violations>0</maxPriority1Violations>
-            <maxPriority2Violations>0</maxPriority2Violations>
-            <maxPriority3Violations>0</maxPriority3Violations>
-          </configuration>
-        </plugin-->
-
         <plugin> <!-- license-maven-plugin -->
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
@@ -492,7 +493,7 @@
             <failIfMissing>false</failIfMissing>
             <defaultUseDefaultExcludes>false</defaultUseDefaultExcludes>
             <defaultProperties>
-              <name>${applicationFullName}</name>
+              <name>${applicationName}</name>
               <url>${applicationUrl}</url>
               <licenseName>${applicationLicenseName}</licenseName>
               <licenseType>${applicationLicenseType}</licenseType>
@@ -517,6 +518,7 @@
                 <excludes>
                   <exclude>**/resources/**/*.properties</exclude>
                   <exclude>**/resources/**/*.png</exclude>
+                  <exclude>**/site/**/*.vm</exclude>
                 </excludes>
               </licenseSet>
             </licenseSets>
@@ -542,13 +544,12 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.maven-javadoc-plugin}</version>
           <configuration>
-            <failOnError>false</failOnError>
             <notimestamp>true</notimestamp>
             <bottom>${applicationCopyright}</bottom>
             <additionalOptions>-html5</additionalOptions>
-            <!--sourceFileExcludes>
+            <sourceFileExcludes>
               <sourceFileExclude>**/module-info.java</sourceFileExclude>
-            </sourceFileExcludes-->
+            </sourceFileExcludes>
           </configuration>
         </plugin>
         <plugin> <!-- maven-jxr-plugin -->
@@ -573,7 +574,12 @@
                 <mainClass>${applicationClassName}</mainClass>
               </manifest>
               <manifestEntries>
-                <Implementation-Title>${applicationName}</Implementation-Title>
+                <Specification-Title>${applicationName}</Specification-Title>
+                <Specification-Version>${project.version}</Specification-Version>
+                <Specification-Vendor>${applicationVendor}</Specification-Vendor>
+                <Implementation-Title>${applicationModuleName}</Implementation-Title>
+                <Implementation-Version>${project.version}</Implementation-Version>
+                <Implementation-Vendor>${applicationVendor}</Implementation-Vendor>
               </manifestEntries>
             </archive>
           </configuration>
@@ -771,13 +777,13 @@
               templates for launcher script.
             -->
             <launcher>
-              <command>${applicationName}</command>
+              <command>${applicationLauncherName}</command>
               <mainmodule>${applicationModuleName}</mainmodule>
               <mainclass>${applicationClassName}</mainclass>
-              <jvmargs>${applicationJvmArgs}</jvmargs>
+              <jvmargs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</jvmargs>
               <args>${applicationArgs}</args>
-              <nixtemplate>${applicationTemplateNix}</nixtemplate>
-              <wintemplate>${applicationTemplateWin}</wintemplate>
+              <nixtemplate>${jlinkTemplateNix}</nixtemplate>
+              <wintemplate>${jlinkTemplateWin}</wintemplate>
             </launcher>
             <!--
               Excludes header files.
@@ -885,7 +891,7 @@
               Exclude native commands (such as java/java.exe) from the image.
               Default value: false.
             -->
-            <stripnativecommands>true</stripnativecommands>
+            <stripnativecommands>false</stripnativecommands>
             <!--
               De-duplicate all legal notices. If true is specified then
               it will be an error if two files of the same filename
@@ -977,7 +983,7 @@
               the destination directory in which files of generated
               application image are placed.
             -->
-            <name>${jpackageImageDir}</name>
+            <name>${platformImageName}</name>
             <!--
               Enable verbose tracing.
               Default value: false.
@@ -1157,6 +1163,18 @@
     </pluginManagement>
 
     <plugins>
+      <plugin> <!-- properties-maven-plugin -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin> <!-- maven-enforcer-plugin -->
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
@@ -1169,18 +1187,6 @@
       </plugin>
       <plugin> <!-- maven-clean-plugin -->
         <artifactId>maven-clean-plugin</artifactId>
-      </plugin>
-      <plugin> <!-- properties-maven-plugin -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>read-project-properties</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin> <!-- build-helper-maven-plugin -->
         <groupId>org.codehaus.mojo</groupId>
@@ -1200,17 +1206,21 @@
             </configuration>
           </execution>
           <execution>
-            <id>regex-property</id>
+            <id>regex-properties</id>
             <phase>validate</phase>
             <goals>
-              <goal>regex-property</goal>
+              <goal>regex-properties</goal>
             </goals>
             <configuration>
-              <name>applicationCopyrightYears</name>
-              <value>${applicationInceptionYear} - ${applicationCurrentYear}</value>
-              <regex>(\d{4}) - \1</regex>
-              <failIfNoMatch>false</failIfNoMatch>
-              <replacement>${applicationCurrentYear}</replacement>
+              <regexPropertySettings>
+                <regexPropertySetting>
+                  <name>applicationCopyrightYears</name>
+                  <value>${applicationInceptionYear} - ${applicationCurrentYear}</value>
+                  <regex>(\d{4}) - \1</regex>
+                  <replacement>${applicationCurrentYear}</replacement>
+                  <failIfNoMatch>false</failIfNoMatch>
+                </regexPropertySetting>
+              </regexPropertySettings>
             </configuration>
           </execution>
           <execution>
@@ -1256,6 +1266,39 @@
               </target>
             </configuration>
           </execution>
+          <execution>
+            <id>codenarc</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <failOnError>false</failOnError>
+              <target>
+                <taskdef classname="org.codenarc.ant.CodeNarcTask" name="codenarc" />
+                <codenarc
+                    ruleSetFiles="file:config/codenarc/rules.groovy"
+                    maxPriority1Violations="1000"
+                    maxPriority2Violations="1000"
+                    maxPriority3Violations="1000">
+                  <fileset dir="src/test/groovy">
+                    <include name="**/*.groovy" />
+                  </fileset>
+                  <report type="console" />
+                  <report type="xml">
+                    <option name="outputFile"
+                        value="${project.build.directory}/codenarc.xml" />
+                    <option name="title" value="${project.name}" />
+                  </report>
+                  <report type="html">
+                    <option name="outputFile"
+                        value="${project.reporting.outputDirectory}/codenarc.html" />
+                    <option name="title" value="${project.name}" />
+                  </report>
+                </codenarc>
+              </target>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin> <!-- maven-checkstyle-plugin -->
@@ -1291,13 +1334,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <!-- codenarc-maven-plugin -->
-      <!--plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-      </plugin-->
-
       <plugin> <!-- license-maven-plugin -->
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
@@ -1488,26 +1524,6 @@
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>cli</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>${applicationClassName}</mainClass>
-              <commandlineArgs>--debug --no-gui</commandlineArgs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>gui</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>${applicationClassName}</mainClass>
-              <commandlineArgs>--debug</commandlineArgs>
-            </configuration>
-          </execution>
-          <execution>
             <id>default-cli</id>
             <goals>
               <goal>exec</goal>
@@ -1521,7 +1537,6 @@
                 <argument>--module</argument>
                 <argument>${applicationModuleName}/${applicationClassName}</argument>
                 <argument>--debug</argument>
-                <argument>--no-gui</argument>
               </arguments>
             </configuration>
           </execution>
@@ -1580,15 +1595,32 @@
                 Specifies the command line arguments to pass to the main class
                 if no command line arguments are given to the launcher.
               -->
-              <arguments>${applicationArgs}</arguments>
+              <arguments>${platformArgs}</arguments>
               <!--
                 Specifies the options to pass to the Java runtime.
               -->
-              <javaoptions>${applicationJvmArgs}</javaoptions>
+              <javaoptions>${platformJvmArgs}</javaoptions>
+              <!--
+                Specifies options are added to, or used to overwrite,
+                the original command line options to build additional
+                alternative launchers.
+              -->
+              <addlaunchers>
+                <addlauncher>
+                  <name>${platformLauncherName}-cli</name>
+                  <file>${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties</file>
+                  <module>${applicationModuleName}/${applicationClassName}</module>
+                  <javaoptions>${platformJvmArgs}</javaoptions>
+                  <appversion>${applicationVersion}</appversion>
+                  <icon>${jpackageResourcesDir}/${platformLauncherName}-cli.${platformIconExtension}</icon>
+                  <!--arguments>${platformArgs}</arguments-->
+                  <!--winconsole>true</winconsole-->
+                </addlauncher>
+              </addlaunchers>
               <!--
                 Specifies the location of the icon of the application package.
               -->
-              <icon>${jpackageConfigDir}/${applicationName}.${platformIconExtension}</icon>
+              <icon>${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}</icon>
               <!--
                 Enable creating a console launcher for the application,
                 should be specified for application which requires console
@@ -1614,7 +1646,7 @@
                 Specifies the location of the predefined application image
                 that is used to build an installable package.
               -->
-              <appimage>${jpackageDir}/${jpackageImageDir}</appimage>
+              <appimage>${jpackageImageDir}</appimage>
               <!--
                 Specifies the location of a properties file that contains
                 list of key, value pairs. The keys "extension", "mime-type",
@@ -1626,7 +1658,7 @@
                 location of the application for Windows, or absolute path of the
                 installation directory of the application for Mac or Linux.
               -->
-              <installdir>${applicationVendor}/${applicationName}</installdir>
+              <installdir>${platformInstallDir}</installdir>
               <!--
                 Specifies the location of a license file.
               -->
@@ -1645,7 +1677,7 @@
               <!--
                 Start menu group this application is placed in.
               -->
-              <winmenugroup>${applicationVendor}/${applicationName}</winmenugroup>
+              <winmenugroup>${platformMenuGroup}</winmenugroup>
               <!--
                 Enable requesting to perform an install on a per-user basis.
                 Default value: false
@@ -1659,7 +1691,7 @@
               <!--
                 UUID associated with upgrades for this package.
               -->
-              <winupgradeuuid>8CF81762-0B19-46A6-875E-1F839A1700D0</winupgradeuuid>
+              <winupgradeuuid>${platformUUID}</winupgradeuuid>
               <!--
                 An identifier that uniquely identifies the application for macOS.
                 Defaults to the main class name. May only use
@@ -1818,12 +1850,16 @@
       <plugin> <!-- maven-source-plugin -->
         <artifactId>maven-source-plugin</artifactId>
       </plugin>
-
-      <!-- maven-javadoc-plugin -->
-      <!--plugin>
+      <plugin> <!-- maven-javadoc-plugin -->
         <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin-->
-
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
       <plugin> <!-- versions-maven-plugin -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
@@ -1876,13 +1912,6 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
-
-      <!-- codenarc-maven-plugin -->
-      <!--plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>codenarc-maven-plugin</artifactId>
-      </plugin-->
-
       <plugin> <!-- maven-surefire-report-plugin -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -1941,7 +1970,14 @@
       </activation>
       <properties>
         <platformFamily>windows</platformFamily>
+        <platformImageName>Launcher</platformImageName>
         <platformIconExtension>ico</platformIconExtension>
+        <platformLauncherName>${applicationLauncherName}</platformLauncherName>
+        <platformArgs>${applicationArgs} --gui</platformArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
+        <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
+        <platformUUID>8CF81762-0B19-46A6-875E-1F839A1700D0</platformUUID>
       </properties>
     </profile>
     <profile>
@@ -1953,7 +1989,14 @@
       </activation>
       <properties>
         <platformFamily>linux</platformFamily>
+        <platformImageName>Launcher</platformImageName>
         <platformIconExtension>png</platformIconExtension>
+        <platformLauncherName>${applicationLauncherName}</platformLauncherName>
+        <platformArgs>${applicationArgs} --gui</platformArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
+        <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
+        <platformUUID />
       </properties>
     </profile>
     <profile>
@@ -1965,7 +2008,14 @@
       </activation>
       <properties>
         <platformFamily>mac</platformFamily>
+        <platformImageName>Launcher</platformImageName>
         <platformIconExtension>icns</platformIconExtension>
+        <platformLauncherName>${applicationLauncherName}</platformLauncherName>
+        <platformArgs>${applicationArgs} --gui</platformArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
+        <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
+        <platformUUID />
       </properties>
     </profile>
   </profiles>
@@ -2010,21 +2060,21 @@
       <url>${applicationAuthorUrl}</url>
       <timezone>Europe/Kaliningrad</timezone>
       <roles>
-        <role>developer</role>
+        <role>${applicationAuthorRole}</role>
       </roles>
     </developer>
   </developers>
 
   <scm>
-    <url>https://github.com/akman/java-boilerplate-gradle/tree/${project.scm.tag}</url>
-    <connection>scm:git:git@github.com:akman/java-boilerplate-gradle.git</connection>
-    <developerConnection>scm:git:git@github.com:akman/java-boilerplate-gradle.git</developerConnection>
+    <url>https://github.com/${applicationScmUser}/${applicationScmRepo}/tree/${project.scm.tag}</url>
+    <connection>scm:git:git@github.com:${applicationScmUser}/${applicationScmRepo}.git</connection>
+    <developerConnection>scm:git:git@github.com:${applicationScmUser}/${applicationScmRepo}.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/akman/java-boilerplate-gradle/issues</url>
+    <url>https://github.com/${applicationScmUser}/${applicationScmRepo}/issues</url>
   </issueManagement>
 
   <distributionManagement>
@@ -2042,7 +2092,7 @@
 
   <ciManagement>
     <system>Travis CI</system>
-    <url>https://travis-ci.com/github/akman/java-boilerplate-gradle</url>
+    <url>https://travis-ci.com/github/${applicationScmUser}/${applicationScmRepo}</url>
   </ciManagement>
 
 </project>

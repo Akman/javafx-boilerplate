@@ -1,18 +1,17 @@
-# Java application boilerplate project
+# Java Boilerplate Project
 
-[![Build Status](https://travis-ci.org/akman/java-boilerplate-gradle.svg?branch=master)](https://travis-ci.org/akman/java-boilerplate-gradle)
-[![Code Coverage](https://codecov.io/gh/akman/java-boilerplate-gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/akman/java-boilerplate-gradle)
-[![Latest Release](https://img.shields.io/github/downloads/akman/java-boilerplate-gradle/latest/total.svg)](https://github.com/akman/java-boilerplate-gradle/releases/latest)
-[![License](https://img.shields.io/github/license/akman/java-boilerplate-gradle.svg)](https://github.com/akman/java-boilerplate-gradle/blob/master/LICENSE)
+[![Build Status][travis_badge]][travis_href]
+[![Code Coverage][codecov_badge]][codecov_href]
+[![Latest Release][release_badge]][release_href]
+[![License][license_badge]][license_href]
 
-This project aims to cover best practices for Java application development
-as a whole. It provides tool recommendations for linting, testing and packaging.
+This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.
 
-[The source for this project is available here][src]
+[The source for this project is available here][src_href]
 
-[The latest release for this project is available here][release]
+[The latest release for this project is available here][release_href]
 
-[The documentation for this project is available here][docs]
+[The documentation for this project is available here][docs_href]
 
 Most of the configuration for project is done in the `build.gradle` or
 `pom.xml` file.
@@ -22,7 +21,7 @@ to your needs.
 This is the README file for the project.
 
 The file should use UTF-8 encoding and can be written using
-[GitHub Flavored Markdown][md] with the appropriate key set.
+[GitHub Flavored Markdown][md_href] with the appropriate key set.
 It will be displayed as the project
 homepage on common code-hosting services, and should be written for that
 purpose.
@@ -286,7 +285,19 @@ Display the properties of the project.
 ./gradlew properties
 ```
 
-[src]: https://github.com/akman/java-boilerplate-gradle
-[release]: https://github.com/akman/java-boilerplate-gradle/releases/latest
-[docs]: https://akman.github.io/java-boilerplate-gradle
-[md]: https://help.github.com/articles/basic-writing-and-formatting-syntax
+## Pull request
+
+Pull request template: [.github/pull_request_template.md][pull_request_href].
+
+[travis_badge]: https://travis-ci.org/akman/java-boilerplate-gradle.svg?branch=master
+[travis_href]: https://travis-ci.org/akman/java-boilerplate-gradle
+[codecov_badge]: https://codecov.io/gh/akman/java-boilerplate-gradle/branch/master/graph/badge.svg
+[codecov_href]: https://codecov.io/gh/akman/java-boilerplate-gradle
+[release_badge]: https://img.shields.io/github/downloads/akman/java-boilerplate-gradle/latest/total.svg
+[release_href]: https://github.com/akman/java-boilerplate-gradle/releases/latest
+[license_badge]: https://img.shields.io/github/license/akman/java-boilerplate-gradle.svg
+[license_href]: https://github.com/akman/java-boilerplate-gradle/blob/master/LICENSE
+[src_href]: https://github.com/akman/java-boilerplate-gradle
+[docs_href]: https://akman.github.io/java-boilerplate-gradle
+[md_href]: https://help.github.com/articles/basic-writing-and-formatting-syntax
+[pull_request_href]: https://github.com/akman/java-boilerplate-gradle/blob/master/.github/pull_request_template.md

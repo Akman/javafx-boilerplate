@@ -31,12 +31,14 @@
  */
 module ru.akman.launcher {
 
+  // picocli
+  requires info.picocli;
+  opens ru.akman.launcher to info.picocli;
+
   // slf4j + logback
   requires org.slf4j;
   requires java.naming;
-  // requires java.management;
   requires ch.qos.logback.classic;
-  // requires ch.qos.logback.core;
 
   // javafx
   requires javafx.base;

@@ -60,7 +60,9 @@
     </properties>
   </rule>
 
-  <rule ref="category/java/errorprone.xml" />
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="DoNotCallSystemExit" />
+  </rule>
 
   <rule ref="category/java/multithreading.xml" />
 

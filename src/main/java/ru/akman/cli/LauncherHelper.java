@@ -55,9 +55,8 @@ public final class LauncherHelper {
 
   /**
    * CLI Application launcher.
-   * @param args CLI arguments
    */
-  public static void run(final String... args) {
+  public static void run() {
     if (LOG.isInfoEnabled()) {
       LOG.info(Launcher.getString("app.starting"));
     }

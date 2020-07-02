@@ -26,7 +26,24 @@
   DEALINGS IN THE SOFTWARE.
 */
 
-ext {
-
+.brand img {
+  height: 24px;
+  width: 24px;
 }
 
+hr {
+  margin: 0;
+}
+
+.well {
+  margin-bottom: 5px;
+}
+
+.well hr {
+  display: none;
+}
+
+footer .copyright {
+  text-align: center;
+  font-size: 62%;
+}
