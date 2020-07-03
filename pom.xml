@@ -35,7 +35,7 @@
 
   <groupId>com.github.akman</groupId>
   <artifactId>java-boilerplate</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.44.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${applicationName}</name>
@@ -60,7 +60,7 @@
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
     <!-- Properties -->
-    <defaultProperties>${project.basedir}/project.properties</defaultProperties>
+    <defaultProperties>${project.basedir}/maven.properties</defaultProperties>
 
     <!-- Application -->
     <applicationName>Java Boilerplate Project</applicationName>
@@ -105,7 +105,6 @@
 
     <!-- JPackage -->
     <jpackageConfigDir>${project.basedir}/package/${platformFamily}</jpackageConfigDir>
-    <jpackageCommonConfigDir>${project.basedir}/package</jpackageCommonConfigDir>
     <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
     <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
     <jpackageImageDir>${jpackageDir}/${platformImageName}</jpackageImageDir>
@@ -226,11 +225,6 @@
       <artifactId>logback-classic</artifactId>
       <version>${version.logback}</version>
     </dependency>
-    <!--dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <version>${version.logback}</version>
-    </dependency-->
     <!-- JUnit -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -238,18 +232,6 @@
       <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
-    <!--dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${version.junit}</version>
-      <scope>test</scope>
-    </dependency-->
-    <!--dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${version.junit}</version>
-      <scope>test</scope>
-    </dependency-->
     <!-- Groovy -->
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -265,12 +247,6 @@
       <scope>test</scope>
     </dependency>
     <!-- Mockito -->
-    <!--dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${version.mockito}</version>
-      <scope>test</scope>
-    </dependency-->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
@@ -780,7 +756,7 @@
               <command>${applicationLauncherName}</command>
               <mainmodule>${applicationModuleName}</mainmodule>
               <mainclass>${applicationClassName}</mainclass>
-              <jvmargs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</jvmargs>
+              <jvmargs>${applicationJvmArgs}</jvmargs>
               <args>${applicationArgs}</args>
               <nixtemplate>${jlinkTemplateNix}</nixtemplate>
               <wintemplate>${jlinkTemplateWin}</wintemplate>
@@ -1974,7 +1950,7 @@
         <platformIconExtension>ico</platformIconExtension>
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
-        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
         <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID>8CF81762-0B19-46A6-875E-1F839A1700D0</platformUUID>
@@ -1993,7 +1969,7 @@
         <platformIconExtension>png</platformIconExtension>
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
-        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
         <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
@@ -2012,7 +1988,7 @@
         <platformIconExtension>icns</platformIconExtension>
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
-        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding} -splash:$APPDIR/splash.png</platformJvmArgs>
+        <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
         <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />

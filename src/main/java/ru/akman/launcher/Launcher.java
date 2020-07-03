@@ -135,11 +135,27 @@ public final class Launcher implements Callable<Integer> {
   }
 
   /**
+   * Set DEBUG mode enabled or disabled.
+   * @param isEnabled is DEBUG mode enabled
+   */
+  public void setDebugEnabled(final boolean isEnabled) {
+    debugEnabled = isEnabled;
+  }
+
+  /**
    * Is GUI mode enabled.
    * @return true if GUI mode is enabled
    */
   public boolean isGuiEnabled() {
     return guiEnabled;
+  }
+
+  /**
+   * Set GUI mode enabled or disabled.
+   * @param isEnabled is GUI mode enabled
+   */
+  public void setGuiEnabled(final boolean isEnabled) {
+    guiEnabled = isEnabled;
   }
 
   /**

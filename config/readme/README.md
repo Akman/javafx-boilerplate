@@ -1,11 +1,11 @@
-# ${name}
+# ${applicationName}
 
 [![Build Status][travis_badge]][travis_href]
 [![Code Coverage][codecov_badge]][codecov_href]
 [![Latest Release][release_badge]][release_href]
 [![License][license_badge]][license_href]
 
-${description}
+${applicationDescription}
 
 [The source for this project is available here][src_href]
 
@@ -62,7 +62,7 @@ export MAVEN_OPTS="-Xmx1024m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemor
 
 ## Setup gradle properties
 
-Edit default gradle properties in file: ***$HOME/.gradle/gradle.properties***
+Edit default gradle properties in file: ***USERHOME/.gradle/gradle.properties***
 
 For example you can set gradle console output to plain mode,
 set running gradle builds without gradle daemon.

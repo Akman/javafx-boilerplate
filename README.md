@@ -62,7 +62,7 @@ export MAVEN_OPTS="-Xmx1024m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemor
 
 ## Setup gradle properties
 
-Edit default gradle properties in file: ***$HOME/.gradle/gradle.properties***
+Edit default gradle properties in file: ***USERHOME/.gradle/gradle.properties***
 
 For example you can set gradle console output to plain mode,
 set running gradle builds without gradle daemon.
