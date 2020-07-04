@@ -152,8 +152,8 @@
     <version.maven-failsafe-plugin>3.0.0-M5</version.maven-failsafe-plugin>
     <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
     <version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
-    <version.jlink-maven-plugin>0.1.8-SNAPSHOT</version.jlink-maven-plugin>
-    <version.jpackage-maven-plugin>0.1.2-SNAPSHOT</version.jpackage-maven-plugin>
+    <version.jlink-maven-plugin>0.1.8</version.jlink-maven-plugin>
+    <version.jpackage-maven-plugin>0.1.2</version.jpackage-maven-plugin>
     <version.maven-install-plugin>3.0.0-M1</version.maven-install-plugin>
     <version.maven-deploy-plugin>3.0.0-M1</version.maven-deploy-plugin>
     <version.maven-release-plugin>3.0.0-M1</version.maven-release-plugin>
