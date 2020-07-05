@@ -13,59 +13,88 @@ ${applicationDescription}
 
 [The documentation for this project is available here][docs_href]
 
-Most of the configuration for project is done in the `build.gradle` or
-`pom.xml` file.
-You should edit this file accordingly to adapt this boilerplate project
+You can use either Gradle or Maven to build this boilerplate project.
+
+Most of the configuration for the Gradle is done in the `build.gradle` file.
+Most of the configuration for the Maven is done in the `pom.xml` file.
+
+You should edit these files accordingly to adapt this boilerplate project
 to your needs.
 
 This is the README file for the project.
 
 The file should use UTF-8 encoding and can be written using
 [GitHub Flavored Markdown][md_href] with the appropriate key set.
-It will be displayed as the project
-homepage on common code-hosting services, and should be written for that
-purpose.
+It will be displayed as the project homepage on common code-hosting services,
+and should be written for that purpose.
 
 Typical contents for this file would include an overview of the project, basic
-usage examples, etc. Generally, including the project changelog in here is not a
-good idea, although a simple "What's New" section for the most recent version
-may be appropriate.
+usage examples, etc. Generally, including the project changelog in here
+is not a good idea, although a simple "What's New" section for the most
+recent version may be appropriate.
 
-All tasks are performed from the project directory itself where placed
-***gradlew***, ***gradlew.bat*** or ***mvnw***, ***mvnw.cmd***.
+All tasks are performed from the project directory itself
+where placed `gradlew`, `gradlew.bat` and `mvnw`, `mvnw.cmd` files.
 
-## Install maven wrapper
+## Using the wrappers
 
-```bash
-mvn -N io.takari:maven:0.7.7:wrapper
+It is recommended to always execute a build with the wrappers to ensure
+a reliable, controlled and standardized execution of the build.
+Using the wrappers looks almost exactly like running the build with
+the Gradle or the Maven installation. Depending on the operating
+system you either run `gradlew` or `gradlew.bat` for the Gradle and
+run `mvnw` or `mvnw.cmd` for the Maven instead of the `gradle` or `mvn`
+command.
+
+## Generate or update maven wrapper
+
+Generating the wrapper files requires an installed version of the Maven
+on your machine.
+
+```console
+mvn -N io.takari:maven:wrapper
 ```
 
-## Update gradle wrapper
+To switch the version of the Maven used to build a project simply pass in
+the new version.
 
-Simply pass in the new version as well as the distribution type, either
-***all*** which includes sources and documentation or ***bin*** which only
-ships with the binaries.
+```console
+mvn -N io.takari:maven:wrapper -Dmaven=3.6.3
+```
 
-```bash
-./gradlew wrapper
-./gradlew wrapper --gradle-version 6.0.1 --distribution-type bin
-./gradlew wrapper --gradle-version 6.0.1 --distribution-type all
+## Generate or update gradle wrapper
+
+Generating the wrapper files requires an installed version of the Gradle
+on your machine.
+
+```console
+gradle wrapper
+```
+
+To switch the version of the Gradle used to build a project simply pass in
+the new version as well as the distribution type, either `all` which includes
+sources and documentation or `bin` which only ships with the binaries.
+
+```console
+gradle wrapper --gradle-version 6.5.1
+gradle wrapper --gradle-version 6.5.1 --distribution-type bin
 ```
 
 ## Setup maven properties
 
-You can set settings by export environment variable MAVEN_OPTS:
+You can set settings by export environment variable `MAVEN_OPTS`:
 
-```bash
+```console
 export MAVEN_OPTS="-Xmx1024m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
 ```
 
 ## Setup gradle properties
 
-Edit default gradle properties in file: ***USERHOME/.gradle/gradle.properties***
+Edit default gradle properties in the file `.gradle/gradle.properties`
+in the user’s home directory.
 
-For example you can set gradle console output to plain mode,
-set running gradle builds without gradle daemon.
+For example you can set gradle console output to plain mode, set running
+gradle builds without gradle daemon.
 
 ```properties
 org.gradle.daemon = false
@@ -74,30 +103,49 @@ org.gradle.console = plain
 org.gradle.jvmargs = -Xms512m -Xmx1024m -Dfile.encoding=UTF-8
 ```
 
-Or you can set above settings by export environment variable GRADLE_OPTS:
+Or you can set above settings by export environment variable `GRADLE_OPTS`:
 
-```bash
+```console
 export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.console=plain -Xms512m -Xmx1024m -Dfile.encoding=UTF-8"
 ```
 
-## Display available tasks
+## Maven build lifecycle
 
-To see which tasks are available for our build we can run:
+Maven is based around the central concept of a build lifecycle.
+The build process is clearly defined. There are three built-in build
+lifecycles: `default`, `clean` and `site`.
 
-```bash
+The default lifecycle comprises of the following phases:
+
+- `validate` - validate the project is correct
+- `compile` - compile the source code of the project
+- `test` - test the compiled source code
+- `package` - take the compiled code and package it
+- `verify` - run any checks on results of integration tests
+- `install` - install the package into the local repository
+- `deploy` - deploy the final package to the remote repository
+
+Each of a build phase is made up of plugin goals, and this is done
+by declaring the plugin goals bound to those build phases.
+
+## Display available gradle tasks
+
+To see which tasks are available for your Gradle build you can run:
+
+```console
 ./gradlew tasks
 ```
 
 By default only the tasks which are dependencies on other tasks are shown.
-To see all tasks we must add the command-line option --all.
+To see all tasks we must add the command-line option `--all`.
 
-```bash
+```console
 ./gradlew tasks --all
 ```
 
 To see more detail about a task, run:
 
-```bash
+```console
 ./gradlew help --task <task>
 ```
 
@@ -105,26 +153,33 @@ To see more detail about a task, run:
 
 Clean build.
 
-```bash
+```console
 ./gradlew clean
+```
+
+```console
+./mvnw clean
 ```
 
 ## Check project
 
 Run all checks.
 
-```bash
+```console
 ./gradlew check
+```
+
+```console
+./mvnw verify
 ```
 
 The following plugins are used to check the project:
 
 - license
 - checkstyle
-- pmd
+- pmd/cpd
 - spotbugs
-- junit
-- jacoco
+- codenarc
 
 You can use all of these tools separately.
 
@@ -138,19 +193,27 @@ of your dependencies.
 
 Check for header consistency.
 
-```bash
+```console
 ./gradlew license
+```
+
+```console
+./mvnw validate license:check
 ```
 
 Apply the license found in the header file in files missing the header.
 
-```bash
+```console
 ./gradlew licenseFormat
+```
+
+```console
+./mvnw validate license:format
 ```
 
 Generate reports on your runtime dependencies.
 
-```bash
+```console
 ./gradlew downloadLicenses
 ```
 
@@ -159,19 +222,25 @@ Generate reports on your runtime dependencies.
 The Checkstyle plugin performs quality checks on your project’s Java source
 files using Checkstyle and generates reports from these checks.
 
-```bash
-./gradlew checkstyleMain
-./gradlew checkstyleTest
+```console
+./gradlew checkstyleMain checkstyleTest
 ```
 
-### PMD
+```console
+./mvnw checkstyle:check
+```
 
-The PMD plugin performs quality checks on your project’s Java source files
-using PMD and generates reports from these checks.
+### PMD/CPD
 
-```bash
-./gradlew pmdMain
-./gradlew pmdTest
+The PMD/CPD plugin performs quality checks on your project’s Java source files
+using PMD/CPD and generates reports from these checks.
+
+```console
+./gradlew pmdMain pmdTest cpdCheck
+```
+
+```console
+./mvnw pmd:check pmd:cpd-check
 ```
 
 ### SpotBugs
@@ -179,110 +248,135 @@ using PMD and generates reports from these checks.
 SpotBugs plugin performs static analysis to look for bugs in Java code using
 SpotBugs and generates reports from these analysis.
 
-```bash
-./gradlew spotbugsMain
-./gradlew spotbugsTest
+```console
+./gradlew spotbugsMain spotbugsTest
 ```
 
-### JUnit
+```console
+./mvnw spotbugs:check
+./mvnw spotbugs:gui
+```
 
-Run unit tests.
+### CodeNarc
 
-```bash
+The CodeNarc plugin performs quality checks on your project’s Groovy source
+files using CodeNarc and generates reports from these checks.
+
+```console
+./gradlew codenarcMain codenarcTest
+```
+
+```console
+./mvnw antrun:run@codenarc
+```
+
+## Unit testing
+
+Run unit tests:
+
+```console
 ./gradlew test
 ```
 
-### JaCoCo
-
-The JaCoCo plugin provides code coverage metrics for Java code via integration
-with JaCoCo.
-
-Verify code coverage metrics based on specified rules for the test task.
-
-```bash
-./gradlew jacocoTestCoverageVerification
+```console
+./mvnw test
 ```
+
+The JaCoCo plugin provides code coverage metrics for Java code via
+integration with JaCoCo.
 
 ## Reports
 
-Plugins used to check the project generate reports also, but JaCoCo do not.
+Generate reports:
 
-### JaCoCo Code Coverage
+```console
+./gradlew projectReport buildDashboard
+```
 
-Generate code coverage report for the test task.
-
-```bash
-./gradlew jacocoTestReport
+```console
+./mvnw validate site
 ```
 
 ## Build project
 
-Assemble and test this project.
+Build this project
 
-```bash
-./gradlew build
+```console
+./gradlew clean build
 ```
 
-Create a modular runtime image.
-
-```bash
-./gradlew jlink
+```console
+./mvnw clean verify
 ```
 
 ## Run
 
-```bash
-./gradlew exec
-./gradlew exec --args="--no-gui --debug"
+```console
+./gradlew run
+./gradlew run --args="--gui --debug"
 ```
 
-Run created modular runtime image.
-
-```bash
-./build/image/bin/launcher
+```console
+./mvnw exec:exec
 ```
 
 ## Distribute
 
-Create a zip of the modular runtime image.
+Create modular runtime image with installer:
 
-```bash
-./gradlew jlinkZip
-```
-
-Create an installable image.
-
-```bash
+```console
 ./gradlew jpackage
 ```
 
-## Dependencies
+```console
+./mvnw jlink:jlink jpackage:jpackage@jpackage-image jpackage:jpackage@jpackage-installer
+```
+
+## Project dependencies
 
 Displays all dependencies declared in project.
 
-```bash
+```console
 ./gradlew dependencies
 ```
 
-A web-based, searchable dependency report is available by adding the
---scan option.
-
-```bash
-./gradlew dependencies --scan
+```console
+./mvnw dependency:tree
 ```
 
 Discover dependency updates
 
-```bash
+```console
 ./gradlew dependencyUpdates -Drevision=release
 ```
 
-## Properties
+```console
+./mvnw versions:display-dependency-updates
+```
+
+## Project properties
 
 Display the properties of the project.
 
-```bash
+```console
 ./gradlew properties
+```
+
+```console
+./mvnw help:effective-settings
+./mvnw help:effective-pom
+./mvnw help:system
+./mvnw help:all-profiles
+```
+
+## Release project
+
+```console
+./gradlew release
+```
+
+```console
+./mvnw release:clean release:prepare release:perform
 ```
 
 ## Pull request

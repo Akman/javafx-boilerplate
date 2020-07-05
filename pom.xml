@@ -59,9 +59,6 @@
     <project.build.sourceEncoding>${defaultEncoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${defaultEncoding}</project.reporting.outputEncoding>
 
-    <!-- Properties -->
-    <defaultProperties>${project.basedir}/maven.properties</defaultProperties>
-
     <!-- Application -->
     <applicationName>Java Boilerplate Project</applicationName>
     <applicationVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</applicationVersion>
@@ -110,8 +107,8 @@
     <jpackageImageDir>${jpackageDir}/${platformImageName}</jpackageImageDir>
 
     <!-- Dependencies -->
-    <version.javafx>15-ea+6</version.javafx>
-    <version.picocli>4.3.2</version.picocli>
+    <version.javafx>15-ea+7</version.javafx>
+    <version.picocli>4.4.0</version.picocli>
     <version.slf4j>2.0.0-alpha1</version.slf4j>
     <version.logback>[1.3.0-alpha4]</version.logback>
     <version.junit>5.7.0-M1</version.junit>
@@ -289,11 +286,13 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>
           <version>${version.properties-maven-plugin}</version>
+          <!--
           <configuration>
             <files>
-              <file>${defaultProperties}</file>
+              <file>${project.basedir}/maven.properties</file>
             </files>
           </configuration>
+          -->
         </plugin>
         <plugin> <!-- maven-enforcer-plugin -->
           <artifactId>maven-enforcer-plugin</artifactId>
@@ -997,6 +996,9 @@
         <plugin> <!-- maven-deploy-plugin -->
           <artifactId>maven-deploy-plugin</artifactId>
           <version>${version.maven-deploy-plugin}</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
         </plugin>
         <plugin> <!-- maven-release-plugin -->
           <artifactId>maven-release-plugin</artifactId>
@@ -1037,6 +1039,7 @@
           <version>${version.nexus-staging-maven-plugin}</version>
           <extensions>true</extensions>
           <configuration>
+            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
             <serverId>ossrh</serverId>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
             <autoReleaseAfterClose>true</autoReleaseAfterClose>
@@ -1749,14 +1752,6 @@
       </plugin>
       <plugin> <!-- maven-deploy-plugin -->
         <artifactId>maven-deploy-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin> <!-- maven-release-plugin -->
         <artifactId>maven-release-plugin</artifactId>
