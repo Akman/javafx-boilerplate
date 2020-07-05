@@ -992,6 +992,9 @@
         <plugin> <!-- maven-install-plugin -->
           <artifactId>maven-install-plugin</artifactId>
           <version>${version.maven-install-plugin}</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
         </plugin>
         <plugin> <!-- maven-deploy-plugin -->
           <artifactId>maven-deploy-plugin</artifactId>
