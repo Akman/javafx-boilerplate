@@ -80,9 +80,11 @@ cache:
   directories:
     - $HOME/.gradle/wrapper/
     - $HOME/.gradle/caches/
+#    - $HOME/.m2
 
 before_install:
   - chmod a+x ./gradlew
+#  - chmod a+x ./mvnw
   - find ./ci -type f -name *.sh -exec chmod a+x {} ';'
 
 install:
@@ -93,6 +95,7 @@ before_script:
 
 script:
   - ./gradlew check jacocoTestReport
+#  - ./mvnw --batch-mode clean verify
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -105,6 +108,7 @@ after_success:
 
 before_deploy:
   - ./gradlew jpackage
+#  - ./mvnw jpackage:jpackage@jpackage-image jpackage:jpackage@jpackage-installer
   - ./ci/package.sh
 
 deploy:
@@ -113,6 +117,7 @@ deploy:
     secure: "aMcP2fctVVLdUReCrbsOnhRc/apQg7P85X7AXhNI+GKWB+ODcVQNL76gjJzSVrLelKn8iB9+4IS2zqrwKeNwd+336XuzmDNUGtFbzZp2dMDHQ4V/VV2WjXpqXemEUMblGIrRrEiBNB0GTww9fQ/mt7OqGDWAJDD6oGjnBAkzKfYhdNxiYDdQbDjulzTcI+nzhqwG/eVQkXD04ov/gE/C8VINOzI7DbmpLGzU+m5xV9KTWbGSFBarNfovC+Rl+lTEZ1+/VUyooM1idbSiHLppcjuAVwdeFaKD8AO9nl5cWpdWQxVkqQc6zZEB5Q9Upu+UtPoQAjL7MFl2SwL0pW0p01KicfeTewURX4iGdv3yyEPEsTpBM1Gytw3jCOLfP6QkhUszKAGUXvtqSxttI5eZBzq92S7CxpTiWTMDnzhDv5li3V1WiyF9cZFhauY5X5fdjUJfwbYBBcU4xXB6GsvYszNBuhb+E3UOo3TeQ0ZHCbnRPnHvIlc0VkcUsFKJmJmmamuzbTYAUyQi62d6vZImdY8q+z0omNSwYBUkQz1VOMXWDZBR81X4QzmMNsFiMvbSmuK4VQO/fRW00nkvUt5tfLkGfnts2MxrSX/38038YCGHg+/8HrrhK813RcIqB6hj9g8GMj94t+02ZwtkmFWeEbBnTPx/QiextT4kWj1Kb28="
   file_glob: true
   file: build/jpackage/*
+#  file: target/jpackage/*
   skip_cleanup: true
   on:
     # deployment is triggered if and only if $TRAVIS_TAG is set

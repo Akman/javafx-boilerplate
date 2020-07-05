@@ -465,27 +465,27 @@ run {
   args = platformArgs
 }
 
-task exec(type: ru.akman.utils.ExecTask) {
-  description 'Executes this project as a JVM application'
-  group 'application'
-  dependsOn classes
-  standardInput = System.in
-  executable = org.gradle.internal.jvm.Jvm.current().javaExecutable
-  args = platformJvmArgs
-  args += [
-    '-Dfile.encoding=' + System.properties['file.encoding'],
-    '-Duser.country=' + System.properties['user.country'],
-    '-Duser.language=' + System.properties['user.language'],
-    '-Duser.variant=' + System.properties['user.variant'],
-  ]
-  args += [
-    '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
-    '--patch-module', "${applicationModuleName}=" +
-        files(sourceSets.main.output.resourcesDir).asPath,
-    '--module', "${applicationModuleName}/${applicationClassName}",
-  ]
-  args += platformArgs
-}
+// task exec(type: ru.akman.utils.ExecTask) {
+//   description 'Executes this project as a JVM application'
+//   group 'application'
+//   dependsOn classes
+//   standardInput = System.in
+//   executable = org.gradle.internal.jvm.Jvm.current().javaExecutable
+//   args = platformJvmArgs
+//   args += [
+//     '-Dfile.encoding=' + System.properties['file.encoding'],
+//     '-Duser.country=' + System.properties['user.country'],
+//     '-Duser.language=' + System.properties['user.language'],
+//     '-Duser.variant=' + System.properties['user.variant'],
+//   ]
+//   args += [
+//     '--module-path', files(sourceSets.main.runtimeClasspath).asPath,
+//     '--patch-module', "${applicationModuleName}=" +
+//         files(sourceSets.main.output.resourcesDir).asPath,
+//     '--module', "${applicationModuleName}/${applicationClassName}",
+//   ]
+//   args += platformArgs
+// }
 
 release {
 
@@ -915,31 +915,14 @@ codenarc {
   reportFormat = 'html'
 }
 
-// dependencyReport (txt)
-// htmlDependencyReport (html)
-// propertyReport (txt)
-// taskReport (txt)
-// projectReport (txt)
-buildDashboard.dependsOn projectReport
-// buildDashboard (html)
-// checkstyleMain (html)(xml)
-// checkstyleTest (html)(xml)
-// codenarcMain (html)
-// codenarcTest (html)
-// cpdCheck (text)(xml)
-// groovyCpdCheck (text)(xml)
-// jacocoTestReport (html)(xml)
-// pmdMain (html)(xml)
-// pmdTest (html)(xml)
-// test (html)(junitXml)
 buildDashboard {
   reports {
     html {
-      //aggregate report, ...
       destination file("${project.reporting.baseDir}")
     }
   }
 }
+buildDashboard.dependsOn projectReport
 
 task processCommonResources(type: Copy) {
   description = 'Processes common resources'
