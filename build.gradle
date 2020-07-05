@@ -149,7 +149,7 @@ ext {
       platformJvmArgs = applicationJvmArgs + [
           "-Dfile.encoding=${defaultEncoding}",
       ]
-      platformInstallDir = "${applicationVendor}/${platformImageName}"
+      platformInstallDir = ''
       platformMenuGroup = "${applicationVendor}/${platformImageName}"
       platformUUID = ''
       break
@@ -163,7 +163,7 @@ ext {
       platformJvmArgs = applicationJvmArgs + [
           "-Dfile.encoding=${defaultEncoding}",
       ]
-      platformInstallDir = "${applicationVendor}/${platformImageName}"
+      platformInstallDir = ''
       platformMenuGroup = "${applicationVendor}/${platformImageName}"
       platformUUID = ''
       break
@@ -936,7 +936,7 @@ build.dependsOn processCommonResources
 
 jlink {
   // The path to the JDK providing the tools needed
-  javaHome = System.getenv('JAVA_HOME')
+  // javaHome = System.getenv('JAVA_HOME')
 
   // The name of the Gradle dependency configuration used to
   // execute your application.
@@ -1205,12 +1205,16 @@ jlink {
       // "icon", and "description" can be used to describe the
       // association. This option can be used multiple times.
       '--file-associations', "${jpackageConfigDir}/associations.properties",
-      // Absolute path of the installation directory of the
-      // application on OS X or Linux. Relative sub-path of the
-      // installation location of the application such as
-      // "Program Files" or "AppData" on Windows.
-      '--install-dir', "${platformInstallDir}",
     ]
+    if (platformInstallDir) {
+      installerOptions += [
+        // Absolute path of the installation directory of the
+        // application on OS X or Linux. Relative sub-path of the
+        // installation location of the application such as
+        // "Program Files" or "AppData" on Windows.
+        '--install-dir', "${platformInstallDir}",
+      ]
+    }
 
     // This property is required only when using the targetPlatform method.
     // It specifies which of the images produced by jlink should be used as

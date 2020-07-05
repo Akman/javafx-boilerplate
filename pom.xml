@@ -633,7 +633,7 @@
                 - JDK home directory specified by system variable JAVA_HOME
                 - system path specified by system variable PATH
             -->
-            <toolhome>${env.JAVA_HOME}</toolhome>
+            <!--toolhome>${env.JAVA_HOME}</toolhome-->
             <!--
               Specifies the location in which modular dependencies
               will be placed.
@@ -1968,7 +1968,7 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
+        <platformInstallDir />
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
       </properties>
@@ -1987,7 +1987,7 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
+        <platformInstallDir />
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
       </properties>
