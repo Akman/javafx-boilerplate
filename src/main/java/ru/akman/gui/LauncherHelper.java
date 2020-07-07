@@ -195,18 +195,8 @@ public final class LauncherHelper extends Application {
     stage.setOpacity(OPACITY);
     stage.centerOnScreen();
     // stage.setFullScreen(true);
-
-    // stage.iconifiedProperty().addListener(new ChangeListener<Boolean>() {
-    //   @Override
-    //   public void changed(ObservableValue ov,
-    //       Boolean oldProp, Boolean newProp) {
-    //     if (newProp.booleanValue()) {
-    //       stage.close();
-    //     }
-    //   }
-    // });
-    stage.iconifiedProperty().addListener((ov, oldVal, newVal) -> {
-      if (newVal) {
+    stage.iconifiedProperty().addListener((ov, oldProp, newProp) -> {
+      if (newProp.booleanValue()) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Stage iconified.");
         }

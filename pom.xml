@@ -35,7 +35,7 @@
 
   <groupId>com.github.akman</groupId>
   <artifactId>java-boilerplate</artifactId>
-  <version>0.44.0-SNAPSHOT</version>
+  <version>0.46.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${applicationName}</name>
@@ -1634,7 +1634,9 @@
                 list of key, value pairs. The keys "extension", "mime-type",
                 "icon", and "description" can be used to describe the association.
               -->
-              <fileassociations>${jpackageConfigDir}/associations.properties</fileassociations>
+              <fileassociations>
+                <fileassociation>${jpackageConfigDir}/associations.properties</fileassociation>
+              </fileassociations>
               <!--
                 Specifies the relative sub-path under the default installation
                 location of the application for Windows, or absolute path of the
@@ -1968,7 +1970,7 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir />
+        <platformInstallDir>"/opt/${applicationVendor}/${platformImageName}"</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
       </properties>
@@ -1987,7 +1989,7 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir />
+        <platformInstallDir>"/Applications/${applicationVendor}/${platformImageName}"</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
       </properties>

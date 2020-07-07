@@ -43,12 +43,7 @@ import ru.akman.commons.CommonUtils;
 /**
  * Application launcher.
  */
-@Command(
-    name = "launcher",
-    description = "Launcher application",
-    version = "Version 1.0",
-    mixinStandardHelpOptions = true
-)
+@Command
 public final class Launcher implements Callable<Integer> {
 
   /**
@@ -60,6 +55,11 @@ public final class Launcher implements Callable<Integer> {
    * Messages resource bundle name.
    */
   private static final String MESSAGES_NAME = "messages";
+
+  /**
+   * CLI resource bundle name.
+   */
+  private static final String CLI_NAME = "cli";
 
   /**
    * Application properties name.
@@ -92,6 +92,16 @@ public final class Launcher implements Callable<Integer> {
   private static final String PROP_APP_PARTING = "app.parting";
 
   /**
+   * Application propertie for application name.
+   */
+  private static final String PROP_APP_NAME = "application.launcher.name";
+
+  /**
+   * Application propertie for application version.
+   */
+  private static final String PROP_APP_VERSION = "application.version";
+
+  /**
    * Default logger.
    */
   private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
@@ -113,7 +123,7 @@ public final class Launcher implements Callable<Integer> {
    */
   @Option(
       names = {"-d", "--debug"},
-      description = "Log in debug mode."
+      descriptionKey = "debug"
   )
   private boolean debugEnabled;
 
@@ -122,7 +132,7 @@ public final class Launcher implements Callable<Integer> {
    */
   @Option(
       names = {"-g", "--gui"},
-      description = "Run application in GUI mode."
+      descriptionKey = "gui"
   )
   private boolean guiEnabled;
 
@@ -191,6 +201,16 @@ public final class Launcher implements Callable<Integer> {
   public static void main(final String[] args) {
     CommonUtils.setupSystemStreams();
     final CommandLine cmdLine = new CommandLine(new Launcher());
+    cmdLine
+        .setResourceBundle(ResourceBundle.getBundle(
+            CLI_NAME, Locale.getDefault()))
+        .getCommandSpec()
+        .mixinStandardHelpOptions(true)
+        .name(getProperty(PROP_APP_NAME))
+        .version(new String[] {
+          "%n@|bold " + getProperty(PROP_APP_NAME) + "|@ @|bold,yellow v"
+              + getProperty(PROP_APP_VERSION) + "|@"
+        });
     System.exit(cmdLine.execute(args));
   }
 

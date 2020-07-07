@@ -149,7 +149,7 @@ ext {
       platformJvmArgs = applicationJvmArgs + [
           "-Dfile.encoding=${defaultEncoding}",
       ]
-      platformInstallDir = ''
+      platformInstallDir = "/opt/${applicationVendor}/${platformImageName}"
       platformMenuGroup = "${applicationVendor}/${platformImageName}"
       platformUUID = ''
       break
@@ -163,7 +163,7 @@ ext {
       platformJvmArgs = applicationJvmArgs + [
           "-Dfile.encoding=${defaultEncoding}",
       ]
-      platformInstallDir = ''
+      platformInstallDir = "/Applications/${applicationVendor}/${platformImageName}"
       platformMenuGroup = "${applicationVendor}/${platformImageName}"
       platformUUID = ''
       break
