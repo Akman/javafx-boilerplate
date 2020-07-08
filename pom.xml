@@ -90,6 +90,7 @@
     <applicationClassName>ru.akman.launcher.Launcher</applicationClassName>
     <applicationJvmArgs>-Xms256m -Xmx512m</applicationJvmArgs>
     <applicationArgs>--debug</applicationArgs>
+    <applicationSplashImage>splash.png</applicationSplashImage>
 
     <!-- JLink -->
     <jlinkConfigDir>${project.basedir}/package</jlinkConfigDir>
@@ -103,6 +104,7 @@
     <!-- JPackage -->
     <jpackageConfigDir>${project.basedir}/package/${platformFamily}</jpackageConfigDir>
     <jpackageResourcesDir>${jpackageConfigDir}/resources</jpackageResourcesDir>
+    <jpackageInputDir>${jpackageConfigDir}/input</jpackageInputDir>
     <jpackageDir>${project.build.directory}/jpackage</jpackageDir>
     <jpackageImageDir>${jpackageDir}/${platformImageName}</jpackageImageDir>
 
@@ -150,7 +152,7 @@
     <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
     <version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
     <version.jlink-maven-plugin>0.1.8</version.jlink-maven-plugin>
-    <version.jpackage-maven-plugin>0.1.2</version.jpackage-maven-plugin>
+    <version.jpackage-maven-plugin>0.1.3-SNAPSHOT</version.jpackage-maven-plugin>
     <version.maven-install-plugin>3.0.0-M1</version.maven-install-plugin>
     <version.maven-deploy-plugin>3.0.0-M1</version.maven-deploy-plugin>
     <version.maven-release-plugin>3.0.0-M1</version.maven-release-plugin>
@@ -555,6 +557,7 @@
                 <Implementation-Title>${applicationModuleName}</Implementation-Title>
                 <Implementation-Version>${project.version}</Implementation-Version>
                 <Implementation-Vendor>${applicationVendor}</Implementation-Vendor>
+                <SplashScreen-Image>${applicationSplashImage}</SplashScreen-Image>
               </manifestEntries>
             </archive>
           </configuration>
@@ -1541,7 +1544,7 @@
         <artifactId>jpackage-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>jpackage-image</id>
+            <id>image</id>
             <goals>
               <goal>jpackage</goal>
             </goals>
@@ -1581,7 +1584,7 @@
               <!--
                 Specifies the options to pass to the Java runtime.
               -->
-              <javaoptions>${platformJvmArgs}</javaoptions>
+              <javaoptions>${platformJvmArgs} -splash:\$APPDIR/${applicationSplashImage}</javaoptions>
               <!--
                 Specifies options are added to, or used to overwrite,
                 the original command line options to build additional
@@ -1610,10 +1613,16 @@
                 Default value: false
               -->
               <!--winconsole>false</winconsole-->
+              <!--
+                Path of the input directory that contains the files to be
+                packaged. All files in the input directory will be packaged into
+                the application image into $APPDIR directory.
+              -->
+              <input>${jpackageInputDir}</input>
             </configuration>
           </execution>
           <execution>
-            <id>jpackage-installer</id>
+            <id>installer</id>
             <goals>
               <goal>jpackage</goal>
             </goals>

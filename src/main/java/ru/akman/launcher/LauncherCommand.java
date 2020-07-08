@@ -28,6 +28,7 @@
 
 package ru.akman.launcher;
 
+import java.awt.SplashScreen;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,10 @@ class LauncherCommand implements Callable<Integer> {
    */
   @Override
   public Integer call() throws Exception {
+    final SplashScreen splash = SplashScreen.getSplashScreen();
+    if (splash != null) {
+      splash.close();
+    }
     if (isDebugEnabled()) {
       CommonUtils.setLoggerLevel(LOG_LEVEL_DEBUG);
     }

@@ -329,7 +329,7 @@ Create modular runtime image with installer:
 ```
 
 ```console
-./mvnw jlink:jlink jpackage:jpackage@jpackage-image jpackage:jpackage@jpackage-installer
+./mvnw validate jlink:jlink jpackage:jpackage@image jpackage:jpackage@installer
 ```
 
 ## Project dependencies

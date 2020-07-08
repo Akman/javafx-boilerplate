@@ -118,6 +118,7 @@ ext {
   applicationArgs = [
     '--debug'
   ]
+  applicationSplashImage = 'splash.png'
 
   // Platform
   os = org.gradle.internal.os.OperatingSystem.current()
@@ -180,6 +181,7 @@ ext {
 
   // JPackage
   jpackageConfigDir = "${projectDir}/package/${platformFamily}"
+  jpackageInputDir = "${jpackageConfigDir}/input"
   jpackageResourcesDir = "${jpackageConfigDir}/resources"
   jpackageDir = "${buildDir}/jpackage"
   jpackageImageDir = "${jpackageDir}/${platformImageName}"
@@ -390,6 +392,7 @@ jar {
       'Implementation-Title': "${applicationModuleName}",
       'Implementation-Version': "${project.version}",
       'Implementation-Vendor': "${applicationVendor}",
+      'SplashScreen-Image': "${applicationSplashImage}",
     )
   }
 }
@@ -405,6 +408,7 @@ task fatJar(type: Jar) {
       'Implementation-Title': "${applicationModuleName}",
       'Implementation-Version': "${version}",
       'Implementation-Vendor': "${applicationVendor}",
+      'SplashScreen-Image': "${applicationSplashImage}",
     )
   }
   from {
@@ -1128,6 +1132,8 @@ jlink {
     // when executing the jpackageImage task.
     // defaultValue: empty list
     imageOptions = [
+      // Input dir
+      '--input', jpackageInputDir,
       // Copyright for the application
       '--copyright', applicationCopyright,
       // Description of the application
@@ -1179,7 +1185,9 @@ jlink {
     // List of JVM arguments to be passed to the virtual machine.
     // defaultValue: the jvmArgs value configured in the launcher block or
     // an empty list
-    jvmArgs = platformJvmArgs
+    jvmArgs = platformJvmArgs + [
+      "-splash:\$APPDIR/${applicationSplashImage}"
+    ]
 
     // List of arguments to be passed to the application.
     // defaultValue: the args value configured in the launcher block or
