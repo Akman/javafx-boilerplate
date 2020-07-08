@@ -32,24 +32,15 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import ru.akman.commons.CommonUtils;
 
 /**
  * Application launcher.
  */
-@Command
-public final class Launcher implements Callable<Integer> {
-
-  /**
-   * Logger level for debug mode.
-   */
-  private static final String LOG_LEVEL_DEBUG = "DEBUG";
+public final class Launcher {
 
   /**
    * Messages resource bundle name.
@@ -70,26 +61,6 @@ public final class Launcher implements Callable<Integer> {
    * Application properties charset.
    */
   private static final String PROPS_CHARSET = "UTF-8";
-
-  /**
-   * Application propertie for greeting.
-   */
-  private static final String PROP_APP_GREETING = "app.greeting";
-
-  /**
-   * Application propertie for CLI mode.
-   */
-  private static final String PROP_APP_MODE_CLI = "app.mode.cli";
-
-  /**
-   * Application propertie for GUI mode.
-   */
-  private static final String PROP_APP_MODE_GUI = "app.mode.gui";
-
-  /**
-   * Application propertie for parting.
-   */
-  private static final String PROP_APP_PARTING = "app.parting";
 
   /**
    * Application propertie for application name.
@@ -119,54 +90,9 @@ public final class Launcher implements Callable<Integer> {
       PROPS_NAME, Charset.forName(PROPS_CHARSET));
 
   /**
-   * Debug mode.
+   * Application command.
    */
-  @Option(
-      names = {"-d", "--debug"},
-      descriptionKey = "debug"
-  )
-  private boolean debugEnabled;
-
-  /**
-   * GUI mode.
-   */
-  @Option(
-      names = {"-g", "--gui"},
-      descriptionKey = "gui"
-  )
-  private boolean guiEnabled;
-
-  /**
-   * Is DEBUG mode enabled.
-   * @return true if DEBUG mode is enabled
-   */
-  public boolean isDebugEnabled() {
-    return debugEnabled;
-  }
-
-  /**
-   * Set DEBUG mode enabled or disabled.
-   * @param isEnabled is DEBUG mode enabled
-   */
-  public void setDebugEnabled(final boolean isEnabled) {
-    debugEnabled = isEnabled;
-  }
-
-  /**
-   * Is GUI mode enabled.
-   * @return true if GUI mode is enabled
-   */
-  public boolean isGuiEnabled() {
-    return guiEnabled;
-  }
-
-  /**
-   * Set GUI mode enabled or disabled.
-   * @param isEnabled is GUI mode enabled
-   */
-  public void setGuiEnabled(final boolean isEnabled) {
-    guiEnabled = isEnabled;
-  }
+  private static final LauncherCommand COMMAND = new LauncherCommand();
 
   /**
    * Get string from the application resources.
@@ -195,12 +121,20 @@ public final class Launcher implements Callable<Integer> {
   }
 
   /**
+   * Get application command.
+   * @return application command
+   */
+  public static LauncherCommand getCommand() {
+    return COMMAND;
+  }
+
+  /**
    * Main entry point of application.
    * @param args system CLI arguments
    */
   public static void main(final String[] args) {
     CommonUtils.setupSystemStreams();
-    final CommandLine cmdLine = new CommandLine(new Launcher());
+    final CommandLine cmdLine = new CommandLine(COMMAND);
     cmdLine
         .setResourceBundle(ResourceBundle.getBundle(
             CLI_NAME, Locale.getDefault()))
@@ -212,37 +146,6 @@ public final class Launcher implements Callable<Integer> {
               + getProperty(PROP_APP_VERSION) + "|@"
         });
     System.exit(cmdLine.execute(args));
-  }
-
-  /**
-   * Command line user interface.
-   *
-   * @return Exit code
-   */
-  @Override
-  public Integer call() throws Exception {
-    if (isDebugEnabled()) {
-      CommonUtils.setLoggerLevel(LOG_LEVEL_DEBUG);
-    }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(getString(PROP_APP_GREETING));
-    }
-    CommonUtils.dumpProperties(PROPERTIES);
-    if (isGuiEnabled()) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(getString(PROP_APP_MODE_GUI));
-      }
-      ru.akman.gui.LauncherHelper.run();
-    } else {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(getString(PROP_APP_MODE_CLI));
-      }
-      ru.akman.cli.LauncherHelper.run();
-    }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(getString(PROP_APP_PARTING));
-    }
-    return 0;
   }
 
 }
