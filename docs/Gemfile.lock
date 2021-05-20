@@ -24,10 +24,12 @@ GEM
       http_parser.rb (~> 0.6.0)
     ethon (0.12.0)
       ffi (>= 1.3.0)
+    eventmachine (1.2.7)
     eventmachine (1.2.7-x64-mingw32)
     execjs (2.7.0)
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
+    ffi (1.13.1)
     ffi (1.13.1-x64-mingw32)
     forwardable-extended (2.6.0)
     gemoji (3.0.1)
@@ -206,13 +208,17 @@ GEM
       jekyll-seo-tag (~> 2.1)
     minitest (5.14.1)
     multipart-post (2.1.1)
-    nokogiri (1.11.0.rc2-x64-mingw32)
+    nokogiri (1.11.4-x64-mingw32)
+      racc (~> 1.4)
+    nokogiri (1.11.4-x86_64-linux)
+      racc (~> 1.4)
     octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (3.1.1)
+    racc (1.5.2)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -239,11 +245,11 @@ GEM
     tzinfo-data (1.2020.1)
       tzinfo (>= 1.0.0)
     unicode-display_width (1.7.0)
-    wdm (0.1.1)
     zeitwerk (2.3.1)
 
 PLATFORMS
   x64-mingw32
+  x86_64-linux
 
 DEPENDENCIES
   activesupport (>= 6.0.3.1)
@@ -258,7 +264,6 @@ DEPENDENCIES
   nokogiri (>= 1.11.0.rc2)
   tzinfo (~> 1.1)
   tzinfo-data (>= 1.2019.3)
-  wdm (~> 0.1.1)
 
 RUBY VERSION
    ruby 2.7.1p83
