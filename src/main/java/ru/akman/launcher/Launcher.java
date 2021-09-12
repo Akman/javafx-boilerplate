@@ -96,7 +96,9 @@ public final class Launcher {
 
   /**
    * Get string from the application resources.
+   *
    * @param key resource string key
+   *
    * @return resource string value
    */
   public static String getString(final String key) {
@@ -105,7 +107,9 @@ public final class Launcher {
 
   /**
    * Get string from the application properties.
+   *
    * @param key property string key
+   *
    * @return property string value
    */
   public static String getProperty(final String key) {
@@ -114,6 +118,7 @@ public final class Launcher {
 
   /**
    * Get application properties.
+   *
    * @return application properties
    */
   public static Properties getProperties() {
@@ -122,6 +127,7 @@ public final class Launcher {
 
   /**
    * Get application command.
+   *
    * @return application command
    */
   public static LauncherCommand getCommand() {
@@ -129,10 +135,22 @@ public final class Launcher {
   }
 
   /**
+   * Private constructor.
+   * All methods are static.
+   */
+  private Launcher() {
+  }
+
+  /**
    * Main entry point of application.
+   *
    * @param args system CLI arguments
    */
   public static void main(final String[] args) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(getProperty(PROP_APP_NAME) + " - "
+          + getProperty(PROP_APP_VERSION));
+    }
     CommonUtils.setupSystemStreams();
     final CommandLine cmdLine = new CommandLine(COMMAND);
     cmdLine

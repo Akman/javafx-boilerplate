@@ -36,17 +36,17 @@ plugins {
   id 'jacoco'
 
   // https://github.com/hierynomus/license-gradle-plugin
-  id 'com.github.hierynomus.license' version '0.15.0'
+  id 'com.github.hierynomus.license' version '0.16.1'
 
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.27.0'
+  id 'com.github.ben-manes.versions' version '0.36.0'
   
   // https://github.com/Akman/vscode-tasks
-  id 'ru.akman.vscode-tasks' version '0.2.0'
+  id 'ru.akman.vscode-tasks' version '0.4.0'
 }
 
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 ext {
@@ -95,7 +95,7 @@ dependencies {
   // Spock
 
   testImplementation(
-    'org.spockframework:spock-core:1.3-groovy-2.5',
+    'org.spockframework:spock-core:2.0-groovy-3.0',
     // only necessary if Hamcrest matchers are used
     // 'org.hamcrest:hamcrest-core:1.3',
   )
@@ -182,7 +182,7 @@ license {
 
 codenarc {
   // The version of the code quality tool to be used.
-  toolVersion = '1.5'
+  toolVersion = '2.0.0'
 
   // The CodeNarc configuration file to use.
   // https://github.com/CodeNarc/CodeNarc/tree/master/src/main/resources/rulesets
@@ -237,15 +237,15 @@ tasks.withType(Test) {
 }
 
 jacoco {
-  toolVersion = '0.8.5'
-  reportsDir = file("${project.reporting.baseDir}/jacoco")
+  toolVersion = '0.8.6'
+  reportsDirectory = file("${project.reporting.baseDir}/jacoco")
 }
 
 jacocoTestReport {
   reports {
-    xml.enabled true
+    xml.required = true
     xml.destination file("${project.reporting.baseDir}/jacoco/report.xml")
-    csv.enabled false
+    csv.required = false
     html.destination file("${project.reporting.baseDir}/jacoco/html")
   }
 }

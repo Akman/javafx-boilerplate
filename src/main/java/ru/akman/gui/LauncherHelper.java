@@ -117,6 +117,7 @@ public final class LauncherHelper extends Application {
 
   /**
    * Load FXML document into default scene.
+   *
    * @param fxml name of FXML document without extension
    */
   public static void setRoot(final String fxml) {

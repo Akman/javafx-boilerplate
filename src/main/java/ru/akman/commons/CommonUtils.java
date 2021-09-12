@@ -89,6 +89,7 @@ public final class CommonUtils {
    * importance.
    * The <code>ALL</code> is used to turn on all logging.
    * If passing level is invalid then used default level <code>ERROR</code>.
+   *
    * @param level root logger level
    */
   public static void setLoggerLevel(final String level) {
@@ -109,6 +110,7 @@ public final class CommonUtils {
    * importance.
    * The <code>ALL</code> is used to turn on all logging.
    * If passing level is invalid then used default level <code>ERROR</code>.
+   *
    * @param level logger level
    * @param name logger name (class name or <code>"ROOT"</code>)
    */
@@ -129,6 +131,7 @@ public final class CommonUtils {
 
   /**
    * Load resource by name and charset.
+   *
    * @param resourceName resource name (path)
    * @param resourceCharset resource charset
    * @return properties object
@@ -154,6 +157,7 @@ public final class CommonUtils {
 
   /**
    * Dump properties.
+   *
    * @param properties properties object
    */
   public static void dumpProperties(final Properties properties) {

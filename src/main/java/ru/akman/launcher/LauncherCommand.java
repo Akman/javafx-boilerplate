@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import ru.akman.commons.CommonUtils;
-import ru.akman.launcher.Launcher;
 
 /**
  * Application launcher command.
@@ -84,22 +83,6 @@ class LauncherCommand implements Callable<Integer> {
   private boolean debugEnabled;
 
   /**
-   * Is DEBUG mode enabled.
-   * @return true if DEBUG mode is enabled
-   */
-  public boolean isDebugEnabled() {
-    return debugEnabled;
-  }
-
-  /**
-   * Set DEBUG mode enabled or disabled.
-   * @param isEnabled is DEBUG mode enabled
-   */
-  public void setDebugEnabled(final boolean isEnabled) {
-    debugEnabled = isEnabled;
-  }
-
-  /**
    * GUI mode.
    */
   @Option(
@@ -109,7 +92,26 @@ class LauncherCommand implements Callable<Integer> {
   private boolean guiEnabled;
 
   /**
+   * Is DEBUG mode enabled.
+   *
+   * @return true if DEBUG mode is enabled
+   */
+  public boolean isDebugEnabled() {
+    return debugEnabled;
+  }
+
+  /**
+   * Set DEBUG mode enabled or disabled.
+   *
+   * @param isEnabled is DEBUG mode enabled
+   */
+  public void setDebugEnabled(final boolean isEnabled) {
+    debugEnabled = isEnabled;
+  }
+
+  /**
    * Is GUI mode enabled.
+   *
    * @return true if GUI mode is enabled
    */
   public boolean isGuiEnabled() {
@@ -118,12 +120,13 @@ class LauncherCommand implements Callable<Integer> {
 
   /**
    * Set GUI mode enabled or disabled.
+   *
    * @param isEnabled is GUI mode enabled
    */
   public void setGuiEnabled(final boolean isEnabled) {
     guiEnabled = isEnabled;
   }
-  
+
   /**
    * Command line user interface.
    *
