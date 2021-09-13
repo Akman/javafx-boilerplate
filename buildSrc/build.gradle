@@ -1,7 +1,7 @@
 /*
   JavaFX Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle
+  https://github.com/akman/javafx-boilerplate
 
   MIT License (MIT)
 
@@ -59,7 +59,7 @@ ext {
   applicationFullName = "${applicationName} v${applicationVersion}"
   applicationDescription = 'JavaFX application boilerplate project using gradle and maven build tools. This project aims to cover best practices for JavaFX application development as a whole. It provides tool recommendations for linting, testing and packaging.'
   applicationScmUser = 'akman'
-  applicationScmRepo = 'java-boilerplate-gradle'
+  applicationScmRepo = 'javafx-boilerplate'
   applicationUrl = "https://github.com/${applicationScmUser}/${applicationScmRepo}"
   applicationInceptionYear = 2019
   applicationCurrentYear = Calendar.getInstance().get(Calendar.YEAR)

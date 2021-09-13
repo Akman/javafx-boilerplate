@@ -1,11 +1,11 @@
 /*
-  Java Boilerplate Project
+  JavaFX Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle
+  https://github.com/akman/javafx-boilerplate
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2021 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,6 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 */
-
 package ru.akman.cli;
 
 import java.io.BufferedReader;

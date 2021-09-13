@@ -2,7 +2,7 @@
 <!--
   JavaFX Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle
+  https://github.com/akman/javafx-boilerplate
 
   MIT License (MIT)
 
@@ -65,7 +65,7 @@
     <applicationFullName>${applicationName} v${applicationVersion}</applicationFullName>
     <applicationDescription>JavaFX application boilerplate project using gradle and maven build tools. This project aims to cover best practices for JavaFX application development as a whole. It provides tool recommendations for linting, testing and packaging.</applicationDescription>
     <applicationScmUser>akman</applicationScmUser>
-    <applicationScmRepo>java-boilerplate-gradle</applicationScmRepo>
+    <applicationScmRepo>javafx-boilerplate</applicationScmRepo>
     <applicationUrl>https://github.com/${applicationScmUser}/${applicationScmRepo}</applicationUrl>
     <applicationInceptionYear>2019</applicationInceptionYear>
     <applicationAuthorNickname>Akman</applicationAuthorNickname>
