@@ -1,7 +1,7 @@
 #
 # The MIT License (MIT)
 #
-# Copyright (C) 2019 Alexander Kapitman <akman.ru@gmail.com>
+# Copyright (C) 2019 - 2021 Alexander Kapitman <akman.ru@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -61,7 +61,7 @@ twitter:
 # url: https://akman.github.io
 
 # change this to the subpath of your site, e.g. /blog. Leave it empty if you don't need it.
-# baseurl: /java-boilerplate-gradle
+# baseurl: /javafx-boilerplate
 
 # header pages
 header_pages:
@@ -86,7 +86,7 @@ google_analytics:
 show_downloads: true
 
 github:
-  download_url: https://github.com/Akman/java-boilerplate-gradle/releases/latest
+  download_url: https://github.com/Akman/javafx-boilerplate/releases/latest
   # owner_name
   # owner_url
   # repository_name
