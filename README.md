@@ -1,11 +1,11 @@
-# Java Boilerplate Project v0.46.0
+# JavaFX Boilerplate Project v0.46.0
 
 [![Build Status][travis_badge]][travis_href]
 [![Code Coverage][codecov_badge]][codecov_href]
 [![Latest Release][release_badge]][release_href]
 [![License][license_badge]][license_href]
 
-This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.
+JavaFX application boilerplate project using gradle and maven build tools. This project aims to cover best practices for JavaFX application development as a whole. It provides tool recommendations for linting, testing and packaging.
 
 [The source for this project is available here][src_href]
 

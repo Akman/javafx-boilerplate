@@ -1,5 +1,7 @@
 ruleset {
 
+    // https://codenarc.org/codenarc-rule-index.html
+
     description 'All Groovy CodeNarc rules, grouped by category'
 
     ruleset('rulesets/basic.xml')
@@ -44,6 +46,7 @@ ruleset {
     HardCodedWindowsRootDirectory
     IntegerGetInteger
     MultipleUnaryOperators
+    ParameterAssignmentInFilterClosure
     RandomDoubleCoercedToZero
     RemoveAllOnSelf
     ReturnFromFinallyBlock
@@ -117,6 +120,7 @@ ruleset {
         NoDef {
             doNotApplyToClassNames = '*Test'
         }
+        exclude 'ImplicitReturnStatement'
     }
 
     /*
@@ -128,6 +132,7 @@ ruleset {
     HashtableIsObsolete
     IfStatementCouldBeTernary
     ImplicitClosureParameter
+    ImplicitReturnStatement
     InvertedCondition
     InvertedIfElse
     LongLiteralWithLowerCaseL
@@ -166,6 +171,9 @@ ruleset {
     Instanceof
     LocaleSetDefault
     NestedForLoop
+    OptionalCollectionReturnType
+    OptionalField
+    OptionalMethodParameter
     PrivateFieldCouldBeFinal
     PublicInstanceField
     ReturnsNullInsteadOfEmptyArray
@@ -248,11 +256,15 @@ ruleset {
     LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
+    MissingBlankLineBeforeAnnotatedField
     SpaceAfterCatch
     SpaceAfterClosingBrace
     SpaceAfterComma
     SpaceAfterFor
     SpaceAfterIf
+    SpaceAfterMethodCallName
+    SpaceAfterMethodDeclarationName
+    SpaceAfterNotOperator
     SpaceAfterOpeningBrace
     SpaceAfterSemicolon
     SpaceAfterSwitch
@@ -262,6 +274,7 @@ ruleset {
     SpaceAroundOperator
     SpaceBeforeClosingBrace
     SpaceBeforeOpeningBrace
+    SpaceInsideParentheses
     TrailingWhitespace
     */
 
@@ -282,6 +295,7 @@ ruleset {
     // ruleset('rulesets/grails.xml')
 
     /*
+    GrailsDomainGormMethods
     GrailsDomainHasEquals
     GrailsDomainHasToString
     GrailsDomainReservedSqlKeywordName
@@ -453,10 +467,10 @@ ruleset {
     // ruleset('rulesets/size.xml')
 
     /*
-    AbcMetric   // Requires the GMetrics jar
+    AbcMetric (Requires the GMetrics jar)
     ClassSize
-    CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file
-    CyclomaticComplexity   // Requires the GMetrics jar
+    CrapMetric (Requires the GMetrics jar and a Cobertura coverage file)
+    CyclomaticComplexity (Requires the GMetrics jar)
     MethodCount
     MethodSize
     NestedBlockDepth

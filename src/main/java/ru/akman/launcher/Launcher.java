@@ -122,7 +122,9 @@ public final class Launcher {
    * @return application properties
    */
   public static Properties getProperties() {
-    return PROPERTIES;
+    Properties properties = new Properties();
+    properties.putAll(PROPERTIES);
+    return properties;
   }
 
   /**

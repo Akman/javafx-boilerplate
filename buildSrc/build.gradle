@@ -1,11 +1,11 @@
 /*
-  Gradle Build Boilerplate Project
+  JavaFX Boilerplate Project
 
-  https://github.com/akman/java-boilerplate-gradle/buildSrc
+  https://github.com/akman/java-boilerplate-gradle
 
-  The MIT License (MIT)
+  MIT License (MIT)
 
-  Copyright (C) 2019 - 2020 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2021 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -54,10 +54,10 @@ ext {
   defaultEncoding = 'UTF-8'
 
   // Application
-  applicationName = 'Java Boilerplate Project'
+  applicationName = 'JavaFX Boilerplate Project'
   applicationVersion = project.version.replaceAll('-SNAPSHOT', '')
   applicationFullName = "${applicationName} v${applicationVersion}"
-  applicationDescription = 'This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.'
+  applicationDescription = 'JavaFX application boilerplate project using gradle and maven build tools. This project aims to cover best practices for JavaFX application development as a whole. It provides tool recommendations for linting, testing and packaging.'
   applicationScmUser = 'akman'
   applicationScmRepo = 'java-boilerplate-gradle'
   applicationUrl = "https://github.com/${applicationScmUser}/${applicationScmRepo}"
@@ -182,7 +182,7 @@ license {
 
 codenarc {
   // The version of the code quality tool to be used.
-  toolVersion = '2.0.0'
+  toolVersion = '2.2.0'
 
   // The CodeNarc configuration file to use.
   // https://github.com/CodeNarc/CodeNarc/tree/master/src/main/resources/rulesets
@@ -237,7 +237,7 @@ tasks.withType(Test) {
 }
 
 jacoco {
-  toolVersion = '0.8.6'
+  toolVersion = '0.8.7'
   reportsDirectory = file("${project.reporting.baseDir}/jacoco")
 }
 

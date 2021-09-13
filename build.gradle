@@ -1,5 +1,5 @@
 /*
-  Java Boilerplate Project
+  JavaFX Boilerplate Project
 
   https://github.com/akman/java-boilerplate-gradle
 
@@ -70,27 +70,43 @@ repositories {
 }
 
 ext {
+  
+  // Gradle
+  gradleVersion = '7.2'
+  if (GradleVersion.current() < GradleVersion.version(gradleVersion)) {
+    logger.warn("WARNING: Gradle version '${gradleVersion}' or higher is required.")
+  }
+
   // Java
   javaVersion = JavaVersion.VERSION_16
-
-  // Dependencies  
-  javafxVersion = '16'
-
-  // Tools
-  checkstyleVersion = '9.0'
-  pmdVersion = '6.38.0'
-  spotbugsVersion = '4.4.0'
-  codenarcVersion = '2.2.0'
-  jacocoVersion = '0.8.7'
 
   // Encoding
   defaultEncoding = 'UTF-8'
 
+  // Tools
+  checkstyleVersion = '9.0'
+  pmdVersion = '6.38.0'
+  spotbugsVersion = '4.4.1'
+  codenarcVersion = '2.2.0'
+  jacocoVersion = '0.8.7'
+
+  // Dependencies  
+  javafxVersion = '16'
+  picocliVersion = '4.6.1'
+  slf4jVersion = '2.0.0-alpha5'
+  logbackVersion = '1.3.0-alpha10'
+  junitVersion = '5.8.0'
+  spockVersion = '2.0-groovy-3.0'
+  mockitoVersion = '3.12.4'
+  groovyVersion = '3.0.9'
+  hamcrestVersion = '2.2'
+  assertjVersion = '3.16.1'
+
   // Application
-  applicationName = 'Java Boilerplate Project'
+  applicationName = 'JavaFX Boilerplate Project'
   applicationVersion = project.version.replaceAll('-SNAPSHOT', '')
   applicationFullName = "${applicationName} v${applicationVersion}"
-  applicationDescription = 'This project aims to cover best practices for Java application development as a whole. It provides tool recommendations for linting, testing and packaging.'
+  applicationDescription = 'JavaFX application boilerplate project using gradle and maven build tools. This project aims to cover best practices for JavaFX application development as a whole. It provides tool recommendations for linting, testing and packaging.'
   applicationScmUser = 'akman'
   applicationScmRepo = 'java-boilerplate-gradle'
   applicationUrl = "https://github.com/${applicationScmUser}/${applicationScmRepo}"
@@ -198,12 +214,11 @@ ext {
 
   // Log
   logDir = file("${projectDir}/log")
-  
 }
 
 dependencies {
   annotationProcessor(
-    'info.picocli:picocli-codegen:4.4.0'
+    "info.picocli:picocli-codegen:${picocliVersion}"
   )
   implementation(
     // JavaFX
@@ -215,26 +230,26 @@ dependencies {
     //"org.openjfx:javafx-web:${javafxVersion}:${platformModifier}",
     //"org.openjfx:javafx-media:${javafxVersion}:${platformModifier}",
     // Picocli
-    'info.picocli:picocli:4.3.2',
+    "info.picocli:picocli:${picocliVersion}",
     // SLF4J + Logback
-    'org.slf4j:slf4j-api:2.0.0-alpha1',
-    'ch.qos.logback:logback-classic:1.3.0-alpha4',
+    "org.slf4j:slf4j-api:${slf4jVersion}",
+    "ch.qos.logback:logback-classic:${logbackVersion}",
   )
   testImplementation(
     // JUpiter
-    'org.junit.jupiter:junit-jupiter-api:5.7.0-M1',
+    "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
     // Spock
-    'org.spockframework:spock-core:2.0-groovy-3.0',
+    "org.spockframework:spock-core:${spockVersion}",
     // Mockito
-    'org.mockito:mockito-junit-jupiter:3.3.3',
+    "org.mockito:mockito-junit-jupiter:${mockitoVersion}",
     // Hamcrest
-    // 'org.hamcrest:hamcrest:2.2',
+    // "org.hamcrest:hamcrest:${hamcrestVersion}",
     // AssertJ
-    // 'org.assertj:assertj-core:3.16.1',
+    // "org.assertj:assertj-core:${assertjVersion}",
   )
   testRuntimeOnly(
     // JUnit 5
-    'org.junit.jupiter:junit-jupiter-engine:5.7.0-M1',
+    "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
   )
 }
 
@@ -1338,7 +1353,9 @@ jlink {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// Explicit dependencies for compatibility with Gradle 8.0
 [
+  build,
   compileJava,
   compileTestJava,
   compileTestGroovy,
