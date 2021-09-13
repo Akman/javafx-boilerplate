@@ -1390,6 +1390,7 @@
           <execution>
             <id>prepare</id>
             <goals>
+              <goal>resources</goal>
               <goal>copy-resources</goal>
             </goals>
             <configuration>

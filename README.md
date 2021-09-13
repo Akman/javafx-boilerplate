@@ -383,15 +383,15 @@ Display the properties of the project.
 
 Pull request template: [.github/pull_request_template.md][pull_request_href].
 
-[travis_badge]: https://travis-ci.org/akman/java-boilerplate-gradle.svg?branch=master
-[travis_href]: https://travis-ci.org/akman/java-boilerplate-gradle
-[codecov_badge]: https://codecov.io/gh/akman/java-boilerplate-gradle/branch/master/graph/badge.svg
-[codecov_href]: https://codecov.io/gh/akman/java-boilerplate-gradle
-[release_badge]: https://img.shields.io/github/downloads/akman/java-boilerplate-gradle/latest/total.svg
-[release_href]: https://github.com/akman/java-boilerplate-gradle/releases/latest
-[license_badge]: https://img.shields.io/github/license/akman/java-boilerplate-gradle.svg
-[license_href]: https://github.com/akman/java-boilerplate-gradle/blob/master/LICENSE
-[src_href]: https://github.com/akman/java-boilerplate-gradle
-[docs_href]: https://akman.github.io/java-boilerplate-gradle
+[travis_badge]: https://travis-ci.org/akman/javafx-boilerplate.svg?branch=master
+[travis_href]: https://travis-ci.org/akman/javafx-boilerplate
+[codecov_badge]: https://codecov.io/gh/akman/javafx-boilerplate/branch/master/graph/badge.svg
+[codecov_href]: https://codecov.io/gh/akman/javafx-boilerplate
+[release_badge]: https://img.shields.io/github/downloads/akman/javafx-boilerplate/latest/total.svg
+[release_href]: https://github.com/akman/javafx-boilerplate/releases/latest
+[license_badge]: https://img.shields.io/github/license/akman/javafx-boilerplate.svg
+[license_href]: https://github.com/akman/javafx-boilerplate/blob/master/LICENSE
+[src_href]: https://github.com/akman/javafx-boilerplate
+[docs_href]: https://akman.github.io/javafx-boilerplate
 [md_href]: https://help.github.com/articles/basic-writing-and-formatting-syntax
-[pull_request_href]: https://github.com/akman/java-boilerplate-gradle/blob/master/.github/pull_request_template.md
+[pull_request_href]: https://github.com/akman/javafx-boilerplate/blob/master/.github/pull_request_template.md

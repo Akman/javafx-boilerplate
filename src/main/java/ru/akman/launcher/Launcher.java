@@ -25,6 +25,7 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 */
+
 package ru.akman.launcher;
 
 import java.nio.charset.Charset;
@@ -121,7 +122,7 @@ public final class Launcher {
    * @return application properties
    */
   public static Properties getProperties() {
-    Properties properties = new Properties();
+    final Properties properties = new Properties();
     properties.putAll(PROPERTIES);
     return properties;
   }

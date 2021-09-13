@@ -664,7 +664,7 @@ license {
     'fxml': 'XML_STYLE',
   ])
   ext {
-    name = applicationFullName
+    name = applicationName
     url = applicationUrl
     copyright = applicationCopyright
     licenseName = applicationLicenseName
