@@ -1346,6 +1346,12 @@ jlink {
           // Type of the license ("License: " of the RPM .spec)
           '--linux-rpm-license-type', applicationLicenseType,
         ]
+        // The type of the installer to create. Valid values are: "exe",
+        // "msi", "rpm", "deb", "pkg", "dmg". If this option is not
+        // specified (in create-installer mode) all supported types of
+        // installable packages for the current platform will be
+        // created.
+        installerType = 'deb'
         break
     }
   }
