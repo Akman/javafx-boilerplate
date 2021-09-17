@@ -1,4 +1,4 @@
-# JavaFX Boilerplate Project v0.46.0
+# JavaFX Boilerplate Project v0.47.0
 
 [![Build Status][travis_badge]][travis_href]
 [![Code Coverage][codecov_badge]][codecov_href]
