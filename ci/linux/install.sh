@@ -11,6 +11,7 @@ set -ev
 # wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 # tar xzfp $JPACKAGE_JDK_ARCHIVE_NAME
 # echo "export JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
+echo "export JPACKAGE_HOME=$JAVA_HOME" >> .travis.env
 
 sudo apt-get update -y
 sudo apt-get install -y fakeroot
