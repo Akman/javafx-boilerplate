@@ -6,6 +6,7 @@
 *.ico  binary
 *.gif  binary
 *.png  binary
+*.icns binary
 
 *.bat  text   eol=crlf
 
