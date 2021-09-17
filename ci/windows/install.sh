@@ -19,7 +19,7 @@ echo "export JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 # FeatureIcedTeaWeb	Install IcedTea-Web
 # FeatureJNLPFileRunWith	Associate .jnlp files with IcedTea-web
 # FeatureOracleJavaSoft	Updates registry keys HKLM/SOFTWARE/JavaSoft/
-choco install adoptopenjdk16 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
+choco install adoptopenjdk --version 16.0.1.9 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
 echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-16.0.1.9-hotspot"' >> .travis.env
 
 # choco install wixtoolset -y
