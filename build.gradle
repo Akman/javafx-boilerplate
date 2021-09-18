@@ -1152,6 +1152,8 @@ jlink {
     // when executing the jpackageImage task.
     // defaultValue: empty list
     imageOptions = [
+      // Verbose mode
+      '--verbose',
       // Input dir
       '--input', jpackageInputDir,
       // Copyright for the application
@@ -1218,6 +1220,8 @@ jlink {
     // when executing the jpackage task.
     // defaultValue: empty list
     installerOptions = [
+      // Verbose mode
+      '--verbose',
       // Copyright for the application
       '--copyright', applicationCopyright,
       // Description of the application
@@ -1351,7 +1355,7 @@ jlink {
         // specified (in create-installer mode) all supported types of
         // installable packages for the current platform will be
         // created.
-        installerType = 'deb'
+        // installerType = 'deb'
         break
     }
   }
