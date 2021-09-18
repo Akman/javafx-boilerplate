@@ -4,10 +4,9 @@
 
 set -ev
 
-# https://jdk.java.net/archive
 JPACKAGE_JDK_BASE_URL=https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL
 JPACKAGE_JDK_ARCHIVE_NAME=openjdk-14.0.2_windows-x64_bin.zip
-JPACKAGE_JDK_HOME=jdk-14
+JPACKAGE_JDK_HOME=jdk-14.0.2
 wget -q $JPACKAGE_JDK_BASE_URL/$JPACKAGE_JDK_ARCHIVE_NAME
 7z x -bd $JPACKAGE_JDK_ARCHIVE_NAME
 echo "export JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
