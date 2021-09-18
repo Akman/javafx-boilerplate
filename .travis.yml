@@ -111,11 +111,15 @@ before_deploy:
 #  - ./mvnw jpackage:jpackage@jpackage-image jpackage:jpackage@jpackage-installer
   - ./ci/package.sh
 
+
+# https://docs.travis-ci.com/user/deployment/releases/#authenticating-with-an-oauth-token
+# travis login --pro --github-token YOUR_GIT_HUB_PERSONAL_ACCESS_TOKEN
+# travis encrypt --com YOUR_GIT_HUB_PERSONAL_ACCESS_TOKEN
 deploy:
 #  edge: true
   provider: releases
   api_key:
-    secure: "aMcP2fctVVLdUReCrbsOnhRc/apQg7P85X7AXhNI+GKWB+ODcVQNL76gjJzSVrLelKn8iB9+4IS2zqrwKeNwd+336XuzmDNUGtFbzZp2dMDHQ4V/VV2WjXpqXemEUMblGIrRrEiBNB0GTww9fQ/mt7OqGDWAJDD6oGjnBAkzKfYhdNxiYDdQbDjulzTcI+nzhqwG/eVQkXD04ov/gE/C8VINOzI7DbmpLGzU+m5xV9KTWbGSFBarNfovC+Rl+lTEZ1+/VUyooM1idbSiHLppcjuAVwdeFaKD8AO9nl5cWpdWQxVkqQc6zZEB5Q9Upu+UtPoQAjL7MFl2SwL0pW0p01KicfeTewURX4iGdv3yyEPEsTpBM1Gytw3jCOLfP6QkhUszKAGUXvtqSxttI5eZBzq92S7CxpTiWTMDnzhDv5li3V1WiyF9cZFhauY5X5fdjUJfwbYBBcU4xXB6GsvYszNBuhb+E3UOo3TeQ0ZHCbnRPnHvIlc0VkcUsFKJmJmmamuzbTYAUyQi62d6vZImdY8q+z0omNSwYBUkQz1VOMXWDZBR81X4QzmMNsFiMvbSmuK4VQO/fRW00nkvUt5tfLkGfnts2MxrSX/38038YCGHg+/8HrrhK813RcIqB6hj9g8GMj94t+02ZwtkmFWeEbBnTPx/QiextT4kWj1Kb28="
+    secure: "q40HoGo00rL19IAU1VGt1r2yvF+rbVXo6kabCX908DHrbyIXPpyluYw2eBINbP8ouGbfRUYtkext1G33PijWi77DmP+J+OQGqzG7EdaXOlaTdj6e1V+KHsx9hleqSlIs/IrkSDtbOi9BcGUh/tU+LpvbuJtHIBj72jJwHrd84WIhkhKIVtG/khtlj1Q6y/OdqRRlOcTsWfh/Q0sEgp9jmClyHWl5cHxAXtYnHNxUEnUaxUsvPYZLJk2/tr1OIuUFucxTqtOzS1aLzm/OZw2IYnB4ejxWdggBbWgXkgKNUeKAYEiaiQDlwxWvufdSq/QlxVndQDSlJVM8B+Umy5YgxsMidELTg7jXbtRj5+Rp+lgbmYWd8+pmfEdgIUh7bhryXjM4OppwVYMMdsIXpmNug1K6tMA6CKZ2ZBUbrxGOVCN9Wv4SdvanoF3L7jy/XrHgtKt3JkLBVia/0kDm0hb2XZfQJMZyUYbDTvAw9DbLwF+ziJFehFxIOLzarzge5avtYZQfEgiyOMYEIb3VhvGb7St/yAd0A45n9evWDav3vI0XqtlYno+nTrEIAutGHGIYSISs/S/usMOVQYLoHr7xN+4rgdin/STcP6D6KxEZbGZSjtG1v8UTkGbA7NOgIJUn77DRziX7y07srjMLuHdIJN0dVf19iB83kW7mOKH5VTA="
   file_glob: true
   file: build/jpackage/*
 #  file: target/jpackage/*
