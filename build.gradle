@@ -26,6 +26,7 @@
   DEALINGS IN THE SOFTWARE.
 */
 
+// https://plugins.gradle.org/search
 plugins {
   // https://docs.gradle.org/current/userguide/application_plugin.html
   id 'application'
@@ -52,7 +53,7 @@ plugins {
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.3'
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.7.4'
+  id 'com.github.spotbugs' version '4.7.5'
   // https://badass-jlink-plugin.beryx.org
   // https://github.com/beryx/badass-jlink-plugin
   id 'org.beryx.jlink' version '2.24.2'
@@ -124,7 +125,7 @@ ext {
     applicationCopyright += " - ${applicationCurrentYear}"
   }
   applicationCopyright += " ${applicationAuthorName}";
-  //applicationCopyright += " <${applicationAuthorEmail}>";
+  applicationCopyright += " <${applicationAuthorEmail}>";
   applicationVendor = 'Akman'
   applicationVendorUrl = 'https://akman.github.io/'
   applicationLicenseFile = 'LICENSE'
