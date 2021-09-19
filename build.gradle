@@ -52,7 +52,7 @@ plugins {
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.3'
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.7.6'
+  id 'com.github.spotbugs' version '4.7.4'
   // https://badass-jlink-plugin.beryx.org
   // https://github.com/beryx/badass-jlink-plugin
   id 'org.beryx.jlink' version '2.24.2'
