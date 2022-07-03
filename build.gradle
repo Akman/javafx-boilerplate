@@ -53,16 +53,16 @@ plugins {
   // https://github.com/aaschmid/gradle-cpd-plugin
   id 'de.aaschmid.cpd' version '3.3'
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '4.7.5'
+  id 'com.github.spotbugs' version '5.0.9'
   // https://badass-jlink-plugin.beryx.org
   // https://github.com/beryx/badass-jlink-plugin
-  id 'org.beryx.jlink' version '2.24.2'
+  id 'org.beryx.jlink' version '2.25.0'
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.16.1'
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.39.0'
+  id 'com.github.ben-manes.versions' version '0.42.0'
   // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '2.8.1'
+  id 'net.researchgate.release' version '2.8.1' // 3.0.0
   // https://github.com/Akman/vscode-tasks
   id 'ru.akman.vscode-tasks' version '0.4.0'
 }
@@ -74,33 +74,33 @@ repositories {
 ext {
   
   // Gradle
-  gradleVersion = '7.2'
+  gradleVersion = '7.4'
   if (GradleVersion.current() < GradleVersion.version(gradleVersion)) {
     logger.warn("WARNING: Gradle version '${gradleVersion}' or higher is required.")
   }
 
   // Java
-  javaVersion = JavaVersion.VERSION_16
+  javaVersion = JavaVersion.VERSION_18
 
   // Encoding
   defaultEncoding = 'UTF-8'
 
   // Tools
-  checkstyleVersion = '9.0'
-  pmdVersion = '6.38.0'
-  spotbugsVersion = '4.4.1'
-  codenarcVersion = '2.2.0'
-  jacocoVersion = '0.8.7'
+  checkstyleVersion = '10.3.1'
+  pmdVersion = '6.47.0'
+  spotbugsVersion = '4.7.1'
+  codenarcVersion = '3.1.0'
+  jacocoVersion = '0.8.8'
 
   // Dependencies  
-  javafxVersion = '16'
+  javafxVersion = '18'
   picocliVersion = '4.6.1'
   slf4jVersion = '2.0.0-alpha5'
   logbackVersion = '1.3.0-alpha10'
   junitVersion = '5.8.0'
-  spockVersion = '2.0-groovy-3.0'
+  spockVersion = '2.2-M1-groovy-4.0'
   mockitoVersion = '3.12.4'
-  groovyVersion = '3.0.9'
+  groovyVersion = '4.0.3'
   hamcrestVersion = '2.2'
   assertjVersion = '3.16.1'
 
@@ -318,6 +318,9 @@ clean {
 }
 
 task processCommonResources(type: Copy) {
+  // TODO: Copying to a directory which contains
+  //       unreadable content has been deprecated
+  doNotTrackState('Reason: processCommonResources')
   description = 'Processes common resources'
   from "${projectDir}/config/readme/README.md"
   into projectDir
@@ -367,6 +370,7 @@ test {
     "-Dfile.encoding=${defaultEncoding}",
   ]
   reports {
+    // TODO: The Report.enabled property has been deprecated
     html.enabled = true
   }
 }
@@ -426,6 +430,7 @@ jar {
 task fatJar(type: Jar) {
   archiveAppendix = 'full'
   manifest {
+    // TODO: The AbstractArchiveTask.version property has been deprecated
     attributes(
       'Main-Class': "${applicationClassName}",
       'Specification-Title': "${applicationName}",
@@ -1132,7 +1137,7 @@ jlink {
   // https://openjdk.java.net/jeps/343
   jpackage {
     // The path to the JDK providing the jpackage tool.
-    jpackageHome = System.getenv('JPACKAGE_HOME')
+    jpackageHome = System.getenv('JPACKAGE_HOME')?: System.getenv('JAVA_HOME')
 
     // Convenience property for setting both imageOutputDir and
     // installerOutputDir with the value "${buildDir}/${outputDir}".

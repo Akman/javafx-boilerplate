@@ -5,7 +5,7 @@
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2021 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2022 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,6 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 */
-
 /**
  * This package provided GUI interface for application.
  */

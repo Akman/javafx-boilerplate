@@ -6,7 +6,7 @@
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2021 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2022 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,7 @@
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
-    <version>1.9</version>
+    <version>1.11.1</version>
   </skin>
 
   <!--
@@ -113,10 +113,10 @@
       </gitHub>
 
       <topBarIcon>
-        <name>${name}</name>
+        <name>${project.name}</name>
         <src>images/bean.png</src>
         <href>index.html</href>
-        <alt>${name}</alt>
+        <alt>${project.name}</alt>
       </topBarIcon>
 
       <!--
@@ -150,7 +150,7 @@
     -->
 
     <breadcrumbs>
-      <item name="${name}" />
+      <item name="${project.name}" href="index.html"/>
       <!--
       <item name= href= img= position= alt= border= width= height= target= title= />
       -->
