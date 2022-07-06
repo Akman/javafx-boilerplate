@@ -18,8 +18,9 @@ echo "export JPACKAGE_HOME=$(pwd)/$JPACKAGE_JDK_HOME" >> .travis.env
 # FeatureIcedTeaWeb	Install IcedTea-Web
 # FeatureJNLPFileRunWith	Associate .jnlp files with IcedTea-web
 # FeatureOracleJavaSoft	Updates registry keys HKLM/SOFTWARE/JavaSoft/
-choco install adoptopenjdk --version 16.0.1.900 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
-echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-16.0.1.9-hotspot"' >> .travis.env
+choco install libericajdk --version 18.0.1 -y -ia ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJavaHome
+#echo 'export JAVA_HOME="/c/Program Files/AdoptOpenJDK/jdk-16.0.1.9-hotspot"' >> .travis.env
+echo 'export JAVA_HOME="$JAVA_HOME"' >> .travis.env
 
 # choco install wixtoolset -y
 wget -q https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip
