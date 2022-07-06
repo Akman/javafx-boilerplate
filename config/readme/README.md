@@ -383,8 +383,8 @@ Display the properties of the project.
 
 Pull request template: [.github/pull_request_template.md][pull_request_href].
 
-[travis_badge]: https://travis-ci.com/${applicationScmUser}/${applicationScmRepo}.svg?branch=master
-[travis_href]: https://travis-ci.com/${applicationScmUser}/${applicationScmRepo}
+[travis_badge]: https://app.travis-ci.com/${applicationScmUser}/${applicationScmRepo}.svg?branch=master
+[travis_href]: https://app.travis-ci.com/${applicationScmUser}/${applicationScmRepo}
 [codecov_badge]: https://codecov.io/gh/${applicationScmUser}/${applicationScmRepo}/branch/master/graph/badge.svg
 [codecov_href]: https://codecov.io/gh/${applicationScmUser}/${applicationScmRepo}
 [release_badge]: https://img.shields.io/github/downloads/${applicationScmUser}/${applicationScmRepo}/latest/total.svg

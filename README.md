@@ -1,4 +1,4 @@
-# JavaFX Boilerplate Project v0.61.0
+# JavaFX Boilerplate Project v0.62.0
 
 [![Build Status][travis_badge]][travis_href]
 [![Code Coverage][codecov_badge]][codecov_href]
@@ -383,8 +383,8 @@ Display the properties of the project.
 
 Pull request template: [.github/pull_request_template.md][pull_request_href].
 
-[travis_badge]: https://travis-ci.com/akman/javafx-boilerplate.svg?branch=master
-[travis_href]: https://travis-ci.com/akman/javafx-boilerplate
+[travis_badge]: https://app.travis-ci.com/akman/javafx-boilerplate.svg?branch=master
+[travis_href]: https://app.travis-ci.com/akman/javafx-boilerplate
 [codecov_badge]: https://codecov.io/gh/akman/javafx-boilerplate/branch/master/graph/badge.svg
 [codecov_href]: https://codecov.io/gh/akman/javafx-boilerplate
 [release_badge]: https://img.shields.io/github/downloads/akman/javafx-boilerplate/latest/total.svg
