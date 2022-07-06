@@ -62,7 +62,7 @@ plugins {
   // https://github.com/ben-manes/gradle-versions-plugin
   id 'com.github.ben-manes.versions' version '0.42.0'
   // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '3.0.0' //* 2.8.1
+  id 'net.researchgate.release' version '3.0.0'
   // https://github.com/Akman/vscode-tasks
   id 'ru.akman.vscode-tasks' version '0.4.0'
 }
@@ -589,20 +589,18 @@ release {
 
   ignoredSnapshotDependencies = []
 
-  // TODO: //* xxxx
-
   // (GIT only) If set to the name of a branch, the "release" task will
   // commit the release on this branch, and the next version
   // on the working branch.
-  //* pushReleaseVersionBranch = false
+  // pushReleaseVersionBranch = 'release-git-branch'
 
   git {
 
-    // Defines the branch which releases must be done off of.
-    // Eg. set to "release" to require releases are done on
-    // the "release" branch (or use a regular expression to allow releases
-    // from multiple branches, e.g. "/release|master/").
-    // Set to '' to ignore.
+    //* Defines the branch which releases must be done off of.
+    //* Eg. set to "release" to require releases are done on
+    //* the "release" branch (or use a regular expression to allow releases
+    //* from multiple branches, e.g. "/release|master/").
+    //* Set to '' to ignore.
     //* requireBranch = 'master'
 
     //* pushToBranchPrefix = ''
@@ -611,7 +609,7 @@ release {
 
     //* commitVersionFileOnly = false
 
-    // Adds `-s` parameter to the tag command
+    //* Adds `-s` parameter to the tag command
     //* signTag = false
 
     // Defines an array of options to add to the git adapter during a push.
