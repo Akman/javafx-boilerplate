@@ -35,7 +35,7 @@
 
   <groupId>com.github.akman</groupId>
   <artifactId>javafx-boilerplate</artifactId>
-  <version>0.58.0-SNAPSHOT</version>
+  <version>0.60.0</version>
   <packaging>jar</packaging>
 
   <name>${applicationName}</name>
