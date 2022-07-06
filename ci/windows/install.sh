@@ -19,7 +19,7 @@ WIX_ARCHIVE_NAME=wix311-binaries.zip
 WIX_HOME=wix-3.11.2
 echo "export WIX=$(pwd)/$WIX_HOME" >> .travis.env
 
-echo "export PATH=$JAVA_HOME/bin:$WIX:$PATH" >> .travis.env
+echo 'export PATH="$JAVA_HOME/bin":"$WIX":"$PATH"' >> .travis.env
 
 echo 'export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dfile.encoding=UTF-8"' >> .travis.env
 

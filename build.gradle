@@ -125,7 +125,7 @@ ext {
     applicationCopyright += " - ${applicationCurrentYear}"
   }
   applicationCopyright += " ${applicationAuthorName}";
-  applicationCopyright += " <${applicationAuthorEmail}>";
+  applicationCopyright += " (${applicationAuthorEmail})";
   applicationVendor = 'Akman'
   applicationVendorUrl = 'https://akman.github.io/'
   applicationLicenseFile = 'LICENSE'
@@ -1337,7 +1337,7 @@ jlink {
           // '--linux-package-name', applicationLauncherName,
 
           // Maintainer for .deb bundle
-          '--linux-deb-maintainer', applicationAuthorName + ' <' + applicationAuthorEmail + '>',
+          '--linux-deb-maintainer', applicationAuthorName + ' (' + applicationAuthorEmail + ')',
 
           // Menu group this application is placed in
           '--linux-menu-group', platformMenuGroup,
