@@ -106,6 +106,13 @@ public final class LauncherHelper extends Application {
   private static java.awt.TrayIcon trayIcon;
 
   /**
+   * Default constructor.
+   */
+  public LauncherHelper() {
+    // nop
+  }
+
+  /**
    * Run the application.
    */
   public static void run() {

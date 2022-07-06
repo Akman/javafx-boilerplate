@@ -40,6 +40,13 @@ public class SecondaryController {
    */
   private static final String PRIMARY_FXML = "primary.fxml";
 
+  /**
+   * Default constructor.
+   */
+  public SecondaryController() {
+    // nop
+  }
+
   @FXML
   private void switchToPrimary() {
     // TODO: Private method 'switchToPrimary()' is never called.
