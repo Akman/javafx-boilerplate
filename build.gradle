@@ -62,7 +62,7 @@ plugins {
   // https://github.com/ben-manes/gradle-versions-plugin
   id 'com.github.ben-manes.versions' version '0.42.0'
   // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '3.0.0'
+  id 'net.researchgate.release' version '2.8.1'
   // https://github.com/Akman/vscode-tasks
   id 'ru.akman.vscode-tasks' version '0.4.0'
 }
@@ -601,16 +601,16 @@ release {
     //* the "release" branch (or use a regular expression to allow releases
     //* from multiple branches, e.g. "/release|master/").
     //* Set to '' to ignore.
-    //* requireBranch = 'master'
+    requireBranch = 'master'
 
-    //* pushToBranchPrefix = ''
+    pushToBranchPrefix = ''
 
-    //* pushToRemote = 'origin'
+    pushToRemote = 'origin'
 
-    //* commitVersionFileOnly = false
+    commitVersionFileOnly = false
 
     //* Adds `-s` parameter to the tag command
-    //* signTag = false
+    signTag = false
 
     // Defines an array of options to add to the git adapter during a push.
     // This could be useful to have the vc hooks skipped during a release.
