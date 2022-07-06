@@ -68,10 +68,10 @@ matrix:
         - openjdk18
     
     - os: osx
-      osx_image: xcode12.5
+      osx_image: xcode12.2
       language: java
       jdk:
-        - openjdk16
+        - openjdk14
 
     - os: windows
       language: bash
