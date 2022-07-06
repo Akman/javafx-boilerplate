@@ -10,7 +10,7 @@ Ruby ~> v2.5.5
 ## Setup
 
 ```bash
-$ gem install bundler
+$ gem install bundler jekyll
 $ bundle install
 $ bundle update
 ```
