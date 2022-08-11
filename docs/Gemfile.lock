@@ -265,9 +265,9 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (>= 6.0.5)
-  faraday (~> 2.3.0)
-  faraday-retry (~> 2.0.0)
-  github-pages (>= 219)
+  faraday (>= 2.3.0)
+  faraday-retry (>= 2.0.0)
+  github-pages (>= 226)
   jekyll (>= 3.9.2)
   jekyll-feed (>= 0.15.1)
   jekyll-seo-tag (>= 2.8.0)
