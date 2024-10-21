@@ -6,7 +6,7 @@
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2022 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2024 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -46,11 +46,16 @@
   <properties>
 
     <!-- Maven -->
-    <mavenVersion>3.8.6</mavenVersion>
+    <mavenVersion>3.9.9</mavenVersion>
 
     <!-- Java -->
-    <javaVersion>18</javaVersion>
+    <javaVersion>21</javaVersion>
+    <maven.compiler.source>${javaVersion}</maven.compiler.source>
+    <maven.compiler.target>${javaVersion}</maven.compiler.target>
     <maven.compiler.release>${javaVersion}</maven.compiler.release>
+
+    <!-- JavaFX -->
+    <javafxVersion>21.0.5</javafxVersion>
 
     <!-- Encoding -->
     <defaultEncoding>UTF-8</defaultEncoding>
@@ -107,62 +112,62 @@
     <jpackageImageDir>${jpackageDir}/${platformImageName}</jpackageImageDir>
 
     <!-- Dependencies -->
-    <version.javafx>${javaVersion}</version.javafx>
-    <version.picocli>4.6.3</version.picocli>
-    <version.slf4j>2.0.0-alpha7</version.slf4j>
-    <version.logback>1.3.0-alpha16</version.logback>
-    <version.junit>5.9.0-M1</version.junit>
-    <version.spock>2.2-M1-groovy-4.0</version.spock>
-    <version.mockito>4.6.1</version.mockito>
-    <version.groovy>4.0.3</version.groovy>
+    <version.javafx>${javafxVersion}</version.javafx>
+    <version.picocli>4.7.6</version.picocli>
+    <version.slf4j>2.1.0-alpha1</version.slf4j>
+    <version.logback>1.5.11</version.logback>
+    <version.junit>5.11.2</version.junit>
+    <version.spock>2.4-M4-groovy-4.0</version.spock>
+    <version.mockito>5.14.2</version.mockito>
+    <version.groovy>4.0.23</version.groovy>
     <!--version.hamcrest>2.2</version.hamcrest-->
     <!--version.assertj>3.16.1</version.assertj-->
 
     <!-- Tools -->
-    <version.checkstyle>10.3.1</version.checkstyle>
-    <version.pmd>6.47.0</version.pmd>
-    <version.spotbugs>4.7.1</version.spotbugs>
-    <version.codenarc>3.1.0</version.codenarc>
-    <version.jacoco>0.8.8</version.jacoco>
+    <version.checkstyle>10.18.2</version.checkstyle>
+    <version.pmd>7.6.0</version.pmd>
+    <version.spotbugs>4.8.6</version.spotbugs>
+    <version.codenarc>3.5.0-groovy-4.0</version.codenarc>
+    <version.jacoco>0.8.12</version.jacoco>
 
     <!-- Plugins -->
-    <version.maven-enforcer-plugin>3.1.0</version.maven-enforcer-plugin>
-    <version.maven-clean-plugin>3.2.0</version.maven-clean-plugin>
-    <version.properties-maven-plugin>1.1.0</version.properties-maven-plugin>
-    <version.build-helper-maven-plugin>3.3.0</version.build-helper-maven-plugin>
-    <version.maven-toolchains-plugin>3.1.0</version.maven-toolchains-plugin>
-    <version.maven-compiler-plugin>3.10.1</version.maven-compiler-plugin>
+    <version.maven-enforcer-plugin>3.5.0</version.maven-enforcer-plugin>
+    <version.maven-clean-plugin>3.4.0</version.maven-clean-plugin>
+    <version.properties-maven-plugin>1.2.1</version.properties-maven-plugin>
+    <version.build-helper-maven-plugin>3.6.0</version.build-helper-maven-plugin>
+    <version.maven-toolchains-plugin>3.2.0</version.maven-toolchains-plugin>
+    <version.maven-compiler-plugin>3.13.0</version.maven-compiler-plugin>
     <version.maven-antrun-plugin>3.1.0</version.maven-antrun-plugin>
-    <version.maven-checkstyle-plugin>3.1.2</version.maven-checkstyle-plugin>
-    <version.maven-pmd-plugin>3.17.0</version.maven-pmd-plugin>
-    <version.spotbugs-maven-plugin>4.7.0.0</version.spotbugs-maven-plugin>
-    <version.license-maven-plugin>4.2.rc3</version.license-maven-plugin>
-    <version.maven-resources-plugin>3.2.0</version.maven-resources-plugin>
-    <version.native2ascii-maven-plugin>2.0.1</version.native2ascii-maven-plugin>
-    <version.maven-source-plugin>3.2.1</version.maven-source-plugin>
-    <version.maven-javadoc-plugin>3.4.0</version.maven-javadoc-plugin>
-    <version.maven-jxr-plugin>3.2.0</version.maven-jxr-plugin>
-    <version.maven-jar-plugin>3.2.2</version.maven-jar-plugin>
-    <version.maven-assembly-plugin>3.4.0</version.maven-assembly-plugin>
-    <version.gmavenplus-plugin>1.13.1</version.gmavenplus-plugin>
-    <version.maven-surefire-plugin>3.0.0-M7</version.maven-surefire-plugin>
-    <version.maven-surefire-report-plugin>3.0.0-M7</version.maven-surefire-report-plugin>
-    <version.maven-failsafe-plugin>3.0.0-M7</version.maven-failsafe-plugin>
+    <version.maven-checkstyle-plugin>3.5.0</version.maven-checkstyle-plugin>
+    <version.maven-pmd-plugin>3.25.0</version.maven-pmd-plugin>
+    <version.spotbugs-maven-plugin>4.8.6.4</version.spotbugs-maven-plugin>
+    <version.license-maven-plugin>4.6</version.license-maven-plugin>
+    <version.maven-resources-plugin>3.3.1</version.maven-resources-plugin>
+    <version.native2ascii-maven-plugin>2.1.1</version.native2ascii-maven-plugin>
+    <version.maven-source-plugin>3.3.1</version.maven-source-plugin>
+    <version.maven-javadoc-plugin>3.10.1</version.maven-javadoc-plugin>
+    <version.maven-jxr-plugin>3.5.0</version.maven-jxr-plugin>
+    <version.maven-jar-plugin>3.4.2</version.maven-jar-plugin>
+    <version.maven-assembly-plugin>3.7.1</version.maven-assembly-plugin>
+    <version.gmavenplus-plugin>4.0.1</version.gmavenplus-plugin>
+    <version.maven-surefire-plugin>3.5.1</version.maven-surefire-plugin>
+    <version.maven-surefire-report-plugin>3.5.1</version.maven-surefire-report-plugin>
+    <version.maven-failsafe-plugin>3.5.1</version.maven-failsafe-plugin>
     <version.jacoco-maven-plugin>${version.jacoco}</version.jacoco-maven-plugin>
-    <version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
+    <version.exec-maven-plugin>3.4.1</version.exec-maven-plugin>
     <version.jlink-maven-plugin>0.1.11</version.jlink-maven-plugin>
     <version.jpackage-maven-plugin>0.1.5</version.jpackage-maven-plugin>
-    <version.maven-install-plugin>3.0.0-M1</version.maven-install-plugin>
-    <version.maven-deploy-plugin>3.0.0-M2</version.maven-deploy-plugin>
-    <version.maven-release-plugin>3.0.0-M6</version.maven-release-plugin>
-    <version.nexus-staging-maven-plugin>1.6.13</version.nexus-staging-maven-plugin>
-    <version.maven-scm-plugin>2.0.0-M1</version.maven-scm-plugin>
-    <version.maven-gpg-plugin>3.0.1</version.maven-gpg-plugin>
-    <version.versions-maven-plugin>2.11.0</version.versions-maven-plugin>
-    <version.maven-dependency-plugin>3.3.0</version.maven-dependency-plugin>
-    <version.maven-site-plugin>4.0.0-M2</version.maven-site-plugin>
-    <version.maven-project-info-reports-plugin>3.3.0</version.maven-project-info-reports-plugin>
-    <version.taglist-maven-plugin>3.0.0</version.taglist-maven-plugin>
+    <version.maven-install-plugin>3.1.3</version.maven-install-plugin>
+    <version.maven-deploy-plugin>3.1.3</version.maven-deploy-plugin>
+    <version.maven-release-plugin>3.1.1</version.maven-release-plugin>
+    <version.nexus-staging-maven-plugin>1.7.0</version.nexus-staging-maven-plugin>
+    <version.maven-scm-plugin>2.1.0</version.maven-scm-plugin>
+    <version.maven-gpg-plugin>3.2.7</version.maven-gpg-plugin>
+    <version.versions-maven-plugin>2.17.1</version.versions-maven-plugin>
+    <version.maven-dependency-plugin>3.8.0</version.maven-dependency-plugin>
+    <version.maven-site-plugin>3.20.0</version.maven-site-plugin>
+    <version.maven-project-info-reports-plugin>3.7.0</version.maven-project-info-reports-plugin>
+    <version.taglist-maven-plugin>3.2.1</version.taglist-maven-plugin>
     <version.maven-changelog-plugin>2.3</version.maven-changelog-plugin>
 
   </properties>
@@ -273,6 +278,7 @@
 
   <build>
     <resources>
+      <!-- default-resources -->
       <resource>
         <directory>${project.basedir}</directory>
         <includes>
@@ -280,7 +286,40 @@
           <include>NOTICE</include>
         </includes>
       </resource>
+      <!-- default-resources -->
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>filters/</exclude>
+          <exclude>filtered/</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources/filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+      <!-- default-testResources -->
+      <resource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>filters/</exclude>
+          <exclude>filtered/</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/test/resources/filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+      <!-- prepare -->
+      <resource>
+        <directory>config/readme</directory>
+        <includes>
+          <include>README.md</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
     </resources>
+    
     <pluginManagement>
       <plugins>
         <plugin> <!-- properties-maven-plugin -->
@@ -428,7 +467,6 @@
             <!--excludes>
               <exclude></exclude>
             </excludes-->
-            <linkXref>true</linkXref>
             <analysisCache>true</analysisCache>
             <minimumTokens>50</minimumTokens>
             <maxAllowedViolations>0</maxAllowedViolations>
@@ -590,7 +628,7 @@
               -Dfile.encoding=${defaultEncoding}
               --add-opens ${applicationModuleName}/ru.akman.gui=ALL-UNNAMED
               --add-opens ${applicationModuleName}/ru.akman.launcher=ALL-UNNAMED
-              @{argLine}
+              @{argLine} -javaagent:${org.mockito:mockito-core:jar}
             </argLine>
             <!--
             <consoleOutputReporter
@@ -1356,19 +1394,6 @@
                 <filter>target/generated-resources/filters/filter.properties</filter>
                 <!--filter>src/main/resources/filters/filter.properties</filter-->
               </filters>
-              <resources>
-                <resource>
-                  <directory>src/main/resources</directory>
-                  <excludes>
-                    <exclude>filters/</exclude>
-                    <exclude>filtered/</exclude>
-                  </excludes>
-                </resource>
-                <resource>
-                  <directory>src/main/resources/filtered</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
             </configuration>
           </execution>
           <execution>
@@ -1382,19 +1407,6 @@
                 <filter>target/generated-test-resources/filters/filter.properties</filter>
                 <!--filter>src/test/resources/filters/filter.properties</filter-->
               </filters>
-              <resources>
-                <resource>
-                  <directory>src/test/resources</directory>
-                  <excludes>
-                    <exclude>filters/</exclude>
-                    <exclude>filtered/</exclude>
-                  </excludes>
-                </resource>
-                <resource>
-                  <directory>src/test/resources/filtered</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
             </configuration>
           </execution>
           <execution>
@@ -1405,15 +1417,6 @@
             </goals>
             <configuration>
               <outputDirectory>${project.basedir}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>config/readme</directory>
-                  <includes>
-                    <include>README.md</include>
-                  </includes>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
             </configuration>
           </execution>
         </executions>
@@ -1807,9 +1810,13 @@
       </plugin>
       <plugin> <!-- maven-dependency-plugin -->
         <artifactId>maven-dependency-plugin</artifactId>
-      </plugin>
-      <plugin> <!-- maven-site-plugin -->
-        <artifactId>maven-site-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -1843,9 +1850,6 @@
       </plugin>
       <plugin> <!-- maven-jxr-plugin -->
         <artifactId>maven-jxr-plugin</artifactId>
-      </plugin>
-      <plugin> <!-- maven-source-plugin -->
-        <artifactId>maven-source-plugin</artifactId>
       </plugin>
       <plugin> <!-- maven-javadoc-plugin -->
         <artifactId>maven-javadoc-plugin</artifactId>

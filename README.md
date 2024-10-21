@@ -52,14 +52,14 @@ Generating the wrapper files requires an installed version of the Maven
 on your machine.
 
 ```console
-mvn -N io.takari:maven:wrapper
+mvn wrapper:wrapper
 ```
 
 To switch the version of the Maven used to build a project simply pass in
 the new version.
 
 ```console
-mvn -N io.takari:maven:wrapper -Dmaven=3.6.3
+mvn wrapper:wrapper -Dmaven=3.9.9
 ```
 
 ## Generate or update gradle wrapper
@@ -76,8 +76,8 @@ the new version as well as the distribution type, either `all` which includes
 sources and documentation or `bin` which only ships with the binaries.
 
 ```console
-gradle wrapper --gradle-version 6.5.1
-gradle wrapper --gradle-version 6.5.1 --distribution-type bin
+gradle wrapper --gradle-version 8.10.2
+gradle wrapper --gradle-version 8.10.2 --distribution-type bin
 ```
 
 ## Setup maven properties

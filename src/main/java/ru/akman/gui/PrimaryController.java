@@ -5,7 +5,7 @@
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2022 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2024 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),

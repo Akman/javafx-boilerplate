@@ -72,15 +72,15 @@ repositories {
 }
 
 ext {
-  
+
   // Gradle
-  gradleVersion = '7.4'
+  gradleVersion = '8.10'
   if (GradleVersion.current() < GradleVersion.version(gradleVersion)) {
     logger.warn("WARNING: Gradle version '${gradleVersion}' or higher is required.")
   }
 
   // Java
-  javaVersion = JavaVersion.VERSION_18
+  javaVersion = JavaVersion.VERSION_21
 
   // Encoding
   defaultEncoding = 'UTF-8'
@@ -92,8 +92,8 @@ ext {
   codenarcVersion = '3.1.0'
   jacocoVersion = '0.8.8'
 
-  // Dependencies  
-  javafxVersion = '18'
+  // Dependencies
+  javafxVersion = '21'
   picocliVersion = '4.6.3'
   slf4jVersion = '2.0.0-alpha7'
   logbackVersion = '1.3.0-alpha16'
@@ -375,7 +375,7 @@ test {
   ]
   reports {
     // TODO: The Report.enabled property has been deprecated
-    html.enabled = true
+    // html.enabled = true
   }
 }
 
@@ -455,32 +455,33 @@ task fatJar(type: Jar) {
   with jar
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-  classifier 'sources'
-  from sourceSets.main.allSource
-}
+//TODO: Could not find method classifier()
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//  classifier 'sources'
+//  from sourceSets.main.allSource
+//}
 
-task javadocJar(type: Jar, dependsOn: classes) {
-  classifier 'javadoc'
-  from javadoc
-}
+//task javadocJar(type: Jar, dependsOn: classes) {
+//  classifier 'javadoc'
+//  from javadoc
+//}
 
-artifacts {
-  archives sourcesJar, javadocJar, fatJar
-}
+//artifacts {
+//  archives sourcesJar, javadocJar, fatJar
+//}
 
-distributions {
-  main {
-    contents {
-      from(javadocJar) {
-        into 'docs'
-      }
-      from(sourcesJar) {
-        into 'docs'
-      }
-    }
-  }
-}
+//distributions {
+//  main {
+//    contents {
+//      from(javadocJar) {
+//        into 'docs'
+//      }
+//      from(sourcesJar) {
+//        into 'docs'
+//      }
+//    }
+//  }
+//}
 
 // startScripts {
 //   doFirst {
@@ -765,8 +766,8 @@ cpdCheck {
   exclude '**/*.groovy'
   exclude '**/*.css'
   reports {
-    text.enabled = true
-    xml.enabled = true
+    //text.enabled = true
+    //xml.enabled = true
   }
   // Generate HTML output.
   // Stylesheet file could be downloaded from:
@@ -806,8 +807,8 @@ task groovyCpdCheck(type: de.aaschmid.gradle.plugins.cpd.Cpd) {
   language = 'groovy'
   source = sourceSets.main.allGroovy
   reports {
-    text.enabled = true
-    xml.enabled = true
+    //text.enabled = true
+    //xml.enabled = true
   }
   // Generate HTML output.
   // Stylesheet file could be downloaded from:
@@ -860,7 +861,7 @@ spotbugs {
 
   // Whether or not to allow the build to continue if there are warnings.
   ignoreFailures = true
-  
+
   // Whether or not to show stack traces.
   showStackTraces = false
 
@@ -1391,7 +1392,7 @@ jlink {
   pmdMain,
   pmdTest,
   spotbugsMain,
-  spotbugsTest, 
+  spotbugsTest,
   distTar,
   distZip,
   jar,
