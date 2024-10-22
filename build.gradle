@@ -5,7 +5,7 @@
 
   MIT License (MIT)
 
-  Copyright (C) 2019 - 2022 Alexander Kapitman <akman.ru@gmail.com>
+  Copyright (C) 2019 - 2024 Alexander Kapitman <akman.ru@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -51,19 +51,19 @@ plugins {
   // https://www.eclemma.org/jacoco/
   id 'jacoco'
   // https://github.com/aaschmid/gradle-cpd-plugin
-  id 'de.aaschmid.cpd' version '3.3'
+  id 'de.aaschmid.cpd' version '3.4'
   // https://github.com/spotbugs/spotbugs-gradle-plugin
-  id 'com.github.spotbugs' version '5.0.9'
+  id 'com.github.spotbugs' version '6.0.25'
   // https://badass-jlink-plugin.beryx.org
   // https://github.com/beryx/badass-jlink-plugin
-  id 'org.beryx.jlink' version '2.25.0'
+  id 'org.beryx.jlink' version '3.0.1'
   // https://github.com/hierynomus/license-gradle-plugin
   id 'com.github.hierynomus.license' version '0.16.1'
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.42.0'
+  id 'com.github.ben-manes.versions' version '0.51.0'
   // https://github.com/researchgate/gradle-release
-  id 'net.researchgate.release' version '2.8.1'
-  // https://github.com/Akman/vscode-tasks
+  id 'net.researchgate.release' version '3.0.2'
+  // https://github.com/akman/vscode-tasks
   id 'ru.akman.vscode-tasks' version '0.4.0'
 }
 
@@ -86,23 +86,24 @@ ext {
   defaultEncoding = 'UTF-8'
 
   // Tools
-  checkstyleVersion = '10.3.1'
-  pmdVersion = '6.47.0'
-  spotbugsVersion = '4.7.1'
-  codenarcVersion = '3.1.0'
-  jacocoVersion = '0.8.8'
+  checkstyleVersion = '10.18.2'
+  pmdVersion = '7.6.0'
+  spotbugsVersion = '4.8.6'
+  codenarcVersion = '3.5.0'
+  jacocoVersion = '0.8.12'
 
   // Dependencies
   javafxVersion = '21'
-  picocliVersion = '4.6.3'
-  slf4jVersion = '2.0.0-alpha7'
-  logbackVersion = '1.3.0-alpha16'
-  junitVersion = '5.9.0-RC1'
-  spockVersion = '2.2-M1-groovy-4.0'
-  mockitoVersion = '4.6.1'
-  groovyVersion = '4.0.3'
-  hamcrestVersion = '2.2'
-  assertjVersion = '3.16.1'
+  picocliVersion = '4.7.6'
+  slf4jVersion = '2.0.15'
+  logbackVersion = '1.5.11'
+  junitVersion = '1.11.2'
+  jupiterVersion = '5.11.2'
+  spockVersion = '2.4-M4-groovy-4.0'
+  mockitoVersion = '5.14.2'
+  groovyVersion = '4.0.23'
+  //hamcrestVersion = '2.2'
+  //assertjVersion = '3.16.1'
 
   // Application
   applicationName = 'JavaFX Boilerplate Project'
@@ -216,6 +217,9 @@ ext {
 
   // Log
   logDir = file("${projectDir}/log")
+
+  // Mockito agent configuration
+  mockitoAgent = configurations.create("mockitoAgent")
 }
 
 dependencies {
@@ -238,11 +242,13 @@ dependencies {
     "ch.qos.logback:logback-classic:${logbackVersion}",
   )
   testImplementation(
-    // JUpiter
-    "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
+    // JUnit
+    // "org.junit.platform:junit-platform-commons:${junitVersion}",
+    "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}",
     // Spock
     "org.spockframework:spock-core:${spockVersion}",
     // Mockito
+    "org.mockito:mockito-core:${mockitoVersion}",
     "org.mockito:mockito-junit-jupiter:${mockitoVersion}",
     // Hamcrest
     // "org.hamcrest:hamcrest:${hamcrestVersion}",
@@ -251,8 +257,13 @@ dependencies {
   )
   testRuntimeOnly(
     // JUnit 5
-    "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
+    "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}",
   )
+  mockitoAgent(
+    "org.mockito:mockito-core:${mockitoVersion}",
+  ) {
+    transitive = false
+  }
 }
 
 java {
@@ -372,6 +383,7 @@ test {
   failFast = true
   jvmArgs = [
     "-Dfile.encoding=${defaultEncoding}",
+    "-javaagent:${mockitoAgent.asPath}",
   ]
   reports {
     // TODO: The Report.enabled property has been deprecated
@@ -602,16 +614,16 @@ release {
     //* the "release" branch (or use a regular expression to allow releases
     //* from multiple branches, e.g. "/release|master/").
     //* Set to '' to ignore.
-    requireBranch = 'master'
+    //requireBranch = 'master'
 
-    pushToBranchPrefix = ''
+    //pushToBranchPrefix = ''
 
-    pushToRemote = 'origin'
+    //pushToRemote = 'origin'
 
-    commitVersionFileOnly = false
+    //commitVersionFileOnly = false
 
     //* Adds `-s` parameter to the tag command
-    signTag = false
+    //signTag = false
 
     // Defines an array of options to add to the git adapter during a push.
     // This could be useful to have the vc hooks skipped during a release.
@@ -850,6 +862,8 @@ check.dependsOn groovyCpdCheck
 // Verification failed: SpotBugs violation found: 3
 // at com.github.spotbugs.snom.internal.SpotBugsRunnerForWorker$
 // SpotBugsExecutor.execute(SpotBugsRunnerForWorker.java:97) ...
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
 spotbugs {
   // The version of the code quality tool to be used.
   toolVersion = spotbugsVersion
@@ -874,12 +888,12 @@ spotbugs {
   // The analysis effort level. The value specified should be one of
   // min, default, or max. Higher levels increase precision and find more
   // bugs at the expense of running time and memory consumption.
-  effort = 'max'
+  effort = Effort.valueOf('MAX')
 
   // The priority threshold for reporting bugs. If set to low, all bugs
   // are reported. If set to medium (the default), medium and high priority
   // bugs are reported. If set to high, only high priority bugs are reported.
-  reportLevel = 'low'
+  reportLevel = Confidence.valueOf('LOW')
 
   // The bug detectors which should be run. The bug detectors are specified
   // by their class names, without any package qualification. By default, all
@@ -966,7 +980,7 @@ buildDashboard {
     }
   }
 }
-buildDashboard.dependsOn projectReport
+//buildDashboard.dependsOn projectReport
 
 ////////////////////////////////////////////////////////////////////////////////
 

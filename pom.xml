@@ -114,10 +114,18 @@
     <!-- Dependencies -->
     <version.javafx>${javafxVersion}</version.javafx>
     <version.picocli>4.7.6</version.picocli>
-    <version.slf4j>2.1.0-alpha1</version.slf4j>
+    <version.slf4japi>2.0.15</version.slf4japi>
     <version.logback>1.5.11</version.logback>
-    <version.junit>5.11.2</version.junit>
+    <version.jupiter>5.11.2</version.jupiter>
+    <version.junit>1.11.2</version.junit>
+
+    <!--
+      Dependency conflict in spock-core:
+      org.apache.groovy:groovy:4.0.20 conflict with 4.0.23
+      org.junit.platform:junit-platform-commons:1.10.2 conflict with 1.11.2
+    -->
     <version.spock>2.4-M4-groovy-4.0</version.spock>
+
     <version.mockito>5.14.2</version.mockito>
     <version.groovy>4.0.23</version.groovy>
     <!--version.hamcrest>2.2</version.hamcrest-->
@@ -221,7 +229,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
+      <version>${version.slf4japi}</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -230,9 +238,15 @@
     </dependency>
     <!-- JUnit -->
     <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <version>${version.junit}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${version.junit}</version>
+      <version>${version.jupiter}</version>
       <scope>test</scope>
     </dependency>
     <!-- Groovy -->
@@ -277,8 +291,8 @@
   </dependencies>
 
   <build>
+
     <resources>
-      <!-- default-resources -->
       <resource>
         <directory>${project.basedir}</directory>
         <includes>
@@ -286,40 +300,8 @@
           <include>NOTICE</include>
         </includes>
       </resource>
-      <!-- default-resources -->
-      <resource>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>filters/</exclude>
-          <exclude>filtered/</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src/main/resources/filtered</directory>
-        <filtering>true</filtering>
-      </resource>
-      <!-- default-testResources -->
-      <resource>
-        <directory>src/test/resources</directory>
-        <excludes>
-          <exclude>filters/</exclude>
-          <exclude>filtered/</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src/test/resources/filtered</directory>
-        <filtering>true</filtering>
-      </resource>
-      <!-- prepare -->
-      <resource>
-        <directory>config/readme</directory>
-        <includes>
-          <include>README.md</include>
-        </includes>
-        <filtering>true</filtering>
-      </resource>
     </resources>
-    
+
     <pluginManagement>
       <plugins>
         <plugin> <!-- properties-maven-plugin -->
@@ -641,7 +623,7 @@
               <usePhrasedFileName>false</usePhrasedFileName>
               <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
               <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
-            </statelessTestsetInfoReporter>          
+            </statelessTestsetInfoReporter>
             <statelessTestsetReporter
                 implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
               <version>3.0</version>
@@ -680,7 +662,7 @@
               Specifies the JDK home path which provides the tool needed.
               If not specified the jlink tool executable will be find in
               the following order:
-              
+
                 - user specified JDK home directory by toolchains-plugin
                 - JDK home directory specified by system variable JAVA_HOME
                 - system path specified by system variable PATH
@@ -700,7 +682,7 @@
             <libsdir>${jlinkLibsDir}</libsdir>
 
             <!-- jlink basic -->
-          
+
             <!--
               Specifies the module path. The path where the jlink tool discovers
               observable modules: modular JAR files, JMOD files, exploded modules.
@@ -709,7 +691,7 @@
               and the other standard and JDK modules. If this option is specified
               but the java.base module cannot be resolved from it, then
               the jlink command appends $JAVA_HOME/jmods to the module path.
-          
+
               pathelements - passed to jlink as is
               filesets - sets of files (without directories)
               dirsets - sets of directories (without files)
@@ -844,21 +826,21 @@
               <disableplugin>compress</disableplugin>
               <disableplugin>dedup-legal-notices</disableplugin>
             </disableplugins-->
-          
+
             <!-- PLUGINS -->
             <!--
               For plug-in options that require a pattern-list, the value is
               a comma-separated list of elements, with each element using one
               the following forms:
-          
+
                 - glob-pattern
                 - glob:glob-pattern
                 - regex:regex-pattern
                 - @filename
-                
+
               Example: **/module-info.class,glob:/java.base/java/lang/**
             -->
-          
+
             <!--
               Compresses all resources in the output image. Specify
               compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
@@ -1282,7 +1264,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
       <plugin> <!-- maven-compiler-plugin -->
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
@@ -1394,6 +1376,19 @@
                 <filter>target/generated-resources/filters/filter.properties</filter>
                 <!--filter>src/main/resources/filters/filter.properties</filter-->
               </filters>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <excludes>
+                    <exclude>filters/</exclude>
+                    <exclude>filtered/</exclude>
+                  </excludes>
+                </resource>
+                <resource>
+                  <directory>src/main/resources/filtered</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
           <execution>
@@ -1407,6 +1402,19 @@
                 <filter>target/generated-test-resources/filters/filter.properties</filter>
                 <!--filter>src/test/resources/filters/filter.properties</filter-->
               </filters>
+              <resources>
+                <resource>
+                  <directory>src/test/resources</directory>
+                  <excludes>
+                    <exclude>filters/</exclude>
+                    <exclude>filtered/</exclude>
+                  </excludes>
+                </resource>
+                <resource>
+                  <directory>src/test/resources/filtered</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
           <execution>
@@ -1417,6 +1425,15 @@
             </goals>
             <configuration>
               <outputDirectory>${project.basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>config/readme</directory>
+                  <includes>
+                    <include>README.md</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
