@@ -2,9 +2,9 @@
 
 ## MAVEN
 
-### Dependency
+### Dependencies
 
-***spock-core***
+*** spock-core ***
 - org.apache.groovy:groovy:4.0.20 conflict with 4.0.23
 - org.junit.platform:junit-platform-commons:1.10.2 conflict with 1.11.2
 
@@ -18,9 +18,9 @@
     </dependency>
 ```
 
-### Warning
+### Warnings
 
-***maven-compiler-plugin:testCompile***
+*** maven-compiler-plugin:testCompile ***
 
 ```xml
 <showWarnings>false</showWarnings>
@@ -29,29 +29,25 @@
 The following options were not recognized by any processor: '[project]'
 ```
 
-### Warning
-
-***project-info-reports:dependencies***
-
-```console
-Site model for default locale is still using the old pre-version 2.0.0 model.
-You MUST migrate to the new model as soon as possible otherwise your build
-will break in the future!
-```
-
-### Warning
-
-***maven-resources-plugin:***
+*** maven-resources-plugin:* ***
 
 ```console
 Parameter 'resources' is read-only, must not be used in configuration
 ```
 
-### Warning
+### Notes
 
-*** mockito-agent ***
+*** maven-compiler-plugin:testCompile ***
 
 ```console
-Sharing is only supported for boot loader classes
-because bootstrap classpath has been appended
+24-10-2024 13:21:03 DEBUG r.a.l.LauncherTest:104 - Здравствуйте!
 ```
+
+Не раскрашивается вывод тестов в консоль при сборке.
+Наверное это в коде тестов надо добиваться, а не от Maven?
+Наверное это настроить можно в SLF4J или Logback?
+
+### Application
+
+- Не работает ключ командной строки --debug
+- Показывать версию Java в информации о версии
