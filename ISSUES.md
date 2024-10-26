@@ -2,6 +2,11 @@
 
 ## MAVEN
 
+### Plugins
+
+jlink-maven-plugin: 0.1.12-SNAPSHOT - (0.1.12)
+jpackage-maven-plugin: 0.1.6-SNAPSHOT - (0.1.6)
+
 ### Dependencies
 
 *** spock-core ***
@@ -22,11 +27,17 @@
 
 *** maven-compiler-plugin:testCompile ***
 
-```xml
-<showWarnings>false</showWarnings>
-```
 ```console
 The following options were not recognized by any processor: '[project]'
+```
+
+Возможно это из-за конфигурации maven-compiler-plugin:
+```xml
+<arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+```
+Можно отключить предупреждения, но это плохо
+```xml
+<showWarnings>false</showWarnings>
 ```
 
 *** maven-resources-plugin:* ***
@@ -36,6 +47,27 @@ Parameter 'resources' is read-only, must not be used in configuration
 ```
 
 ### Notes
+
+*** plugins ***
+
+Что это за параметр конфигурации skip = true
+
+```xml
+<plugin> <!-- maven-install-plugin -->
+  <artifactId>maven-install-plugin</artifactId>
+  <version>${version.maven-install-plugin}</version>
+  <configuration>
+    <skip>true</skip>
+  </configuration>
+</plugin>
+<plugin> <!-- maven-deploy-plugin -->
+  <artifactId>maven-deploy-plugin</artifactId>
+  <version>${version.maven-deploy-plugin}</version>
+  <configuration>
+    <skip>true</skip>
+  </configuration>
+</plugin>
+```
 
 *** maven-compiler-plugin:testCompile ***
 

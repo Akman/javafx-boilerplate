@@ -26,6 +26,7 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -52,7 +53,7 @@
     <javaVersion>23.0.1</javaVersion>
     <javaSourceVersion>${javaVersion}</javaSourceVersion>
     <javaTargetVersion>21</javaTargetVersion>
-    <javaReleaseVersion>11</javaReleaseVersion>
+    <javaReleaseVersion>14</javaReleaseVersion>
 
     <!-- Encoding -->
     <defaultEncoding>UTF-8</defaultEncoding>
@@ -110,7 +111,7 @@
 
     <!-- Tools -->
     <version.checkstyle>10.18.2</version.checkstyle>
-    <version.pmd>7.6.0</version.pmd>
+    <version.pmd>7.7.0</version.pmd>
     <version.spotbugs>4.8.6</version.spotbugs>
     <version.codenarc>3.5.0-groovy-4.0</version.codenarc>
 
@@ -158,7 +159,7 @@
     <version.jacoco-maven-plugin>0.8.12</version.jacoco-maven-plugin>
     <version.exec-maven-plugin>3.5.0</version.exec-maven-plugin>
     <version.jlink-maven-plugin>0.1.12-SNAPSHOT</version.jlink-maven-plugin> <!-- 0.1.12 -->
-    <version.jpackage-maven-plugin>0.1.5</version.jpackage-maven-plugin>
+    <version.jpackage-maven-plugin>0.1.6-SNAPSHOT</version.jpackage-maven-plugin> <!-- 0.1.6 -->
     <version.maven-install-plugin>3.1.3</version.maven-install-plugin>
     <version.maven-deploy-plugin>3.1.3</version.maven-deploy-plugin>
     <version.maven-release-plugin>3.1.1</version.maven-release-plugin>
@@ -366,6 +367,7 @@
               <arg>-Xlint:unchecked</arg>
               <arg>-Xlint:deprecation</arg>
               <arg>-Werror</arg>
+              <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
             </compilerArgs>
             <annotationProcessorPaths>
               <path>
@@ -374,9 +376,6 @@
                 <version>${version.picocli}</version>
               </path>
             </annotationProcessorPaths>
-            <compilerArgs>
-              <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
-            </compilerArgs>
           </configuration>
         </plugin>
         <plugin> <!-- maven-antrun-plugin -->
@@ -653,371 +652,11 @@
           <groupId>com.github.akman</groupId>
           <artifactId>jlink-maven-plugin</artifactId>
           <version>${version.jlink-maven-plugin}</version>
-          <configuration>
-            <!--
-              Specifies the JDK home path which provides the tool needed.
-              If not specified the jlink tool executable will be find in
-              the following order:
-
-                - user specified JDK home directory by toolchains-plugin
-                - JDK home directory specified by system variable JAVA_HOME
-                - system path specified by system variable PATH
-            -->
-            <!--toolhome>${env.JAVA_HOME}</toolhome-->
-            <!--
-              Specifies the location in which modular dependencies
-              will be placed.
-              Default value: ${project.build.directory}/jlink/mods.
-            -->
-            <modsdir>${jlinkModsDir}</modsdir>
-            <!--
-              Specifies the location in which non modular dependencies
-              will be placed.
-              Default value: ${project.build.directory}/jlink/libs.
-            -->
-            <libsdir>${jlinkLibsDir}</libsdir>
-
-            <!-- jlink basic -->
-
-            <!--
-              Specifies the module path. The path where the jlink tool discovers
-              observable modules: modular JAR files, JMOD files, exploded modules.
-              If this option is not specified, then the default module path
-              is $JAVA_HOME/jmods. This directory contains the java.base module
-              and the other standard and JDK modules. If this option is specified
-              but the java.base module cannot be resolved from it, then
-              the jlink command appends $JAVA_HOME/jmods to the module path.
-
-              pathelements - passed to jlink as is
-              filesets - sets of files (without directories)
-              dirsets - sets of directories (without files)
-              dependencysets - sets of dependencies with specified includes and
-                               excludes patterns (glob: or regex:) for file names
-                               and regex patterns only for module names
-            -->
-            <modulepath>
-              <pathelements>
-                <pathelement>${jlinkModsDir}</pathelement>
-              </pathelements>
-              <!--
-              <dirsets>
-                <dirset>
-                  <directory>${build.dir}</directory>
-                  <includes>
-                    <include>classes</include>
-                  </includes>
-                </dirset>
-              </dirsets>
-              -->
-              <!--
-              <dependencysets>
-                <dependencyset>
-                  <includeoutput>true</includeoutput>
-                  <excludeautomatic>true</excludeautomatic>
-                  <excludenames>
-                    <excludename>javafx\..+Empty</excludename>
-                  </excludenames>
-                </dependencyset>
-              </dependencysets>
-              -->
-            </modulepath>
-            <!--
-              Specifies the modules names (names of root modules) to add to
-              the runtime image. Their transitive dependencies will add too.
-            -->
-            <addmodules>
-              <addmodule>${applicationModuleName}</addmodule>
-            </addmodules>
-            <!--
-              Specifies the location of the generated runtime image.
-              Default value: ${project.build.directory}/runtime.
-            -->
-            <output>${jlinkImageDir}</output>
-            <!--
-              Limits the universe of observable modules to those in
-              the transitive closure of the named modules, mod,
-              plus the main module, if any, plus any further
-              modules specified in the "addmodules" property.
-              It used to limit resolve any services other than
-              the selected services, if the property "bindservices"
-              set to true.
-            -->
-            <!--limitmodules>
-              <limitmodule>org.example.limitmodule</limitmodule>
-            </limitmodules-->
-            <!--
-              Suggest providers that implement the given service types
-              from the module path.
-            -->
-            <!--suggestproviders>
-              <suggestprovider>provider.name</suggestprovider>
-            </suggestproviders-->
-            <!--
-              Save jlink options in the given file.
-            -->
-            <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
-            <!--
-              The last plugin allowed to sort resources.
-            -->
-            <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
-            <!--
-              Post process an existing image.
-            -->
-            <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
-            <!--
-              Enable verbose tracing.
-              Default value: false.
-            -->
-            <verbose>true</verbose>
-            <!--
-              Link service provider modules and their dependencies.
-              Default value: false.
-            -->
-            <!--bindservices>false</bindservices-->
-            <!--
-              Specifies the launcher command name for the module or
-              the command name for the module and main class (the module and
-              the main class names are separated by a slash). Arguments passed
-              to jvm, arguments passed to the application. Platform specific
-              templates for launcher script.
-            -->
-            <launcher>
-              <command>${applicationLauncherName}</command>
-              <mainmodule>${applicationModuleName}</mainmodule>
-              <mainclass>${applicationClassName}</mainclass>
-              <jvmargs>${applicationJvmArgs}</jvmargs>
-              <args>${applicationArgs}</args>
-              <nixtemplate>${jlinkTemplateNix}</nixtemplate>
-              <wintemplate>${jlinkTemplateWin}</wintemplate>
-            </launcher>
-            <!--
-              Excludes header files.
-              Default value: false.
-            -->
-            <noheaderfiles>true</noheaderfiles>
-            <!--
-              Excludes man pages.
-              Default value: false.
-            -->
-            <nomanpages>true</nomanpages>
-            <!--
-              Specifies the byte order of the generated
-              image { NATIVE | LITTLE | BIG }.
-              Default value: NATIVE (the format of your system's architecture).
-            -->
-            <!--endian>NATIVE</endian-->
-            <!--
-              Suppresses a fatal error when signed modular JARs are linked
-              in the runtime image. The signature-related files of the signed
-              modular JARs aren't copied to the runtime image.
-              Default value: false.
-            -->
-            <!--ignoresigninginformation>false</ignoresigninginformation-->
-            <!--
-              Disables the specified plug-ins.
-              For a complete list of all available plug-ins,
-              run the command: jlink ‒‒list-plugins
-            -->
-            <!--disableplugins>
-              <disableplugin>compress</disableplugin>
-              <disableplugin>dedup-legal-notices</disableplugin>
-            </disableplugins-->
-
-            <!-- PLUGINS -->
-            <!--
-              For plug-in options that require a pattern-list, the value is
-              a comma-separated list of elements, with each element using one
-              the following forms:
-
-                - glob-pattern
-                - glob:glob-pattern
-                - regex:regex-pattern
-                - @filename
-
-              Example: **/module-info.class,glob:/java.base/java/lang/**
-            -->
-
-            <!--
-              Compresses all resources in the output image. Specify
-              compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
-              An optional pattern-list filter can be specified to list
-              the pattern of files to include.
-            -->
-            <compress>
-              <compression>ZIP</compression>
-              <!--filters>
-                <filter>**/*-info.class</filter>
-                <filter>glob:**/module-info.class</filter>
-                <filter>regex:/java[a-z]+$</filter>
-                <filter>@filename</filter>
-              </filters-->
-            </compress>
-            <!--
-              Includes the list of locales where langtag is
-              a BCP 47 language tag. This option supports locale matching as
-              defined in RFC 4647.
-              Ensure that you specified: ‒‒add-modules jdk.localedata when
-              using this property.
-            -->
-            <!--includelocales>
-              <includelocale>en</includelocale>
-              <includelocale>ru</includelocale>
-              <includelocale>*-IN</includelocale>
-            </includelocales-->
-            <!--
-              Orders the specified paths in priority order.
-            -->
-            <!--orderresources>
-              <orderresource>**/*-info.class</orderresource>
-              <orderresource>glob:**/module-info.class</orderresource>
-              <orderresource>regex:/java[a-z]+$</orderresource>
-              <orderresource>@filename</orderresource>
-            </orderresources-->
-            <!--
-              Specify resources to exclude.
-            -->
-            <!--excluderesources>
-              <excluderesource>**/*-info.class</excluderesource>
-              <excluderesource>glob:**/META-INF/**</excluderesource>
-              <excluderesource>regex:/java[a-z]+$</excluderesource>
-              <excluderesource>@filename</excluderesource>
-            </excluderesources-->
-            <!--
-              Strips debug information from the output image.
-              Default value: false.
-            -->
-            <stripdebug>true</stripdebug>
-            <!--
-              Strip Java debug attributes from classes in the output image.
-              Default value: false.
-            -->
-            <!--stripjavadebugattributes>false</stripjavadebugattributes-->
-            <!--
-              Exclude native commands (such as java/java.exe) from the image.
-              Default value: false.
-            -->
-            <stripnativecommands>false</stripnativecommands>
-            <!--
-              De-duplicate all legal notices. If true is specified then
-              it will be an error if two files of the same filename
-              are different.
-              Default value: false.
-            -->
-            <!--deduplegalnotices>true</deduplegalnotices-->
-            <!--
-              Specify files to exclude.
-            -->
-            <!--excludefiles>
-              <excludefile>**/*-info.class</excludefile>
-              <excludefile>glob:**/META-INF/**</excludefile>
-              <excludefile>regex:/java[a-z]+$</excludefile>
-              <excludefile>@filename</excludefile>
-            </excludefiles-->
-            <!--
-              Specify a JMOD section to exclude { MAN | HEADERS }.
-            -->
-            <!--excludejmodsection>MAN</excludejmodsection-->
-            <!--
-              Specify a file listing the java.lang.invoke classes to pre-generate.
-              By default, this plugin may use a builtin list of classes
-              to pre-generate. If this plugin runs on a different runtime
-              version than the image being created then code generation
-              will be disabled by default to guarantee correctness add
-              ignore-version=true to override this.
-            -->
-            <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
-            <!--
-              Load release properties from the supplied option file.
-              - adds: is to add properties to the release file.
-              - dels: is to delete the list of keys in release file.
-              - Any number of key=value pairs can be passed.
-            -->
-            <!--releaseinfo>
-              <file>file</file>
-              <adds>
-                <key1>value1</key1>
-                <key2>value2</key2>
-              </adds>
-              <dels>
-                <key1 />
-                <key2 />
-              </dels>
-            </releaseinfo-->
-            <!--
-              Fast loading of module descriptors. Always on.
-              The jlink CLI is: ‒‒system-modules=.
-              Default value: true.
-            -->
-            <!--systemmodules>false</systemmodules-->
-            <!--
-              Select the HotSpot VM in
-              the output image: { CLIENT | SERVER | MINIMAL | ALL }
-              Default value: ALL.
-            -->
-            <!--vm>ALL</vm-->
-          </configuration>
         </plugin>
         <plugin> <!-- jpackage-maven-plugin -->
           <groupId>com.github.akman</groupId>
           <artifactId>jpackage-maven-plugin</artifactId>
           <version>${version.jpackage-maven-plugin}</version>
-          <configuration>
-            <!--
-              Specifies the JDK home path which provides the tool needed.
-              If not specified the jpackage tool executable will be find in
-              the following order:
-
-                - user specified JDK home directory by toolchains-plugin
-                - JDK home directory specified by system variable JAVA_HOME
-                - system path specified by system variable PATH
-            -->
-            <toolhome>${env.JPACKAGE_HOME}</toolhome>
-            <!--
-              Specifies the location in which generated output files are placed.
-              Default value: ${project.build.directory}/jpackage
-            -->
-            <dest>${jpackageDir}</dest>
-            <!--
-              Specifies the location in which temporary files are placed.
-              If specified, the directory will not be removed upon the task
-              completion and must be removed manually.
-            -->
-            <!--temp>${project.build.directory}/jpackage/temp-app-image</temp-->
-            <!--
-              Specifies the name of subdirectory relative to
-              the destination directory in which files of generated
-              application image are placed.
-            -->
-            <name>${platformImageName}</name>
-            <!--
-              Enable verbose tracing.
-              Default value: false.
-            -->
-            <verbose>true</verbose>
-            <!--
-              Specifies version of the application and/or package.
-            -->
-            <appversion>${applicationVersion}</appversion>
-            <!--
-              Specifies copyright for the application.
-            -->
-            <copyright>${applicationCopyright}</copyright>
-            <!--
-              Specifies description of the application.
-            -->
-            <description>${applicationDescription}</description>
-            <!--
-              Specifies vendor of the application.
-            -->
-            <vendor>${applicationVendor}</vendor>
-            <!--
-              Specifies the location of a resources directory that override
-              jpackage resources. Icons, template files, and other resources
-              of jpackage can be overridden by adding replacement resources
-              to this directory.
-            -->
-            <resourcedir>${jpackageResourcesDir}</resourcedir>
-          </configuration>
         </plugin>
         <plugin> <!-- maven-install-plugin -->
           <artifactId>maven-install-plugin</artifactId>
@@ -1567,228 +1206,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin> <!-- jpackage-maven-plugin -->
-        <groupId>com.github.akman</groupId>
-        <artifactId>jpackage-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>image</id>
-            <goals>
-              <goal>jpackage</goal>
-            </goals>
-            <configuration>
-              <!--
-                Specifies the type of package to
-                create: { PLATFORM | IMAGE | EXE | MSI }.
-                Default value: PLATFORM (a platform dependent default type)
-              -->
-              <type>IMAGE</type>
-              <!--
-                Specifies the location of the predefined runtime
-                image (result of jlink) that will be copied into
-                the application image.
-                If not specified, jpackage will run jlink to create
-                the runtime image using options:
-                  - strip-debug
-                  - no-header-files
-                  - no-man-pages
-                  - strip-native-commands
-              -->
-              <runtimeimage>${jlinkImageDir}</runtimeimage>
-              <!--
-                Specifies the main module (and optionally main class) of
-                the application. This module must be located on the module path.
-                When this option is specified, the main module will be linked
-                in the Java runtime image.
-                Either module or main-jar option can be specified
-                but not both.
-              -->
-              <module>${applicationModuleName}/${applicationClassName}</module>
-              <!--
-                Specifies the command line arguments to pass to the main class
-                if no command line arguments are given to the launcher.
-              -->
-              <arguments>${platformArgs}</arguments>
-              <!--
-                Specifies the options to pass to the Java runtime.
-              -->
-              <javaoptions>${platformJvmArgs} -splash:\$APPDIR/${applicationSplashImage}</javaoptions>
-              <!--
-                Specifies options are added to, or used to overwrite,
-                the original command line options to build additional
-                alternative launchers.
-              -->
-              <addlaunchers>
-                <addlauncher>
-                  <name>${platformLauncherName}-cli</name>
-                  <file>${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties</file>
-                  <module>${applicationModuleName}/${applicationClassName}</module>
-                  <javaoptions>${platformJvmArgs}</javaoptions>
-                  <appversion>${applicationVersion}</appversion>
-                  <icon>${jpackageResourcesDir}/${platformLauncherName}-cli.${platformIconExtension}</icon>
-                  <!--arguments>${platformArgs}</arguments-->
-                  <!--winconsole>true</winconsole-->
-                </addlauncher>
-              </addlaunchers>
-              <!--
-                Specifies the location of the icon of the application package.
-              -->
-              <icon>${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}</icon>
-              <!--
-                Enable creating a console launcher for the application,
-                should be specified for application which requires console
-                interactions.
-                Default value: false
-              -->
-              <!--winconsole>false</winconsole-->
-              <!--
-                Path of the input directory that contains the files to be
-                packaged. All files in the input directory will be packaged into
-                the application image into $APPDIR directory.
-              -->
-              <input>${jpackageInputDir}</input>
-            </configuration>
-          </execution>
-          <execution>
-            <id>installer</id>
-            <goals>
-              <goal>jpackage</goal>
-            </goals>
-            <configuration>
-              <!--
-                Specifies the type of package to
-                create: { PLATFORM | IMAGE | EXE | MSI }.
-                Default value: PLATFORM (a platform dependent default type)
-              -->
-              <type>MSI</type>
-              <!--
-                Specifies the location of the predefined application image
-                that is used to build an installable package.
-              -->
-              <appimage>${jpackageImageDir}</appimage>
-              <!--
-                Specifies the location of a properties file that contains
-                list of key, value pairs. The keys "extension", "mime-type",
-                "icon", and "description" can be used to describe the association.
-              -->
-              <fileassociations>
-                <fileassociation>${jpackageConfigDir}/associations.properties</fileassociation>
-              </fileassociations>
-              <!--
-                Specifies the relative sub-path under the default installation
-                location of the application for Windows, or absolute path of the
-                installation directory of the application for Mac or Linux.
-              -->
-              <installdir>${platformInstallDir}</installdir>
-              <!--
-                Specifies the location of a license file.
-              -->
-              <licensefile>${applicationLicenseFile}</licensefile>
-              <!--
-                Enable adding a dialog to choose a directory in which
-                the product is installed.
-                Default value: false
-              -->
-              <windirchooser>true</windirchooser>
-              <!--
-                Enable adding the application to the system menu.
-                Default value: false
-              -->
-              <winmenu>true</winmenu>
-              <!--
-                Start menu group this application is placed in.
-              -->
-              <winmenugroup>${platformMenuGroup}</winmenugroup>
-              <!--
-                Enable requesting to perform an install on a per-user basis.
-                Default value: false
-              -->
-              <winperuserinstall>true</winperuserinstall>
-              <!--
-                Enable creating a desktop shortcut for the application.
-                Default value: false
-              -->
-              <winshortcut>true</winshortcut>
-              <!--
-                UUID associated with upgrades for this package.
-              -->
-              <winupgradeuuid>${platformUUID}</winupgradeuuid>
-              <!--
-                An identifier that uniquely identifies the application for macOS.
-                Defaults to the main class name. May only use
-                alphanumeric (A-Z,a-z,0-9), hyphen (-), and period (.) characters.
-              -->
-              <!--macpackageidentifier>macPackageIdentifier</macpackageidentifier-->
-              <!--
-                Name of the application as it appears in the Menu Bar.
-                This can be different from the application name.
-                This name must be less than 16 characters long and be suitable for
-                displaying in the menu bar and the application Info window.
-                Defaults to the application name.
-              -->
-              <!--macpackagename>macPackageName</macpackagename-->
-              <!--
-                When signing the application package, this value is prefixed
-                to all components that need to be signed that don't have
-                an existing package identifier.
-              -->
-              <!--macpackagesigningprefix>macPackageSigningPrefix</macpackagesigningprefix-->
-              <!--
-                Request that the package be signed.
-                Default value: false
-              -->
-              <!--macsign>false</macsign-->
-              <!--
-                Path of the keychain to search for the signing identity
-                (absolute path or relative to the current directory).
-                If not specified, the standard keychains are used.
-              -->
-              <!--macsigningkeychain>macSigningKeyChain</macsigningkeychain-->
-              <!--
-                Team name portion in Apple signing identities' names.
-                For example "Developer ID Application: ".
-              -->
-              <!--macsigningkeyusername>macSigningKeyUserName</macsigningkeyusername-->
-              <!--
-                Name for Linux package, defaults to the application name.
-              -->
-              <!--linuxpackagename>linuxPackageName</linuxpackagename-->
-              <!--
-                Maintainer for .deb package (email).
-              -->
-              <!--linuxdebmaintainer>linuxDebMaintainer</linuxdebmaintainer-->
-              <!--
-                Menu group this application is placed in.
-              -->
-              <!--linuxmenugroup>linuxMenuGroup</linuxmenugroup-->
-              <!--
-                Required packages or capabilities for the application.
-                Default value: false
-              -->
-              <!--linuxpackagedeps>false</linuxpackagedeps-->
-              <!--
-                Type of the license ("License: <name>" of the RPM .spec).
-              -->
-              <!--linuxrpmlicensetype>MIT</linuxrpmlicensetype-->
-              <!--
-                Release value of the RPM <name>.spec file or Debian revision value
-                of the DEB control file.
-              -->
-              <!--linuxapprelease>linuxAppRelease</linuxapprelease-->
-              <!--
-                Group value of the RPM <name>.spec file or Section value
-                of DEB control file.
-              -->
-              <!--linuxappcategory>linuxAppCategory</linuxappcategory-->
-              <!--
-                Creates a shortcut for the application.
-                Default value: false
-              -->
-              <!--linuxshortcut>true</linuxshortcut-->
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin> <!-- maven-install-plugin -->
         <artifactId>maven-install-plugin</artifactId>
       </plugin>
@@ -1842,12 +1259,13 @@
           <reportSet>
             <reports>
               <report>index</report>
+              <!--report>help</report-->
               <report>summary</report>
               <!--report>modules</report-->
               <report>dependency-management</report>
               <report>dependencies</report>
               <!--report>dependency-info</report-->
-              <!--report>dependency-convergence</report-->
+              <report>dependency-convergence</report>
               <report>plugin-management</report>
               <report>plugins</report>
               <report>distribution-management</report>
@@ -1992,7 +1410,527 @@
         <platformInstallDir>${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID>8CF81762-0B19-46A6-875E-1F839A1700D0</platformUUID>
+        <jlinkDir>${project.build.directory}/jlink/${platformFamily}</jlinkDir>
+        <jpackageDir>${project.build.directory}/jpackage/${platformFamily}</jpackageDir>
       </properties>
+      <build>
+        <plugins>
+          <plugin> <!-- jlink-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jlink-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jlink tool executable will be find in
+                the following order:
+          
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <!--toolhome>${env.JAVA_HOME}</toolhome-->
+              <!--
+                Specifies the location in which modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/mods.
+              -->
+              <modsdir>${jlinkModsDir}</modsdir>
+              <!--
+                Specifies the location in which non modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/libs.
+              -->
+              <libsdir>${jlinkLibsDir}</libsdir>
+          
+              <!-- jlink basic -->
+          
+              <!--
+                Specifies the module path. The path where the jlink tool discovers
+                observable modules: modular JAR files, JMOD files, exploded modules.
+                If this option is not specified, then the default module path
+                is $JAVA_HOME/jmods. This directory contains the java.base module
+                and the other standard and JDK modules. If this option is specified
+                but the java.base module cannot be resolved from it, then
+                the jlink command appends $JAVA_HOME/jmods to the module path.
+          
+                pathelements - passed to jlink as is
+                filesets - sets of files (without directories)
+                dirsets - sets of directories (without files)
+                dependencysets - sets of dependencies with specified includes and
+                                 excludes patterns (glob: or regex:) for file names
+                                 and regex patterns only for module names
+              -->
+              <modulepath>
+                <pathelements>
+                  <pathelement>${jlinkModsDir}</pathelement>
+                </pathelements>
+                <!--
+                <dirsets>
+                  <dirset>
+                    <directory>${build.dir}</directory>
+                    <includes>
+                      <include>classes</include>
+                    </includes>
+                  </dirset>
+                </dirsets>
+                -->
+                <!--
+                <dependencysets>
+                  <dependencyset>
+                    <includeoutput>true</includeoutput>
+                    <excludeautomatic>true</excludeautomatic>
+                    <excludenames>
+                      <excludename>javafx\..+Empty</excludename>
+                    </excludenames>
+                  </dependencyset>
+                </dependencysets>
+                -->
+              </modulepath>
+              <!--
+                Specifies the modules names (names of root modules) to add to
+                the runtime image. Their transitive dependencies will add too.
+              -->
+              <addmodules>
+                <addmodule>${applicationModuleName}</addmodule>
+              </addmodules>
+              <!--
+                Specifies the location of the generated runtime image.
+                Default value: ${project.build.directory}/runtime.
+              -->
+              <output>${jlinkImageDir}</output>
+              <!--
+                Limits the universe of observable modules to those in
+                the transitive closure of the named modules, mod,
+                plus the main module, if any, plus any further
+                modules specified in the "addmodules" property.
+                It used to limit resolve any services other than
+                the selected services, if the property "bindservices"
+                set to true.
+              -->
+              <!--limitmodules>
+                <limitmodule>org.example.limitmodule</limitmodule>
+              </limitmodules-->
+              <!--
+                Suggest providers that implement the given service types
+                from the module path.
+              -->
+              <!--suggestproviders>
+                <suggestprovider>provider.name</suggestprovider>
+              </suggestproviders-->
+              <!--
+                Save jlink options in the given file.
+              -->
+              <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+              <!--
+                The last plugin allowed to sort resources.
+              -->
+              <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+              <!--
+                Post process an existing image.
+              -->
+              <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Link service provider modules and their dependencies.
+                Default value: false.
+              -->
+              <!--bindservices>false</bindservices-->
+              <!--
+                Specifies the launcher command name for the module or
+                the command name for the module and main class (the module and
+                the main class names are separated by a slash). Arguments passed
+                to jvm, arguments passed to the application. Platform specific
+                templates for launcher script.
+              -->
+              <launcher>
+                <command>${applicationLauncherName}</command>
+                <mainmodule>${applicationModuleName}</mainmodule>
+                <mainclass>${applicationClassName}</mainclass>
+                <jvmargs>${applicationJvmArgs}</jvmargs>
+                <args>${applicationArgs}</args>
+                <nixtemplate>${jlinkTemplateNix}</nixtemplate>
+                <wintemplate>${jlinkTemplateWin}</wintemplate>
+              </launcher>
+              <!--
+                Excludes header files.
+                Default value: false.
+              -->
+              <noheaderfiles>true</noheaderfiles>
+              <!--
+                Excludes man pages.
+                Default value: false.
+              -->
+              <nomanpages>true</nomanpages>
+              <!--
+                Specifies the byte order of the generated
+                image { NATIVE | LITTLE | BIG }.
+                Default value: NATIVE (the format of your system's architecture).
+              -->
+              <!--endian>NATIVE</endian-->
+              <!--
+                Suppresses a fatal error when signed modular JARs are linked
+                in the runtime image. The signature-related files of the signed
+                modular JARs aren't copied to the runtime image.
+                Default value: false.
+              -->
+              <!--ignoresigninginformation>false</ignoresigninginformation-->
+              <!--
+                Disables the specified plug-ins.
+                For a complete list of all available plug-ins,
+                run the command: jlink ‒‒list-plugins
+              -->
+              <!--disableplugins>
+                <disableplugin>compress</disableplugin>
+                <disableplugin>dedup-legal-notices</disableplugin>
+              </disableplugins-->
+          
+              <!-- PLUGINS -->
+              <!--
+                For plug-in options that require a pattern-list, the value is
+                a comma-separated list of elements, with each element using one
+                the following forms:
+          
+                  - glob-pattern
+                  - glob:glob-pattern
+                  - regex:regex-pattern
+                  - @filename
+          
+                Example: **/module-info.class,glob:/java.base/java/lang/**
+              -->
+          
+              <!--
+                Compresses all resources in the output image. Specify
+                compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
+                An optional pattern-list filter can be specified to list
+                the pattern of files to include.
+              -->
+              <compress>
+                <compression>ZIP</compression>
+                <!--filters>
+                  <filter>**/*-info.class</filter>
+                  <filter>glob:**/module-info.class</filter>
+                  <filter>regex:/java[a-z]+$</filter>
+                  <filter>@filename</filter>
+                </filters-->
+              </compress>
+              <!--
+                Includes the list of locales where langtag is
+                a BCP 47 language tag. This option supports locale matching as
+                defined in RFC 4647.
+                Ensure that you specified: ‒‒add-modules jdk.localedata when
+                using this property.
+              -->
+              <!--includelocales>
+                <includelocale>en</includelocale>
+                <includelocale>ru</includelocale>
+                <includelocale>*-IN</includelocale>
+              </includelocales-->
+              <!--
+                Orders the specified paths in priority order.
+              -->
+              <!--orderresources>
+                <orderresource>**/*-info.class</orderresource>
+                <orderresource>glob:**/module-info.class</orderresource>
+                <orderresource>regex:/java[a-z]+$</orderresource>
+                <orderresource>@filename</orderresource>
+              </orderresources-->
+              <!--
+                Specify resources to exclude.
+              -->
+              <!--excluderesources>
+                <excluderesource>**/*-info.class</excluderesource>
+                <excluderesource>glob:**/META-INF/**</excluderesource>
+                <excluderesource>regex:/java[a-z]+$</excluderesource>
+                <excluderesource>@filename</excluderesource>
+              </excluderesources-->
+              <!--
+                Strips debug information from the output image.
+                Default value: false.
+              -->
+              <stripdebug>true</stripdebug>
+              <!--
+                Strip Java debug attributes from classes in the output image.
+                Default value: false.
+              -->
+              <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+              <!--
+                Exclude native commands (such as java/java.exe) from the image.
+                Default value: false.
+              -->
+              <stripnativecommands>true</stripnativecommands>
+              <!--
+                De-duplicate all legal notices. If true is specified then
+                it will be an error if two files of the same filename
+                are different.
+                Default value: false.
+              -->
+              <!--deduplegalnotices>true</deduplegalnotices-->
+              <!--
+                Specify files to exclude.
+              -->
+              <!--excludefiles>
+                <excludefile>**/*-info.class</excludefile>
+                <excludefile>glob:**/META-INF/**</excludefile>
+                <excludefile>regex:/java[a-z]+$</excludefile>
+                <excludefile>@filename</excludefile>
+              </excludefiles-->
+              <!--
+                Specify a JMOD section to exclude { MAN | HEADERS }.
+              -->
+              <!--excludejmodsection>MAN</excludejmodsection-->
+              <!--
+                Specify a file listing the java.lang.invoke classes to pre-generate.
+                By default, this plugin may use a builtin list of classes
+                to pre-generate. If this plugin runs on a different runtime
+                version than the image being created then code generation
+                will be disabled by default to guarantee correctness add
+                ignore-version=true to override this.
+              -->
+              <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+              <!--
+                Load release properties from the supplied option file.
+                - adds: is to add properties to the release file.
+                - dels: is to delete the list of keys in release file.
+                - Any number of key=value pairs can be passed.
+              -->
+              <!--releaseinfo>
+                <file>file</file>
+                <adds>
+                  <key1>value1</key1>
+                  <key2>value2</key2>
+                </adds>
+                <dels>
+                  <key1 />
+                  <key2 />
+                </dels>
+              </releaseinfo-->
+              <!--
+                Fast loading of module descriptors. Always on.
+                The jlink CLI is: ‒‒system-modules=.
+                Default value: true.
+              -->
+              <!--systemmodules>false</systemmodules-->
+              <!--
+                Select the HotSpot VM in
+                the output image: { CLIENT | SERVER | MINIMAL | ALL }
+                Default value: ALL.
+              -->
+              <!--vm>ALL</vm-->
+            </configuration>
+          </plugin>
+          <plugin> <!-- jpackage-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jpackage-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jpackage tool executable will be find in
+                the following order:
+            
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <toolhome>${env.JPACKAGE_HOME}</toolhome>
+              <!--
+                Specifies the location in which generated output files are placed.
+                Default value: ${project.build.directory}/jpackage
+              -->
+              <dest>${jpackageDir}</dest>
+              <!--
+                Specifies the location in which temporary files are placed.
+                If specified, the directory will not be removed upon the task
+                completion and must be removed manually.
+              -->
+              <!--temp>${project.build.directory}/jpackage/temp-app-image</temp-->
+              <!--
+                Specifies the name of subdirectory relative to
+                the destination directory in which files of generated
+                application image are placed.
+              -->
+              <name>${platformImageName}</name>
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Specifies version of the application and/or package.
+              -->
+              <appversion>${applicationVersion}</appversion>
+              <!--
+                Specifies copyright for the application.
+              -->
+              <copyright>${applicationCopyright}</copyright>
+              <!--
+                Specifies description of the application.
+              -->
+              <description>${applicationDescription}</description>
+              <!--
+                Specifies vendor of the application.
+              -->
+              <vendor>${applicationVendor}</vendor>
+              <!--
+                Specifies the location of a resources directory that override
+                jpackage resources. Icons, template files, and other resources
+                of jpackage can be overridden by adding replacement resources
+                to this directory.
+              -->
+              <resourcedir>${jpackageResourcesDir}</resourcedir>
+            </configuration>
+            <executions>
+              <execution>
+                <id>image</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>IMAGE</type>
+                  <!--
+                    Specifies the location of the predefined runtime
+                    image (result of jlink) that will be copied into
+                    the application image.
+                    If not specified, jpackage will run jlink to create
+                    the runtime image using options:
+                      - strip-debug
+                      - no-header-files
+                      - no-man-pages
+                      - strip-native-commands
+                  -->
+                  <runtimeimage>${jlinkImageDir}</runtimeimage>
+                  <!--
+                    Specifies the main module (and optionally main class) of
+                    the application. This module must be located on the module path.
+                    When this option is specified, the main module will be linked
+                    in the Java runtime image.
+                    Either module or main-jar option can be specified
+                    but not both.
+                  -->
+                  <module>${applicationModuleName}/${applicationClassName}</module>
+                  <!--
+                    Specifies the command line arguments to pass to the main class
+                    if no command line arguments are given to the launcher.
+                  -->
+                  <arguments>${platformArgs}</arguments>
+                  <!--
+                    Specifies the options to pass to the Java runtime.
+                  -->
+                  <javaoptions>${platformJvmArgs} -splash:\$APPDIR/${applicationSplashImage}</javaoptions>
+                  <!--
+                    Specifies options are added to, or used to overwrite,
+                    the original command line options to build additional
+                    alternative launchers.
+                  -->
+                  <addlaunchers>
+                    <addlauncher>
+                      <name>${platformLauncherName}-cli</name>
+                      <file>${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties</file>
+                      <module>${applicationModuleName}/${applicationClassName}</module>
+                      <javaoptions>${platformJvmArgs}</javaoptions>
+                      <appversion>${applicationVersion}</appversion>
+                      <icon>${jpackageResourcesDir}/${platformLauncherName}-cli.${platformIconExtension}</icon>
+                      <!--arguments>${platformArgs}</arguments-->
+                      <!--winconsole>true</winconsole-->
+                    </addlauncher>
+                  </addlaunchers>
+                  <!--
+                    Specifies the location of the icon of the application package.
+                  -->
+                  <icon>${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}</icon>
+                  <!--
+                    Enable creating a console launcher for the application,
+                    should be specified for application which requires console
+                    interactions.
+                    Default value: false
+                  -->
+                  <!--winconsole>false</winconsole-->
+                  <!--
+                    Path of the input directory that contains the files to be
+                    packaged. All files in the input directory will be packaged into
+                    the application image into $APPDIR directory.
+                  -->
+                  <input>${jpackageInputDir}</input>
+                </configuration>
+              </execution>
+              <execution>
+                <id>installer</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>MSI</type>
+                  <!--
+                    Specifies the location of the predefined application image
+                    that is used to build an installable package.
+                  -->
+                  <appimage>${jpackageImageDir}</appimage>
+                  <!--
+                    Specifies the location of a properties file that contains
+                    list of key, value pairs. The keys "extension", "mime-type",
+                    "icon", and "description" can be used to describe the association.
+                  -->
+                  <fileassociations>
+                    <fileassociation>${jpackageConfigDir}/associations.properties</fileassociation>
+                  </fileassociations>
+                  <!--
+                    Specifies the relative sub-path under the default installation
+                    location of the application for Windows, or absolute path of the
+                    installation directory of the application for Mac or Linux.
+                  -->
+                  <installdir>${platformInstallDir}</installdir>
+                  <!--
+                    Specifies the location of a license file.
+                  -->
+                  <licensefile>${applicationLicenseFile}</licensefile>
+                  <!--
+                    Enable adding a dialog to choose a directory in which
+                    the product is installed.
+                    Default value: false
+                  -->
+                  <windirchooser>true</windirchooser>
+                  <!--
+                    Enable adding the application to the system menu.
+                    Default value: false
+                  -->
+                  <winmenu>true</winmenu>
+                  <!--
+                    Start menu group this application is placed in.
+                  -->
+                  <winmenugroup>${platformMenuGroup}</winmenugroup>
+                  <!--
+                    Enable requesting to perform an install on a per-user basis.
+                    Default value: false
+                  -->
+                  <winperuserinstall>true</winperuserinstall>
+                  <!--
+                    Enable creating a desktop shortcut for the application.
+                    Default value: false
+                  -->
+                  <winshortcut>true</winshortcut>
+                  <!--
+                    UUID associated with upgrades for this package.
+                  -->
+                  <winupgradeuuid>${platformUUID}</winupgradeuuid>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>linux</id>
@@ -2008,10 +1946,526 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir>"/opt/${applicationVendor}/${platformImageName}"</platformInstallDir>
+        <platformInstallDir>/opt/${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
+        <jlinkDir>${project.build.directory}/jlink/${platformFamily}</jlinkDir>
+        <jpackageDir>${project.build.directory}/jpackage/${platformFamily}</jpackageDir>
       </properties>
+      <build>
+        <plugins>
+          <plugin> <!-- jlink-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jlink-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jlink tool executable will be find in
+                the following order:
+          
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <!--toolhome>${env.JAVA_HOME}</toolhome-->
+              <!--
+                Specifies the location in which modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/mods.
+              -->
+              <modsdir>${jlinkModsDir}</modsdir>
+              <!--
+                Specifies the location in which non modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/libs.
+              -->
+              <libsdir>${jlinkLibsDir}</libsdir>
+          
+              <!-- jlink basic -->
+          
+              <!--
+                Specifies the module path. The path where the jlink tool discovers
+                observable modules: modular JAR files, JMOD files, exploded modules.
+                If this option is not specified, then the default module path
+                is $JAVA_HOME/jmods. This directory contains the java.base module
+                and the other standard and JDK modules. If this option is specified
+                but the java.base module cannot be resolved from it, then
+                the jlink command appends $JAVA_HOME/jmods to the module path.
+          
+                pathelements - passed to jlink as is
+                filesets - sets of files (without directories)
+                dirsets - sets of directories (without files)
+                dependencysets - sets of dependencies with specified includes and
+                                 excludes patterns (glob: or regex:) for file names
+                                 and regex patterns only for module names
+              -->
+              <modulepath>
+                <pathelements>
+                  <pathelement>${jlinkModsDir}</pathelement>
+                </pathelements>
+                <!--
+                <dirsets>
+                  <dirset>
+                    <directory>${build.dir}</directory>
+                    <includes>
+                      <include>classes</include>
+                    </includes>
+                  </dirset>
+                </dirsets>
+                -->
+                <!--
+                <dependencysets>
+                  <dependencyset>
+                    <includeoutput>true</includeoutput>
+                    <excludeautomatic>true</excludeautomatic>
+                    <excludenames>
+                      <excludename>javafx\..+Empty</excludename>
+                    </excludenames>
+                  </dependencyset>
+                </dependencysets>
+                -->
+              </modulepath>
+              <!--
+                Specifies the modules names (names of root modules) to add to
+                the runtime image. Their transitive dependencies will add too.
+              -->
+              <addmodules>
+                <addmodule>${applicationModuleName}</addmodule>
+              </addmodules>
+              <!--
+                Specifies the location of the generated runtime image.
+                Default value: ${project.build.directory}/runtime.
+              -->
+              <output>${jlinkImageDir}</output>
+              <!--
+                Limits the universe of observable modules to those in
+                the transitive closure of the named modules, mod,
+                plus the main module, if any, plus any further
+                modules specified in the "addmodules" property.
+                It used to limit resolve any services other than
+                the selected services, if the property "bindservices"
+                set to true.
+              -->
+              <!--limitmodules>
+                <limitmodule>org.example.limitmodule</limitmodule>
+              </limitmodules-->
+              <!--
+                Suggest providers that implement the given service types
+                from the module path.
+              -->
+              <!--suggestproviders>
+                <suggestprovider>provider.name</suggestprovider>
+              </suggestproviders-->
+              <!--
+                Save jlink options in the given file.
+              -->
+              <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+              <!--
+                The last plugin allowed to sort resources.
+              -->
+              <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+              <!--
+                Post process an existing image.
+              -->
+              <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Link service provider modules and their dependencies.
+                Default value: false.
+              -->
+              <!--bindservices>false</bindservices-->
+              <!--
+                Specifies the launcher command name for the module or
+                the command name for the module and main class (the module and
+                the main class names are separated by a slash). Arguments passed
+                to jvm, arguments passed to the application. Platform specific
+                templates for launcher script.
+              -->
+              <launcher>
+                <command>${applicationLauncherName}</command>
+                <mainmodule>${applicationModuleName}</mainmodule>
+                <mainclass>${applicationClassName}</mainclass>
+                <jvmargs>${applicationJvmArgs}</jvmargs>
+                <args>${applicationArgs}</args>
+                <nixtemplate>${jlinkTemplateNix}</nixtemplate>
+                <wintemplate>${jlinkTemplateWin}</wintemplate>
+              </launcher>
+              <!--
+                Excludes header files.
+                Default value: false.
+              -->
+              <noheaderfiles>true</noheaderfiles>
+              <!--
+                Excludes man pages.
+                Default value: false.
+              -->
+              <nomanpages>true</nomanpages>
+              <!--
+                Specifies the byte order of the generated
+                image { NATIVE | LITTLE | BIG }.
+                Default value: NATIVE (the format of your system's architecture).
+              -->
+              <!--endian>NATIVE</endian-->
+              <!--
+                Suppresses a fatal error when signed modular JARs are linked
+                in the runtime image. The signature-related files of the signed
+                modular JARs aren't copied to the runtime image.
+                Default value: false.
+              -->
+              <!--ignoresigninginformation>false</ignoresigninginformation-->
+              <!--
+                Disables the specified plug-ins.
+                For a complete list of all available plug-ins,
+                run the command: jlink ‒‒list-plugins
+              -->
+              <!--disableplugins>
+                <disableplugin>compress</disableplugin>
+                <disableplugin>dedup-legal-notices</disableplugin>
+              </disableplugins-->
+          
+              <!-- PLUGINS -->
+              <!--
+                For plug-in options that require a pattern-list, the value is
+                a comma-separated list of elements, with each element using one
+                the following forms:
+          
+                  - glob-pattern
+                  - glob:glob-pattern
+                  - regex:regex-pattern
+                  - @filename
+          
+                Example: **/module-info.class,glob:/java.base/java/lang/**
+              -->
+          
+              <!--
+                Compresses all resources in the output image. Specify
+                compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
+                An optional pattern-list filter can be specified to list
+                the pattern of files to include.
+              -->
+              <compress>
+                <compression>ZIP</compression>
+                <!--filters>
+                  <filter>**/*-info.class</filter>
+                  <filter>glob:**/module-info.class</filter>
+                  <filter>regex:/java[a-z]+$</filter>
+                  <filter>@filename</filter>
+                </filters-->
+              </compress>
+              <!--
+                Includes the list of locales where langtag is
+                a BCP 47 language tag. This option supports locale matching as
+                defined in RFC 4647.
+                Ensure that you specified: ‒‒add-modules jdk.localedata when
+                using this property.
+              -->
+              <!--includelocales>
+                <includelocale>en</includelocale>
+                <includelocale>ru</includelocale>
+                <includelocale>*-IN</includelocale>
+              </includelocales-->
+              <!--
+                Orders the specified paths in priority order.
+              -->
+              <!--orderresources>
+                <orderresource>**/*-info.class</orderresource>
+                <orderresource>glob:**/module-info.class</orderresource>
+                <orderresource>regex:/java[a-z]+$</orderresource>
+                <orderresource>@filename</orderresource>
+              </orderresources-->
+              <!--
+                Specify resources to exclude.
+              -->
+              <!--excluderesources>
+                <excluderesource>**/*-info.class</excluderesource>
+                <excluderesource>glob:**/META-INF/**</excluderesource>
+                <excluderesource>regex:/java[a-z]+$</excluderesource>
+                <excluderesource>@filename</excluderesource>
+              </excluderesources-->
+              <!--
+                Strips debug information from the output image.
+                Default value: false.
+              -->
+              <stripdebug>true</stripdebug>
+              <!--
+                Strip Java debug attributes from classes in the output image.
+                Default value: false.
+              -->
+              <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+              <!--
+                Exclude native commands (such as java/java.exe) from the image.
+                Default value: false.
+              -->
+              <stripnativecommands>true</stripnativecommands>
+              <!--
+                De-duplicate all legal notices. If true is specified then
+                it will be an error if two files of the same filename
+                are different.
+                Default value: false.
+              -->
+              <!--deduplegalnotices>true</deduplegalnotices-->
+              <!--
+                Specify files to exclude.
+              -->
+              <!--excludefiles>
+                <excludefile>**/*-info.class</excludefile>
+                <excludefile>glob:**/META-INF/**</excludefile>
+                <excludefile>regex:/java[a-z]+$</excludefile>
+                <excludefile>@filename</excludefile>
+              </excludefiles-->
+              <!--
+                Specify a JMOD section to exclude { MAN | HEADERS }.
+              -->
+              <!--excludejmodsection>MAN</excludejmodsection-->
+              <!--
+                Specify a file listing the java.lang.invoke classes to pre-generate.
+                By default, this plugin may use a builtin list of classes
+                to pre-generate. If this plugin runs on a different runtime
+                version than the image being created then code generation
+                will be disabled by default to guarantee correctness add
+                ignore-version=true to override this.
+              -->
+              <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+              <!--
+                Load release properties from the supplied option file.
+                - adds: is to add properties to the release file.
+                - dels: is to delete the list of keys in release file.
+                - Any number of key=value pairs can be passed.
+              -->
+              <!--releaseinfo>
+                <file>file</file>
+                <adds>
+                  <key1>value1</key1>
+                  <key2>value2</key2>
+                </adds>
+                <dels>
+                  <key1 />
+                  <key2 />
+                </dels>
+              </releaseinfo-->
+              <!--
+                Fast loading of module descriptors. Always on.
+                The jlink CLI is: ‒‒system-modules=.
+                Default value: true.
+              -->
+              <!--systemmodules>false</systemmodules-->
+              <!--
+                Select the HotSpot VM in
+                the output image: { CLIENT | SERVER | MINIMAL | ALL }
+                Default value: ALL.
+              -->
+              <!--vm>ALL</vm-->
+            </configuration>
+          </plugin>
+          <plugin> <!-- jpackage-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jpackage-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jpackage tool executable will be find in
+                the following order:
+            
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <toolhome>${env.JPACKAGE_HOME}</toolhome>
+              <!--
+                Specifies the location in which generated output files are placed.
+                Default value: ${project.build.directory}/jpackage
+              -->
+              <dest>${jpackageDir}</dest>
+              <!--
+                Specifies the location in which temporary files are placed.
+                If specified, the directory will not be removed upon the task
+                completion and must be removed manually.
+              -->
+              <!--temp>${project.build.directory}/jpackage/temp-app-image</temp-->
+              <!--
+                Specifies the name of subdirectory relative to
+                the destination directory in which files of generated
+                application image are placed.
+              -->
+              <name>${platformImageName}</name>
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Specifies version of the application and/or package.
+              -->
+              <appversion>${applicationVersion}</appversion>
+              <!--
+                Specifies copyright for the application.
+              -->
+              <copyright>${applicationCopyright}</copyright>
+              <!--
+                Specifies description of the application.
+              -->
+              <description>${applicationDescription}</description>
+              <!--
+                Specifies vendor of the application.
+              -->
+              <vendor>${applicationVendor}</vendor>
+              <!--
+                Specifies the location of a resources directory that override
+                jpackage resources. Icons, template files, and other resources
+                of jpackage can be overridden by adding replacement resources
+                to this directory.
+              -->
+              <resourcedir>${jpackageResourcesDir}</resourcedir>
+            </configuration>
+            <executions>
+              <execution>
+                <id>image</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>IMAGE</type>
+                  <!--
+                    Specifies the location of the predefined runtime
+                    image (result of jlink) that will be copied into
+                    the application image.
+                    If not specified, jpackage will run jlink to create
+                    the runtime image using options:
+                      - strip-debug
+                      - no-header-files
+                      - no-man-pages
+                      - strip-native-commands
+                  -->
+                  <runtimeimage>${jlinkImageDir}</runtimeimage>
+                  <!--
+                    Specifies the main module (and optionally main class) of
+                    the application. This module must be located on the module path.
+                    When this option is specified, the main module will be linked
+                    in the Java runtime image.
+                    Either module or main-jar option can be specified
+                    but not both.
+                  -->
+                  <module>${applicationModuleName}/${applicationClassName}</module>
+                  <!--
+                    Specifies the command line arguments to pass to the main class
+                    if no command line arguments are given to the launcher.
+                  -->
+                  <arguments>${platformArgs}</arguments>
+                  <!--
+                    Specifies the options to pass to the Java runtime.
+                  -->
+                  <javaoptions>${platformJvmArgs} -splash:\$APPDIR/${applicationSplashImage}</javaoptions>
+                  <!--
+                    Specifies options are added to, or used to overwrite,
+                    the original command line options to build additional
+                    alternative launchers.
+                  -->
+                  <addlaunchers>
+                    <addlauncher>
+                      <name>${platformLauncherName}-cli</name>
+                      <file>${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties</file>
+                      <module>${applicationModuleName}/${applicationClassName}</module>
+                      <javaoptions>${platformJvmArgs}</javaoptions>
+                      <appversion>${applicationVersion}</appversion>
+                      <icon>${jpackageResourcesDir}/${platformLauncherName}-cli.${platformIconExtension}</icon>
+                      <!--arguments>${platformArgs}</arguments-->
+                    </addlauncher>
+                  </addlaunchers>
+                  <!--
+                    Specifies the location of the icon of the application package.
+                  -->
+                  <icon>${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}</icon>
+                  <!--
+                    Path of the input directory that contains the files to be
+                    packaged. All files in the input directory will be packaged into
+                    the application image into $APPDIR directory.
+                  -->
+                  <input>${jpackageInputDir}</input>
+                </configuration>
+              </execution>
+              <execution>
+                <id>installer</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>PLATFORM</type>
+                  <!--
+                    Specifies the location of the predefined application image
+                    that is used to build an installable package.
+                  -->
+                  <appimage>${jpackageImageDir}</appimage>
+                  <!--
+                    Specifies the location of a properties file that contains
+                    list of key, value pairs. The keys "extension", "mime-type",
+                    "icon", and "description" can be used to describe the association.
+                  -->
+                  <fileassociations>
+                    <fileassociation>${jpackageConfigDir}/associations.properties</fileassociation>
+                  </fileassociations>
+                  <!--
+                    Specifies the relative sub-path under the default installation
+                    location of the application for Windows, or absolute path of the
+                    installation directory of the application for Mac or Linux.
+                  -->
+                  <installdir>${platformInstallDir}</installdir>
+                  <!--
+                    Specifies the location of a license file.
+                  -->
+                  <licensefile>${applicationLicenseFile}</licensefile>
+                  <!--linuxpackagename>linuxPackageName</linuxpackagename-->
+                  <!--
+                    Maintainer for .deb package (email).
+                  -->
+                  <!--linuxdebmaintainer>linuxDebMaintainer</linuxdebmaintainer-->
+                  <!--
+                    Menu group this application is placed in.
+                  -->
+                  <!--linuxmenugroup>linuxMenuGroup</linuxmenugroup-->
+                  <!--
+                    Required packages or capabilities for the application.
+                    Default value: false
+                  -->
+                  <!--linuxpackagedeps>false</linuxpackagedeps-->
+                  <!--
+                    Type of the license ("License: <name>" of the RPM .spec).
+                  -->
+                  <!--linuxrpmlicensetype>MIT</linuxrpmlicensetype-->
+                  <!--
+                    Release value of the RPM <name>.spec file or Debian revision value
+                    of the DEB control file.
+                  -->
+                  <!--linuxapprelease>linuxAppRelease</linuxapprelease-->
+                  <!--
+                    Group value of the RPM <name>.spec file or Section value
+                    of DEB control file.
+                  -->
+                  <!--linuxappcategory>linuxAppCategory</linuxappcategory-->
+                  <!--
+                    Creates a shortcut for the application.
+                    Default value: false
+                  -->
+                  <!--linuxshortcut>true</linuxshortcut-->
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>mac</id>
@@ -2027,10 +2481,532 @@
         <platformLauncherName>${applicationLauncherName}</platformLauncherName>
         <platformArgs>${applicationArgs} --gui</platformArgs>
         <platformJvmArgs>${applicationJvmArgs} -Dfile.encoding=${defaultEncoding}</platformJvmArgs>
-        <platformInstallDir>"/Applications/${applicationVendor}/${platformImageName}"</platformInstallDir>
+        <platformInstallDir>/Applications/${applicationVendor}/${platformImageName}</platformInstallDir>
         <platformMenuGroup>${applicationVendor}/${platformImageName}</platformMenuGroup>
         <platformUUID />
+        <jlinkDir>${project.build.directory}/jlink/${platformFamily}</jlinkDir>
+        <jpackageDir>${project.build.directory}/jpackage/${platformFamily}</jpackageDir>
       </properties>
+      <build>
+        <plugins>
+          <plugin> <!-- jlink-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jlink-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jlink tool executable will be find in
+                the following order:
+          
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <!--toolhome>${env.JAVA_HOME}</toolhome-->
+              <!--
+                Specifies the location in which modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/mods.
+              -->
+              <modsdir>${jlinkModsDir}</modsdir>
+              <!--
+                Specifies the location in which non modular dependencies
+                will be placed.
+                Default value: ${project.build.directory}/jlink/libs.
+              -->
+              <libsdir>${jlinkLibsDir}</libsdir>
+          
+              <!-- jlink basic -->
+          
+              <!--
+                Specifies the module path. The path where the jlink tool discovers
+                observable modules: modular JAR files, JMOD files, exploded modules.
+                If this option is not specified, then the default module path
+                is $JAVA_HOME/jmods. This directory contains the java.base module
+                and the other standard and JDK modules. If this option is specified
+                but the java.base module cannot be resolved from it, then
+                the jlink command appends $JAVA_HOME/jmods to the module path.
+          
+                pathelements - passed to jlink as is
+                filesets - sets of files (without directories)
+                dirsets - sets of directories (without files)
+                dependencysets - sets of dependencies with specified includes and
+                                 excludes patterns (glob: or regex:) for file names
+                                 and regex patterns only for module names
+              -->
+              <modulepath>
+                <pathelements>
+                  <pathelement>${jlinkModsDir}</pathelement>
+                </pathelements>
+                <!--
+                <dirsets>
+                  <dirset>
+                    <directory>${build.dir}</directory>
+                    <includes>
+                      <include>classes</include>
+                    </includes>
+                  </dirset>
+                </dirsets>
+                -->
+                <!--
+                <dependencysets>
+                  <dependencyset>
+                    <includeoutput>true</includeoutput>
+                    <excludeautomatic>true</excludeautomatic>
+                    <excludenames>
+                      <excludename>javafx\..+Empty</excludename>
+                    </excludenames>
+                  </dependencyset>
+                </dependencysets>
+                -->
+              </modulepath>
+              <!--
+                Specifies the modules names (names of root modules) to add to
+                the runtime image. Their transitive dependencies will add too.
+              -->
+              <addmodules>
+                <addmodule>${applicationModuleName}</addmodule>
+              </addmodules>
+              <!--
+                Specifies the location of the generated runtime image.
+                Default value: ${project.build.directory}/runtime.
+              -->
+              <output>${jlinkImageDir}</output>
+              <!--
+                Limits the universe of observable modules to those in
+                the transitive closure of the named modules, mod,
+                plus the main module, if any, plus any further
+                modules specified in the "addmodules" property.
+                It used to limit resolve any services other than
+                the selected services, if the property "bindservices"
+                set to true.
+              -->
+              <!--limitmodules>
+                <limitmodule>org.example.limitmodule</limitmodule>
+              </limitmodules-->
+              <!--
+                Suggest providers that implement the given service types
+                from the module path.
+              -->
+              <!--suggestproviders>
+                <suggestprovider>provider.name</suggestprovider>
+              </suggestproviders-->
+              <!--
+                Save jlink options in the given file.
+              -->
+              <!--saveopts>${project.build.directory}/jlink-opts</saveopts-->
+              <!--
+                The last plugin allowed to sort resources.
+              -->
+              <!--resourceslastsorter>resource-sorter-name</resourceslastsorter-->
+              <!--
+                Post process an existing image.
+              -->
+              <!--postprocesspath>${project.build.directory}/imagefile</postprocesspath-->
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Link service provider modules and their dependencies.
+                Default value: false.
+              -->
+              <!--bindservices>false</bindservices-->
+              <!--
+                Specifies the launcher command name for the module or
+                the command name for the module and main class (the module and
+                the main class names are separated by a slash). Arguments passed
+                to jvm, arguments passed to the application. Platform specific
+                templates for launcher script.
+              -->
+              <launcher>
+                <command>${applicationLauncherName}</command>
+                <mainmodule>${applicationModuleName}</mainmodule>
+                <mainclass>${applicationClassName}</mainclass>
+                <jvmargs>${applicationJvmArgs}</jvmargs>
+                <args>${applicationArgs}</args>
+                <nixtemplate>${jlinkTemplateNix}</nixtemplate>
+                <wintemplate>${jlinkTemplateWin}</wintemplate>
+              </launcher>
+              <!--
+                Excludes header files.
+                Default value: false.
+              -->
+              <noheaderfiles>true</noheaderfiles>
+              <!--
+                Excludes man pages.
+                Default value: false.
+              -->
+              <nomanpages>true</nomanpages>
+              <!--
+                Specifies the byte order of the generated
+                image { NATIVE | LITTLE | BIG }.
+                Default value: NATIVE (the format of your system's architecture).
+              -->
+              <!--endian>NATIVE</endian-->
+              <!--
+                Suppresses a fatal error when signed modular JARs are linked
+                in the runtime image. The signature-related files of the signed
+                modular JARs aren't copied to the runtime image.
+                Default value: false.
+              -->
+              <!--ignoresigninginformation>false</ignoresigninginformation-->
+              <!--
+                Disables the specified plug-ins.
+                For a complete list of all available plug-ins,
+                run the command: jlink ‒‒list-plugins
+              -->
+              <!--disableplugins>
+                <disableplugin>compress</disableplugin>
+                <disableplugin>dedup-legal-notices</disableplugin>
+              </disableplugins-->
+          
+              <!-- PLUGINS -->
+              <!--
+                For plug-in options that require a pattern-list, the value is
+                a comma-separated list of elements, with each element using one
+                the following forms:
+          
+                  - glob-pattern
+                  - glob:glob-pattern
+                  - regex:regex-pattern
+                  - @filename
+          
+                Example: **/module-info.class,glob:/java.base/java/lang/**
+              -->
+          
+              <!--
+                Compresses all resources in the output image. Specify
+                compression { NO_COMPRESSION | CONSTANT_STRING_SHARING | ZIP }.
+                An optional pattern-list filter can be specified to list
+                the pattern of files to include.
+              -->
+              <compress>
+                <compression>ZIP</compression>
+                <!--filters>
+                  <filter>**/*-info.class</filter>
+                  <filter>glob:**/module-info.class</filter>
+                  <filter>regex:/java[a-z]+$</filter>
+                  <filter>@filename</filter>
+                </filters-->
+              </compress>
+              <!--
+                Includes the list of locales where langtag is
+                a BCP 47 language tag. This option supports locale matching as
+                defined in RFC 4647.
+                Ensure that you specified: ‒‒add-modules jdk.localedata when
+                using this property.
+              -->
+              <!--includelocales>
+                <includelocale>en</includelocale>
+                <includelocale>ru</includelocale>
+                <includelocale>*-IN</includelocale>
+              </includelocales-->
+              <!--
+                Orders the specified paths in priority order.
+              -->
+              <!--orderresources>
+                <orderresource>**/*-info.class</orderresource>
+                <orderresource>glob:**/module-info.class</orderresource>
+                <orderresource>regex:/java[a-z]+$</orderresource>
+                <orderresource>@filename</orderresource>
+              </orderresources-->
+              <!--
+                Specify resources to exclude.
+              -->
+              <!--excluderesources>
+                <excluderesource>**/*-info.class</excluderesource>
+                <excluderesource>glob:**/META-INF/**</excluderesource>
+                <excluderesource>regex:/java[a-z]+$</excluderesource>
+                <excluderesource>@filename</excluderesource>
+              </excluderesources-->
+              <!--
+                Strips debug information from the output image.
+                Default value: false.
+              -->
+              <stripdebug>true</stripdebug>
+              <!--
+                Strip Java debug attributes from classes in the output image.
+                Default value: false.
+              -->
+              <!--stripjavadebugattributes>false</stripjavadebugattributes-->
+              <!--
+                Exclude native commands (such as java/java.exe) from the image.
+                Default value: false.
+              -->
+              <stripnativecommands>true</stripnativecommands>
+              <!--
+                De-duplicate all legal notices. If true is specified then
+                it will be an error if two files of the same filename
+                are different.
+                Default value: false.
+              -->
+              <!--deduplegalnotices>true</deduplegalnotices-->
+              <!--
+                Specify files to exclude.
+              -->
+              <!--excludefiles>
+                <excludefile>**/*-info.class</excludefile>
+                <excludefile>glob:**/META-INF/**</excludefile>
+                <excludefile>regex:/java[a-z]+$</excludefile>
+                <excludefile>@filename</excludefile>
+              </excludefiles-->
+              <!--
+                Specify a JMOD section to exclude { MAN | HEADERS }.
+              -->
+              <!--excludejmodsection>MAN</excludejmodsection-->
+              <!--
+                Specify a file listing the java.lang.invoke classes to pre-generate.
+                By default, this plugin may use a builtin list of classes
+                to pre-generate. If this plugin runs on a different runtime
+                version than the image being created then code generation
+                will be disabled by default to guarantee correctness add
+                ignore-version=true to override this.
+              -->
+              <!--generatejliclasses>${project.basedir}/jli-classes</generatejliclasses-->
+              <!--
+                Load release properties from the supplied option file.
+                - adds: is to add properties to the release file.
+                - dels: is to delete the list of keys in release file.
+                - Any number of key=value pairs can be passed.
+              -->
+              <!--releaseinfo>
+                <file>file</file>
+                <adds>
+                  <key1>value1</key1>
+                  <key2>value2</key2>
+                </adds>
+                <dels>
+                  <key1 />
+                  <key2 />
+                </dels>
+              </releaseinfo-->
+              <!--
+                Fast loading of module descriptors. Always on.
+                The jlink CLI is: ‒‒system-modules=.
+                Default value: true.
+              -->
+              <!--systemmodules>false</systemmodules-->
+              <!--
+                Select the HotSpot VM in
+                the output image: { CLIENT | SERVER | MINIMAL | ALL }
+                Default value: ALL.
+              -->
+              <!--vm>ALL</vm-->
+            </configuration>
+          </plugin>
+          <plugin> <!-- jpackage-maven-plugin -->
+            <groupId>com.github.akman</groupId>
+            <artifactId>jpackage-maven-plugin</artifactId>
+            <configuration>
+              <!--
+                Specifies the JDK home path which provides the tool needed.
+                If not specified the jpackage tool executable will be find in
+                the following order:
+            
+                  - user specified JDK home directory by toolchains-plugin
+                  - JDK home directory specified by system variable JAVA_HOME
+                  - system path specified by system variable PATH
+              -->
+              <toolhome>${env.JPACKAGE_HOME}</toolhome>
+              <!--
+                Specifies the location in which generated output files are placed.
+                Default value: ${project.build.directory}/jpackage
+              -->
+              <dest>${jpackageDir}</dest>
+              <!--
+                Specifies the location in which temporary files are placed.
+                If specified, the directory will not be removed upon the task
+                completion and must be removed manually.
+              -->
+              <!--temp>${project.build.directory}/jpackage/temp-app-image</temp-->
+              <!--
+                Specifies the name of subdirectory relative to
+                the destination directory in which files of generated
+                application image are placed.
+              -->
+              <name>${platformImageName}</name>
+              <!--
+                Enable verbose tracing.
+                Default value: false.
+              -->
+              <verbose>true</verbose>
+              <!--
+                Specifies version of the application and/or package.
+              -->
+              <appversion>${applicationVersion}</appversion>
+              <!--
+                Specifies copyright for the application.
+              -->
+              <copyright>${applicationCopyright}</copyright>
+              <!--
+                Specifies description of the application.
+              -->
+              <description>${applicationDescription}</description>
+              <!--
+                Specifies vendor of the application.
+              -->
+              <vendor>${applicationVendor}</vendor>
+              <!--
+                Specifies the location of a resources directory that override
+                jpackage resources. Icons, template files, and other resources
+                of jpackage can be overridden by adding replacement resources
+                to this directory.
+              -->
+              <resourcedir>${jpackageResourcesDir}</resourcedir>
+            </configuration>
+            <executions>
+              <execution>
+                <id>image</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>IMAGE</type>
+                  <!--
+                    Specifies the location of the predefined runtime
+                    image (result of jlink) that will be copied into
+                    the application image.
+                    If not specified, jpackage will run jlink to create
+                    the runtime image using options:
+                      - strip-debug
+                      - no-header-files
+                      - no-man-pages
+                      - strip-native-commands
+                  -->
+                  <runtimeimage>${jlinkImageDir}</runtimeimage>
+                  <!--
+                    Specifies the main module (and optionally main class) of
+                    the application. This module must be located on the module path.
+                    When this option is specified, the main module will be linked
+                    in the Java runtime image.
+                    Either module or main-jar option can be specified
+                    but not both.
+                  -->
+                  <module>${applicationModuleName}/${applicationClassName}</module>
+                  <!--
+                    Specifies the command line arguments to pass to the main class
+                    if no command line arguments are given to the launcher.
+                  -->
+                  <arguments>${platformArgs}</arguments>
+                  <!--
+                    Specifies the options to pass to the Java runtime.
+                  -->
+                  <javaoptions>${platformJvmArgs} -splash:\$APPDIR/${applicationSplashImage}</javaoptions>
+                  <!--
+                    Specifies options are added to, or used to overwrite,
+                    the original command line options to build additional
+                    alternative launchers.
+                  -->
+                  <addlaunchers>
+                    <addlauncher>
+                      <name>${platformLauncherName}-cli</name>
+                      <file>${jpackageResourcesDir}/${platformLauncherName}-cli.launcher.properties</file>
+                      <module>${applicationModuleName}/${applicationClassName}</module>
+                      <javaoptions>${platformJvmArgs}</javaoptions>
+                      <appversion>${applicationVersion}</appversion>
+                      <icon>${jpackageResourcesDir}/${platformLauncherName}-cli.${platformIconExtension}</icon>
+                      <!--arguments>${platformArgs}</arguments-->
+                    </addlauncher>
+                  </addlaunchers>
+                  <!--
+                    Specifies the location of the icon of the application package.
+                  -->
+                  <icon>${jpackageResourcesDir}/${platformImageName}.${platformIconExtension}</icon>
+                  <!--
+                    Path of the input directory that contains the files to be
+                    packaged. All files in the input directory will be packaged into
+                    the application image into $APPDIR directory.
+                  -->
+                  <input>${jpackageInputDir}</input>
+                </configuration>
+              </execution>
+              <execution>
+                <id>installer</id>
+                <goals>
+                  <goal>jpackage</goal>
+                </goals>
+                <configuration>
+                  <!--
+                    Specifies the type of package to
+                    create: { PLATFORM | IMAGE | EXE | MSI }.
+                    Default value: PLATFORM (a platform dependent default type)
+                  -->
+                  <type>PLATFORM</type>
+                  <!--
+                    Specifies the location of the predefined application image
+                    that is used to build an installable package.
+                  -->
+                  <appimage>${jpackageImageDir}</appimage>
+                  <!--
+                    Specifies the location of a properties file that contains
+                    list of key, value pairs. The keys "extension", "mime-type",
+                    "icon", and "description" can be used to describe the association.
+                  -->
+                  <fileassociations>
+                    <fileassociation>${jpackageConfigDir}/associations.properties</fileassociation>
+                  </fileassociations>
+                  <!--
+                    Specifies the relative sub-path under the default installation
+                    location of the application for Windows, or absolute path of the
+                    installation directory of the application for Mac or Linux.
+                  -->
+                  <installdir>${platformInstallDir}</installdir>
+                  <!--
+                    Specifies the location of a license file.
+                  -->
+                  <licensefile>${applicationLicenseFile}</licensefile>
+                  <!--
+                    An identifier that uniquely identifies the application for macOS.
+                    Defaults to the main class name. May only use
+                    alphanumeric (A-Z,a-z,0-9), hyphen (-), and period (.) characters.
+                  -->
+                  <!--macpackageidentifier>macPackageIdentifier</macpackageidentifier-->
+                  <!--
+                    Name of the application as it appears in the Menu Bar.
+                    This can be different from the application name.
+                    This name must be less than 16 characters long and be suitable for
+                    displaying in the menu bar and the application Info window.
+                    Defaults to the application name.
+                  -->
+                  <!--macpackagename>macPackageName</macpackagename-->
+                  <!--
+                    When signing the application package, this value is prefixed
+                    to all components that need to be signed that don't have
+                    an existing package identifier.
+                  -->
+                  <!--macpackagesigningprefix>macPackageSigningPrefix</macpackagesigningprefix-->
+                  <!--
+                    Request that the package be signed.
+                    Default value: false
+                  -->
+                  <!--macsign>false</macsign-->
+                  <!--
+                    Path of the keychain to search for the signing identity
+                    (absolute path or relative to the current directory).
+                    If not specified, the standard keychains are used.
+                  -->
+                  <!--macsigningkeychain>macSigningKeyChain</macsigningkeychain-->
+                  <!--
+                    Team name portion in Apple signing identities' names.
+                    For example "Developer ID Application: ".
+                  -->
+                  <!--macsigningkeyusername>macSigningKeyUserName</macsigningkeyusername-->
+                  <!--
+                    Name for Linux package, defaults to the application name.
+                  -->
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
