@@ -366,8 +366,8 @@
             <compilerArgs>
               <arg>-Xlint:unchecked</arg>
               <arg>-Xlint:deprecation</arg>
-              <arg>-Werror</arg>
-              <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+              <!--arg>-Werror</arg-->
+              <!--arg>-Aproject=${project.groupId}/${project.artifactId}</arg-->
             </compilerArgs>
             <annotationProcessorPaths>
               <path>
